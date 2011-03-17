@@ -25,7 +25,15 @@ class Manga:
     self.activePageId = None
     self.activePage = None
     if path and load:
-      self.load(path,startOnPage)
+      self.name = self._nameFromPath(path)
+      if self.load(path,startOnPage):
+        self.mieru.notify('<b>%s<b/> loaded' % self.name)
+      else:
+        self.mieru.notify('<b>%s<b/> loading failed' % self.name)
+
+
+
+
 
   def getName(self):
     return self.name
@@ -49,7 +57,11 @@ class Manga:
       pageNumber = 0
     path = state.get('path',None)
     if path:
-      self.load(path, pageNumber)
+      self.name = self._nameFromPath(path)
+      if self.load(path, pageNumber):
+        self.mieru.notify('<b>%s</b> restored to page %d' % (self.name, pageNumber+1))
+      else:
+        self.mieru.notify('<b>%s</b> restore failed' % self.name)
 
   def load(self, path, pageNumber=0):
     """try to load manga from the given path"""
@@ -57,7 +69,7 @@ class Manga:
     self.path = path
     self.container = container.from_path(path)
     self.pages = self.container.getFileList()
-    self.gotoPageId(pageNumber)
+    return self.gotoPageId(pageNumber) # return if the first-selected page loaded successfully
 
 
 #  def loadFolder(self, path):
@@ -152,8 +164,10 @@ class Manga:
       # update the id
       self.activePageId = id
       self.activePage = newPage
+      return True
     else:
       print "switching to page failed, id: ", id
+      return False
 
   def next(self):
     """go one page forward"""
@@ -163,7 +177,8 @@ class Manga:
     if nextId < len(self.pages):
       self.gotoPageId(nextId)
     else:
-      print "manga: end reached, no more pages" # TODO: display a notification & go to next archive/folder (?)
+      print "manga: end reached, no more pages"
+      self.mieru.notify('this is the <b>last</b> page')
 
   def previous(self):
     """go one page back"""
@@ -174,6 +189,7 @@ class Manga:
       self.gotoPageId(prevId)
     else:
       print "manga: start reached, no more pages" # TODO: display a notification & go to next archive/folder (?)
+      self.mieru.notify('this is the <b>first</b> page')
 
 
   def updateFitMode(self):
@@ -205,6 +221,10 @@ class Manga:
   def getNextMangaPath(self):
     (prevPath,nextPath) = self.getNeighborPaths()
     return nextPath
+
+  def _nameFromPath(self,path):
+    (tail,name) = os.path.split(path)
+    return name
 
 
 

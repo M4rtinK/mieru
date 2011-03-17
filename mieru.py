@@ -50,7 +50,7 @@ class Mieru:
     self.window.connect("destroy", self.destroy)
 
     # get the platform module
-    self.platform = maemo5.Maemo5(self.window, self)
+    self.platform = maemo5.Maemo5(self)
 
     # get the Clutter embed and add it to the window
     self.embed = cluttergtk.Embed()
@@ -121,7 +121,8 @@ class Mieru:
       self.window.fullscreen()
       self.fullscreen = True
 
-  def notify(message,icon=""):
+  def notify(self, message, icon=""):
+    print "notification: %s" % message
     self.platform.notify(message,icon)
 
   def setFitMode(self, mode):

@@ -5,10 +5,9 @@ import gtk
 import hildon
 
 class Maemo5:
-  def __init__(self, window, mieru):
-    self.window = window
+  def __init__(self, mieru):
     self.mieru = mieru
-    self.enableZoomKeys(window)
+    self.enableZoomKeys(self.mieru.window)
     menu = hildon.AppMenu()
     openFolderButton = gtk.Button("Open folder")
     openFolderButton.connect('clicked',self.startFolderChooser)
@@ -20,7 +19,7 @@ class Maemo5:
     menu.show_all()
 
     # Add the menu to the window
-    window.set_app_menu(menu)
+    self.mieru.window.set_app_menu(menu)
 
 
   def enable_zoom_cb(self, window):
@@ -64,7 +63,9 @@ class Maemo5:
     self.mieru.openManga(path)
 
   def notify(self, message, icon):
-    hildon.hildon_banner_show_information_with_markup(self.mieru.window, icon, message)
+    print message
+#    hildon.hildon_banner_show_information_with_markup(self.mieru.window, "", message)
+    hildon.hildon_banner_show_information_with_markup(self.mieru.window, "icon_text", message)
 
 
 
