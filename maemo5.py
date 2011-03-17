@@ -63,4 +63,8 @@ class Maemo5:
       self.mieru.set('lastChooserFolder', currentFolder)
     self.mieru.openManga(path)
 
+  def notify(self, message, icon):
+    hildon.hildon_banner_show_information_with_markup(self.mieru.window, icon, message)
+
+
 

@@ -121,6 +121,8 @@ class Mieru:
       self.window.fullscreen()
       self.fullscreen = True
 
+  def notify(message,icon=""):
+    self.platform.notify(message,icon)
 
   def setFitMode(self, mode):
     self.set('fitMode',mode)
