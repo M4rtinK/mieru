@@ -3,8 +3,6 @@
    or a whole volume if all page images are in  a single file or folder
 """
 import os
-import magic
-import zipfile
 import gtk
 
 import page as pageModule
@@ -125,7 +123,6 @@ class Manga:
         return True
 
   def getPageById(self, id):
-    print "get", id
     file = self.container.getFileById(id)
     if file:
       # load the image from a pixbuf, created from the file object
@@ -146,7 +143,6 @@ class Manga:
       
   def gotoPageId(self, id):
     # get page for the given id
-    print "goto", id
     oldPage = self.activePage
     newPage = self.getPageById(id)
     if newPage:

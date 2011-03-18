@@ -51,6 +51,9 @@ class Container:
     self.path = path
     self.files = []
     self.imageFiles = []
+    self.simpleImageDetection = True # use only extension matching, not mime to detect image files
+    self.imageFileExtensions = ["png", "jpeg", "jpg", "bmp", "gif", "tiff", "xpm"]
+    # TODO: find what image formats are actually supported by clutter ?
 
   def getFile(self, filename):
     """ return file object for a filename
@@ -110,6 +113,26 @@ class Container:
        """
     imageList = []
     for filename in filenames:
+      if self._isImage(filename):
+        imageList.append(filename)
+    print "%d images found" % len(imageList)
+    self.imageFiles = imageList
+
+  def _isImage(self, filename):
+    if self.simpleImageDetection:
+      (basename, extension) = os.path.splitext(filename)
+      if extension:
+        extension = extension.lower()[1:] # remove the leading dot and make lowercase
+        if extension.lower() in self.imageFileExtensions:
+          print "%s, extension: %s" % (filename, extension)
+          return True
+        else:
+          return False # not a "supported" extension
+      else:
+        return False # no extension -> no image
+
+
+    else:
       file = self.getFile(filename) # get the file object
       if file: # the file probably exists
         mime = getFileMime(file) # get its mime
@@ -118,9 +141,12 @@ class Container:
         m1 = mimeSplit[0]
         m2 = mimeSplit[1]
         if m1 == 'image':
-          imageList.append(filename)
-    print "%d images found" % len(imageList)
-    self.imageFiles = imageList
+          return True
+        else:
+          return False
+
+
+
 
 
 class FolderContainer(Container):

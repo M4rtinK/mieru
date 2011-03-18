@@ -38,7 +38,6 @@ class Page(clutter.Texture):
     self.set_keep_aspect_ratio(True) # we want to preserve the aspect ratio
 
   def do_button_press_event (self, actor, event):
-    print "page: button pressed"
     self.isPressed = True
     (x,y) = event.x,event.y
     self.pressStart = (x,y)
@@ -47,7 +46,6 @@ class Page(clutter.Texture):
     return False
 
   def do_button_release_event (self, actor, event):
-    print "page: button released"
     self.isPressed = False
     self.pressStart = None
     self.lastMotion = None
@@ -55,7 +53,6 @@ class Page(clutter.Texture):
     return False
 
   def on_page_motion(self, page, event):
-#    print "motion on page"
     (x,y) = event.x,event.y
     if page.lastMotion:
       (lasX,lastY) = page.lastMotion
