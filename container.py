@@ -1,3 +1,5 @@
+"""Mieru image files container abstraction"""
+
 import zipfile26 as zipfile # use backported zipfile from PYthon 2.6
 import os
 import rarfile

@@ -3,6 +3,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 import sys
 if len (sys.argv) > 1:
   firstParam = sys.argv[1]
@@ -69,11 +70,18 @@ class Mieru:
 
     self.activeManga = None
 
+    # restore previously saved state (if available)
     self._restoreState()
     
-
     self.lastPageMotionXY = (0,0)
-    
+
+    # activate clutter based buttons
+    self.fsButton = None
+    self.fsButtonActive = False
+    self.fsButtonTimer = None
+    self._activateButtons()
+
+
     # This packs the button into the window (a GTK container).
 
     self.embed.show()
@@ -167,6 +175,45 @@ class Mieru:
     if lastOpenMangaState:
       print "restoring last open manga"
       self.activeManga = manga.fromState(self, lastOpenMangaState)
+
+  def _activateButtons(self):
+    fsToggleButton = clutter.Rectangle(clutter.color_from_string('Grey'))
+    (w,h) = (80,120)
+    fsToggleButton.set_size(w,h)
+    fsToggleButton.set_anchor_point(w,h)
+    fsToggleButton.set_reactive(True)
+
+    self.stage.add(fsToggleButton)
+    fsToggleButton.show()
+
+    (x,y,w1,h1) = self.viewport
+
+    fsToggleButton.set_position(w1,h1)
+
+    fsToggleButton.connect('button-release-event',self.do_button_press_event)
+
+    self.fsButton = fsToggleButton
+
+  def do_button_press_event (self, button, event):
+    if self.fsButtonActive:
+      self.toggleFullscreen()
+      button.set_color((1,1,1,1))
+      self.fsButtonActive = False
+    else:
+      self.fsButtonActive = True
+      button.set_color(clutter.color_from_string('Grey'))
+      self.fsButtonTimer = gobject.timeout_add(1000,self._hideFSButton, button)
+
+  def _hideFSButton(self, button):
+    self.fsButtonActive = False
+    button.set_color((1,1,1,1))
+    self.fsButtonTimer = None
+    return False
+
+
+
+
+
 
 
 #  def do_button_press_event(actor, event):
