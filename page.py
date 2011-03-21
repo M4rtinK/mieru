@@ -18,6 +18,7 @@ class Page(clutter.Texture):
             pb.props.height,
             pb.props.rowstride,
             bpp, 0)
+    del pb
     self.originalSize = self.get_size()
 
     self.mieru = mieru
@@ -66,26 +67,29 @@ class Page(clutter.Texture):
     return False
 
   def movePage(self,page,dx,dy):
+    """move the page so that the voewport either stays inside it
+       or the page stays inside the viewport if it is smaller"""
     (x,y,w,h) = self.mieru.viewport
     (pageX,pageY,pageW,pageH) = page.get_geometry()
     (newX,newY) = (pageX+dx,pageY+dy)
-    if pageW > w:
+
+    if pageW > w: # page is wider than screen
       if newX < w-pageW:
         newX = w-pageW
       elif newX > 0:
         newX = 0
-    else:
+    else: # screen is wider than page
       if newX < 0:
         newX = 0
       if newX > w-pageW:
         newX = w-pageW
 
-    if pageH > h:
+    if pageH > h: # page is longer than screen
       if newY < h-pageH:
         newY = h-pageH
       elif newY > 0:
         newY = 0
-    else:
+    else: # screen is longer than screen
       if newH < 0:
         newH = 0
       if newH > h-pageH:

@@ -8,7 +8,10 @@ def getFilePathMime(path):
   return magic.from_file(path, mime=True)
 
 def getFileMime(file):
-  return magic.from_buffer(file.read(1024), mime=True)
+  mime = magic.from_buffer(file.read(1024), mime=True)
+  file.close() # properly close the file
+  return mime
+
 
 def getBufferMime(path, buffer):
   return magic.from_buffer(buffer, mime=True)

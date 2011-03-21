@@ -7,14 +7,22 @@ import hildon
 class Maemo5:
   def __init__(self, mieru):
     self.mieru = mieru
+
+    # enbale zoom/volume keys for usage by mieru
     self.enableZoomKeys(self.mieru.window)
+
+    # add application menu
     menu = hildon.AppMenu()
     openFolderButton = gtk.Button("Open folder")
-    openFolderButton.connect('clicked',self.startFolderChooser)
+    openFolderButton.connect('clicked',self.startChooser, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     openFileButton = gtk.Button("Open file")
-    openFileButton.connect('clicked',self.startFileChooser)
+    openFileButton.connect('clicked',self.startChooser, gtk.FILE_CHOOSER_ACTION_OPEN)
+    fullscreenButton = gtk.Button("Fullscreen")
+    fullscreenButton.connect('clicked',self.mieru.toggleFullscreen)
+
     menu.append(openFileButton)
     menu.append(openFolderButton)
+    menu.append(fullscreenButton)
     # Show all menu items
     menu.show_all()
 
@@ -23,10 +31,10 @@ class Maemo5:
 
 
   def enable_zoom_cb(self, window):
-	window.window.property_change(gtk.gdk.atom_intern("_HILDON_ZOOM_KEY_ATOM"), gtk.gdk.atom_intern("INTEGER"), 32, gtk.gdk.PROP_MODE_REPLACE, [1]);
+    window.window.property_change(gtk.gdk.atom_intern("_HILDON_ZOOM_KEY_ATOM"), gtk.gdk.atom_intern("INTEGER"), 32, gtk.gdk.PROP_MODE_REPLACE, [1]);
 
-  def disableZoom(self):
-	self.window.property_change(gtk.gdk.atom_intern("_HILDON_ZOOM_KEY_ATOM"), gtk.gdk.atom_intern("INTEGER"), 32, gtk.gdk.PROP_MODE_REPLACE, [0]);
+  def disableZoomKeys(self):
+    self.window.property_change(gtk.gdk.atom_intern("_HILDON_ZOOM_KEY_ATOM"), gtk.gdk.atom_intern("INTEGER"), 32, gtk.gdk.PROP_MODE_REPLACE, [0]);
 
   def enableZoomKeys(self,window):
           if window.flags() & gtk.REALIZED:
@@ -34,33 +42,24 @@ class Maemo5:
           else:
                   window.connect("realize", self.enable_zoom_cb)
 
-  def startFolderChooser(self, foo=None):
-    dialog = hildon.FileChooserDialog(self.mieru.window, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER) 
+  def startChooser(self, button, type):
+    dialog = hildon.FileChooserDialog(self.mieru.window, type)
     lastFolder = self.mieru.get('lastChooserFolder', None)
     currentFolder = None
+    selectedPath = None
     if lastFolder:
       dialog.set_current_folder(lastFolder)
-    if dialog.run() == gtk.RESPONSE_OK:
+    status = dialog.run()
+    dialog.hide()
+    if status == gtk.RESPONSE_OK:
       currentFolder = dialog.get_current_folder()
-      path = dialog.get_filename()
+      selectedPath = dialog.get_filename()
     dialog.destroy()
     if currentFolder != None:
       self.mieru.set('lastChooserFolder', currentFolder)
-    self.mieru.openManga(path)
-
-  def startFileChooser(self, foo=None):
-    dialog = hildon.FileChooserDialog(self.mieru.window, gtk.FILE_CHOOSER_ACTION_OPEN)
-    lastFolder = self.mieru.get('lastChooserFolder', None)
-    currentFolder = None
-    if lastFolder:
-      dialog.set_current_folder(lastFolder)
-    if dialog.run() == gtk.RESPONSE_OK:
-      currentFolder = dialog.get_current_folder()
-      path = dialog.get_filename()
-    dialog.destroy()
-    if currentFolder != None:
-      self.mieru.set('lastChooserFolder', currentFolder)
-    self.mieru.openManga(path)
+    if selectedPath:
+      print "open"
+      self.mieru.openManga(selectedPath)
 
   def notify(self, message, icon):
     print message

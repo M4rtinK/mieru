@@ -10,7 +10,7 @@ import container
 
 
 class Manga:
-  def __init__(self, mieru, path=None, load=True, startOnPage=0):
+  def __init__(self, mieru, path=None, startOnPage=0, load=True):
     self.mieru = mieru
     self.stage = mieru.stage
     self.fitMode = mieru.fitMode
@@ -29,10 +29,6 @@ class Manga:
       else:
         self.mieru.notify('<b>%s<b/> loading failed' % self.name)
 
-
-
-
-
   def getName(self):
     return self.name
 
@@ -45,7 +41,6 @@ class Manga:
     state = {}
     state['path'] = self.path
     state['pageNumber'] = self.activePageId
-    print state
     return state
 
   def setState(self, state):
@@ -129,9 +124,12 @@ class Manga:
       # we can like this easily unpack selected files from archives entirely in memmory
       pl = gtk.gdk.PixbufLoader()
       pl.write(file.read())
+      file.close()
       pl.close() # this  blocks until the image is completely loaded
       # TODO: do this with callbacks
-      return pageModule.Page(pl.get_pixbuf(),self.mieru)
+      page = pageModule.Page(pl.get_pixbuf(),self.mieru)
+      del pl
+      return page
     else:
       return None
 
@@ -157,9 +155,16 @@ class Manga:
       newPage.show()
       # remove the old page from stage
       self.removeFromStage(oldPage)
+
+      if oldPage:
+        # kill it with fire
+        oldPage.unrealize()
+        oldPage.destroy()
+        del oldPage
       # update the id
       self.activePageId = id
       self.activePage = newPage
+      print newPage.get_size()
       return True
     else:
       print "switching to page failed, id: ", id
@@ -175,6 +180,7 @@ class Manga:
     else:
       print "manga: end reached, no more pages"
       self.mieru.notify('this is the <b>last</b> page')
+      self.mieru.loadNextManga()
 
   def previous(self):
     """go one page back"""
@@ -186,6 +192,7 @@ class Manga:
     else:
       print "manga: start reached, no more pages" # TODO: display a notification & go to next archive/folder (?)
       self.mieru.notify('this is the <b>first</b> page')
+      self.mieru.loadPreviousManga()
 
 
   def updateFitMode(self):
@@ -194,20 +201,22 @@ class Manga:
       self.activePage.fitModeChanged()
 
   def getNeighborPaths(self):
-    (folderPath, tail) = os.path.split(path)
-    folderContent = os.path.listdir(folderPath)
-    folderContent.sort()
-    maxId = len(folderContent)-1
     prevPath = None
     nextPath = None
-    if tail in folderContent: # just to be sure
-      id = folderContent.index(tail)
-      prevId = id-1
-      nextId = id+1
-      if prevId >= 0:
-        prevPath = os.path.join(folderPath,folderContent[prevId])
-      if nextId <= maxId:
-        nextPath = os.path.join(folderPath,folderContent[nextId])
+    path = self.path
+    if path:
+      (folderPath, tail) = os.path.split(path)
+      folderContent = os.listdir(folderPath)
+      folderContent.sort()
+      maxId = len(folderContent)-1
+      if tail in folderContent: # just to be sure
+        id = folderContent.index(tail)
+        prevId = id-1
+        nextId = id+1
+        if prevId >= 0:
+          prevPath = os.path.join(folderPath,folderContent[prevId])
+        if nextId <= maxId:
+          nextPath = os.path.join(folderPath,folderContent[nextId])
     return (prevPath, nextPath)
 
   def getPrevMangaPath(self):
@@ -223,12 +232,11 @@ class Manga:
     return name
 
 
-
-
-
-  
-
-
+def fromState(parent, state):
+  """create a Manga from the given state"""
+  m = Manga(parent, load=False)
+  m.setState(state)
+  return m
 
 
 #

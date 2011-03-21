@@ -34,7 +34,8 @@ class Mieru:
     self.fullscreen = False
     self.viewport = (0,0,800,480)
     (x,y,w,h) = self.viewport
-    self.continuousReading = self.get('continuousReading',True)
+#    self.continuousReading = self.get('continuousReading',True)
+    self.continuousReading = False
     self.fitMode = self.get('fitMode','original')
 
 
@@ -66,13 +67,10 @@ class Mieru:
     self.stage.realize()
     self.stage.set_color("White")
 
-#    self.activeManga = manga.Manga('Chobits_01_01',self)
     self.activeManga = None
-    lastOpenMangaState = self.get('lastOpenMangaState',None)
-    if lastOpenMangaState:
-      print "restoring last open manga"
-      self.activeManga = self.getMangaFromState(lastOpenMangaState)
-#      print "manga: %s restored" % self.activeManga.getName()
+
+    self._restoreState()
+    
 
     self.lastPageMotionXY = (0,0)
     
@@ -113,7 +111,7 @@ class Mieru:
   def on_button_press_event(actor, event):
     print "button press event"
 
-  def toggleFullscreen(self):
+  def toggleFullscreen(self, widget=None):
     if self.fullscreen:
       self.window.unfullscreen()
       self.fullscreen = False
@@ -132,28 +130,23 @@ class Mieru:
     if self.activeManga:
       self.activeManga.updateFitMode()
 
-  def openManga(self, path):
-    self.activeManga = manga.Manga(self,path)
+  def openManga(self, path, startOnPage=0):
+    print "opening %s on page %d" % (path,startOnPage)
+    self.activeManga = manga.Manga(self, path, startOnPage)
     self.saveState()
 
   def loadPreviousManga(self):
     if self.continuousReading:
       path = self.activeManga.getNextMangaPath()
       if path:
-        self.openManga(path, startupPage=-1) # start from the last page of the previous manga
+        self.openManga(path, startOnPage=-1) # start from the last page of the previous manga
 
   def loadNextManga(self):
     if self.continuousReading:
       path = self.activeManga.getPrevMangaPath()
       if path:
-        self.openManga(path, startupPage=0) # start from the firstpage of the next manga
+        self.openManga(path, startOnPage=0) # start from the firstpage of the next manga
 
-
-  def getMangaFromState(self, state):
-    """create a Manga from the given state"""
-    m = manga.Manga(self)
-    m.setState(state)
-    return m
 
   def get(self, key, default):
     return self.d.get(key, default)
@@ -168,6 +161,12 @@ class Mieru:
       state = self.activeManga.getState()
       if state['path'] != None: # no need to save mangas with empty path
         self.set('lastOpenMangaState', state)
+
+  def _restoreState(self):
+    lastOpenMangaState = self.get('lastOpenMangaState',None)
+    if lastOpenMangaState:
+      print "restoring last open manga"
+      self.activeManga = manga.fromState(self, lastOpenMangaState)
 
 
 #  def do_button_press_event(actor, event):
