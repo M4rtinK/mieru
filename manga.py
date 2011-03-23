@@ -7,12 +7,15 @@ import gtk
 
 import page as pageModule
 import container
+import clutter
 
 
 class Manga:
   def __init__(self, mieru, path=None, startOnPage=0, load=True):
     self.mieru = mieru
-    self.stage = mieru.stage
+    self.group = clutter.Group()
+    mieru.stage.add(self.group)
+    mieru.stage.lower_child(self.group,self.mieru.buttons)
     self.fitMode = mieru.fitMode
     self.path = path
     self.name = ""
@@ -64,6 +67,20 @@ class Manga:
     self.pages = self.container.getFileList()
     return self.gotoPageId(pageNumber) # return if the first-selected page loaded successfully
 
+  def close(self):
+    if self.activePage:
+      page = self.activePage
+      self.activePage = None
+      self._quicklyDestroyPage(page)
+
+  def _quicklyDestroyPage(self,page):
+    """quickly free resources held by a page"""
+    if page:
+      # kill it with fire
+      page.unrealize()
+      page.destroy()
+      del page
+
 
 #  def loadFolder(self, path):
 #    if of.path.isdir:
@@ -100,14 +117,14 @@ class Manga:
 #    return(loadedPages)
 
   def addToStage(self, page):
-    if self.stage:
-      self.stage.add(page)
+    if self.group:
+      self.group.add(page)
     else:
       "manga: error, no stage"
 
   def removeFromStage(self, page):
-    if self.stage and page:
-      self.stage.remove(page)
+    if self.group and page:
+      self.group.remove(page)
 
   def idExistst(self, id):
     if self.pages:
@@ -157,10 +174,8 @@ class Manga:
       self.removeFromStage(oldPage)
 
       if oldPage:
-        # kill it with fire
-        oldPage.unrealize()
-        oldPage.destroy()
-        del oldPage
+        self._quicklyDestroyPage(oldPage)
+
       # update the id
       self.activePageId = id
       self.activePage = newPage

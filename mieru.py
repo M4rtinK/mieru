@@ -5,6 +5,7 @@ pygtk.require('2.0')
 import gtk
 import gobject
 import sys
+maemo5 = False
 if len (sys.argv) > 1:
   firstParam = sys.argv[1]
   if firstParam == "n900":
@@ -15,6 +16,7 @@ if maemo5:
 import cluttergtk
 import clutter
 
+import declutter
 import manga
 import maemo5
 import options
@@ -68,6 +70,14 @@ class Mieru:
     self.stage.realize()
     self.stage.set_color("White")
 
+    # activate clutter based buttons
+    self.buttons = clutter.Group()
+    self.stage.add(self.buttons)
+    self.fsButton = None
+    self.fsButtonActive = False
+    self.fsButtonTimer = None
+    self._activateButtons()
+    
     self.activeManga = None
 
     # restore previously saved state (if available)
@@ -75,11 +85,6 @@ class Mieru:
     
     self.lastPageMotionXY = (0,0)
 
-    # activate clutter based buttons
-    self.fsButton = None
-    self.fsButtonActive = False
-    self.fsButtonTimer = None
-    self._activateButtons()
 
 
     # This packs the button into the window (a GTK container).
@@ -139,6 +144,10 @@ class Mieru:
       self.activeManga.updateFitMode()
 
   def openManga(self, path, startOnPage=0):
+    if self.activeManga:
+      print "closing previously open manga"
+      self.activeManga.close()
+
     print "opening %s on page %d" % (path,startOnPage)
     self.activeManga = manga.Manga(self, path, startOnPage)
     self.saveState()
@@ -177,14 +186,17 @@ class Mieru:
       self.activeManga = manga.fromState(self, lastOpenMangaState)
 
   def _activateButtons(self):
-    fsToggleButton = clutter.Rectangle(clutter.color_from_string('Grey'))
-    (w,h) = (80,120)
-    fsToggleButton.set_size(w,h)
-    fsToggleButton.set_anchor_point(w,h)
+    fsToggleButton = clutter.Texture('icons/view-fullscreen.png')
+    (w,h) = fsToggleButton.get_size()
+    fsToggleButton.set_size(2*w,2*h)
+    fsToggleButton.set_anchor_point(2*w,2*h)
     fsToggleButton.set_reactive(True)
+    fsToggleButton.set_opacity(0)
 
-    self.stage.add(fsToggleButton)
+#    self.stage.add(fsToggleButton)
+    self.buttons.add(fsToggleButton)
     fsToggleButton.show()
+    fsToggleButton.raise_top()
 
     (x,y,w1,h1) = self.viewport
 
@@ -194,21 +206,35 @@ class Mieru:
 
     self.fsButton = fsToggleButton
 
+    declutter.animate(self.fsButton,clutter.LINEAR,300,[('opacity',255)])
+    gobject.timeout_add(3000,self._hideFSButton, self.fsButton)
+
+#    self.showButton = declutter.Opacity(self.fsButton,clutter.LINEAR, 1000, 255, 0)
+#    print self.showButton
+#    self.showButton.start()
+
+#    self.fsButton.set_opacity(0)
+#    self.animation = self.fsButton.animate(clutter.LINEAR, 1000, 'x', 200)
+
+
   def do_button_press_event (self, button, event):
+    print "pressed"
     if self.fsButtonActive:
+      print "starting hiding"
       self.toggleFullscreen()
-      button.set_color((1,1,1,1))
+#      self._hideFSButton(button)
       self.fsButtonActive = False
     else:
       self.fsButtonActive = True
-      button.set_color(clutter.color_from_string('Grey'))
-      self.fsButtonTimer = gobject.timeout_add(1000,self._hideFSButton, button)
+      declutter.animate(self.fsButton,clutter.LINEAR,300,[('opacity',255)])
+      print "showing"
+      timer = gobject.timeout_add(2000,self._hideFSButton, button)
 
   def _hideFSButton(self, button):
+    print "hiding"
     self.fsButtonActive = False
-    button.set_color((1,1,1,1))
-    self.fsButtonTimer = None
-    return False
+    declutter.animate(button,clutter.LINEAR,300,[('opacity',0)])
+
 
 
 
