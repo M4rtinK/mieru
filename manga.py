@@ -4,10 +4,11 @@
 """
 import os
 import gtk
+import clutter
 
+import declutter
 import page as pageModule
 import container
-import clutter
 
 
 class Manga:
@@ -25,12 +26,36 @@ class Manga:
     self.cacheSize = 5
     self.activePageId = None
     self.activePage = None
+    # animation
+    self.pageTurnTl = clutter.Timeline(200)
+#    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.LINEAR)
+#    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.EASE_OUT_CUBIC)
+#    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.EASE_IN_CUBIC)
+    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.EASE_IN_CIRC)
+#    self.fadeIn = clutter.BehaviourOpacity(0,255,self.pageTurnAlpha)
+#    self.fadeOut = clutter.BehaviourOpacity(255,0,self.pageTurnAlpha)
+#    self.fadeIn = clutter.BehaviourDepth(255,0,self.pageTurnAlpha)
+#    self.fadeOut = clutter.BehaviourDepth(0,-255,self.pageTurnAlpha)
+    self.fadeIn = self.fadeInOpac
+    self.fadeOut = self.fadeOutOpac
+
     if path and load:
       self.name = self._nameFromPath(path)
       if self.load(path,startOnPage):
         self.mieru.notify('<b>%s<b/> loaded' % self.name)
       else:
         self.mieru.notify('<b>%s<b/> loading failed' % self.name)
+
+  def fadeInOpac(self, page):
+    self.a1 = clutter.BehaviourOpacity(0,255,self.pageTurnAlpha)
+    self.a2 = clutter.BehaviourDepth(-255,0,self.pageTurnAlpha)
+    self.a1.apply(page)
+    self.a2.apply(page)
+  def fadeOutOpac(self, page):
+    self.b1 = clutter.BehaviourOpacity(255,0,self.pageTurnAlpha)
+    self.b2 = clutter.BehaviourDepth(0,255,self.pageTurnAlpha)
+    self.b1.apply(page)
+    self.b2.apply(page)
 
   def getName(self):
     return self.name
@@ -72,6 +97,11 @@ class Manga:
       page = self.activePage
       self.activePage = None
       self._quicklyDestroyPage(page)
+
+  def _removeAndDestroy(self, timeline, page):
+    self.removeFromStage(page)
+    self._quicklyDestroyPage(page)
+
 
   def _quicklyDestroyPage(self,page):
     """quickly free resources held by a page"""
@@ -165,21 +195,28 @@ class Manga:
       self.addToStage(newPage)
       # hide the old page
       if oldPage:
-        oldPage.hide()
         oldPage.deactivate()
+#        self.fadeOut.apply(oldPage)
+        self.fadeOut(oldPage)
+        self.pageTurnTl.connect('completed', self._removeAndDestroy, oldPage)
+#        declutter.animate(oldPage, clutter.LINEAR, 300, [('opacity', 0)])
+#        oldPage.hide()
       # show the new page
       newPage.activate()
+#      newPage.set_opacity(0)
       newPage.show()
+#      self.fadeIn.apply(newPage)
+      self.fadeIn(newPage)
       # remove the old page from stage
-      self.removeFromStage(oldPage)
+#      self.removeFromStage(oldPage)
 
-      if oldPage:
-        self._quicklyDestroyPage(oldPage)
+#      if oldPage:
+#        self._quicklyDestroyPage(oldPage)
 
       # update the id
       self.activePageId = id
       self.activePage = newPage
-      print newPage.get_size()
+      self.pageTurnTl.start()
       return True
     else:
       print "switching to page failed, id: ", id
