@@ -125,7 +125,6 @@ class Container:
       if self._isImage(filename):
         imageList.append(filename)
     print "%d images found" % len(imageList)
-    print imageList
     self.imageFiles = imageList
 
   def _isImage(self, filename):

@@ -14,10 +14,18 @@ class Buttons:
     self.fsButtonActive = False
     self.fsButtonActive = False
     self._addButtons()
+    self.mieru.stage.connect('allocation-changed', self._handleResize)
 
   def getLayer(self):
     """return the current container, for abowe/below purposes"""
     return self.layer
+
+  def _handleResize(self, actor, actorBox, flags):
+    """reposition the buttons after the window is resized
+    -> on the N900 this mostly happens when switching to and from
+    fullscreen"""
+    (x,y,w,h) = actorBox
+    self.fsButton.animate(clutter.LINEAR,200, 'x', w, 'y', h)
 
 
   def _addButtons(self):
@@ -50,6 +58,7 @@ class Buttons:
 
 #    self.fsButton.set_opacity(0)
 #    self.animation = self.fsButton.animate(clutter.LINEAR, 1000, 'x', 200)
+
 
 
   def do_button_press_event (self, button, event):
