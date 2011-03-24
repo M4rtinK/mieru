@@ -44,6 +44,9 @@ def from_path(path):
     elif mime == 'application/zip' or mime == 'application/x-zip' or zipfile.is_zipfile(path):
       print "file is probably a zip file"
       return ZipContainer(path)
+    elif mime == 'application/rar' or mime == 'application/x-rar' or rarfile.is_rarfile(path):
+      print "file is probably a rar file"
+      return RarContainer(path)
   elif os.path.isdir(path):
     print "manga: path is a directory"
   else:
@@ -98,6 +101,7 @@ class Container:
   def getImageFileById(self, id):
     try:
       filename = self.imageFiles[id]
+      return self.getFile(filename)
     except IndexError:
       print "no image file with index:", id
       return None
@@ -121,6 +125,7 @@ class Container:
       if self._isImage(filename):
         imageList.append(filename)
     print "%d images found" % len(imageList)
+    print imageList
     self.imageFiles = imageList
 
   def _isImage(self, filename):
@@ -218,7 +223,7 @@ class RarContainer(Container):
   """This class represents a rar archive containing pictures."""
   def __init__(self, path):
     Container.__init__(self, path)
-    self.zf = None
+    self.rf = None
     if rarfile.is_rarfile(path):
       try:
         self.rf = rarfile.RarFile(path,'r')
@@ -228,16 +233,16 @@ class RarContainer(Container):
       print "error, this is not a rar file - wrong mime ?"
       print "path: %s" % path
     if self.rf:
-      self._setFileList(rf.namelist())
+      self._setFileList(self.rf.namelist())
 
   def getFile(self, filename):
+    print filename
     if self.rf:
       try:
         return self.rf.open(filename,'r')
       except Exception, e:
         print "RarContainer: reading file from archive failed: %s" % e
         return None
-
 
 
 

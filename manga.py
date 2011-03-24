@@ -43,9 +43,9 @@ class Manga:
     if path and load:
       self.name = self._nameFromPath(path)
       if self.load(path,startOnPage):
-        self.mieru.notify('<b>%s<b/> loaded' % self.name)
+        self.mieru.notify('<b>%s</b> loaded' % self.name)
       else:
-        self.mieru.notify('<b>%s<b/> loading failed' % self.name)
+        self.mieru.notify('<b>%s</b> loading failed' % self.name)
 
   def fadeInOpac(self, page):
     self.a1 = clutter.BehaviourOpacity(0,255,self.pageTurnAlpha)
@@ -98,6 +98,8 @@ class Manga:
       page = self.activePage
       self.activePage = None
       self._quicklyDestroyPage(page)
+    if self.container:
+      pass
 
   def _removeAndDestroy(self, timeline, page):
     self.removeFromStage(page)
@@ -166,7 +168,7 @@ class Manga:
         return True
 
   def getPageById(self, id):
-    file = self.container.getFileById(id)
+    file = self.container.getImageFileById(id)
     if file:
       # load the image from a pixbuf, created from the file object
       # we can like this easily unpack selected files from archives entirely in memmory
