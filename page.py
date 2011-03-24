@@ -26,7 +26,7 @@ class Page(clutter.Texture):
     self.initialPosition = (0,0)
     self.motionCallbackId = None
 
-    self.fitModeChanged() # implement current fit mode
+    self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
     self._color = clutter.color_from_string('White')
     self.isPressed = False
     self.pressStart = None
@@ -89,16 +89,16 @@ class Page(clutter.Texture):
         newY = h-pageH
       elif newY > 0:
         newY = 0
-    else: # screen is longer than screen
-      if newH < 0:
-        newH = 0
-      if newH > h-pageH:
-        newH = h-pageH
+    else: # screen is longer than page
+      if newY < 0:
+        newY = 0
+      if newY > pageH-h:
+        newY = pageH-h
 
     page.move_by(newX - pageX,newY - pageY)
 
   def activate(self):
-    self.fitModeChanged() # implement current fit mode
+    self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
     self.set_reactive(True) # this enables receiving of motion events
     self.motionCallbackId = self.connect('motion-event', self.on_page_motion)
 
@@ -108,9 +108,7 @@ class Page(clutter.Texture):
       self.motionCallbackId = None
 
 
-  def fitModeChanged(self):
-    # update the variable
-    mode = self.mieru.fitMode
+  def setFitMode(self, mode):
     # implement the fit mode
     if mode == "original":
       self.setOriginalSize()
@@ -123,6 +121,7 @@ class Page(clutter.Texture):
 
 
   def setOriginalSize(self):
+    print "original"
     """resize back to original size"""
     self.set_size(*self.originalSize)
 
@@ -136,12 +135,14 @@ class Page(clutter.Texture):
     return(newW,newH)
 
   def fitToHeight(self):
-    (x,y,w,height) = self.mieru.viewport
+    (x,y,width,height) = self.mieru.viewport
     self.resetPosition()
     (w,h) = self.get_size()
     factor = float(height) / h
     (newW,newH) = (w*factor,h*factor)
     self.set_size(newW,newH)
+    if width > newW: # is screen wider than the image ?
+      self.move_by((width-newW)/2.0, 0) # center the image
     return(newW,newH)
 
   def fitToScreen(self):
@@ -149,14 +150,13 @@ class Page(clutter.Texture):
     (w,h) = self.get_size()
     # resize to fit to screen
     if w > h:
-      (newW,newH) = self.fitToWidth(screenW)
+      (newW,newH) = self.fitToWidth()
     else:
-      (newW,newH) = self.fitToHeight(screenH)
+      (newW,newH) = self.fitToHeight()
     # move to the center
     shiftX = (screenW-newW)/2.0
     shiftY = (screenH-newH)/2.0
     self.movementEnabled = False
-    print "asasas"
     print self.movementEnabled
     self.set_position(shiftX,shiftY)
 

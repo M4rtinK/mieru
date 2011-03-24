@@ -17,7 +17,8 @@ class Manga:
     self.group = clutter.Group()
     mieru.stage.add(self.group)
     mieru.stage.lower_child(self.group,self.mieru.buttons.getLayer())
-    self.fitMode = mieru.fitMode
+    self.fitMode = self.mieru.get('fitMode', 'original')
+    self.mieru.watch('fitMode', self.onFitModeChanged)
     self.path = path
     self.name = ""
     self.pages = []
@@ -247,10 +248,10 @@ class Manga:
       self.mieru.loadPreviousManga()
 
 
-  def updateFitMode(self):
+  def onFitModeChanged(self, key, value):
     # notifiy all pages that the fit mode has changed
     if self.activePage:
-      self.activePage.fitModeChanged()
+      self.activePage.setFitMode(value)
 
   def getNeighborPaths(self):
     prevPath = None

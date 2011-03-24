@@ -33,6 +33,9 @@ class Mieru:
     # restore persistent options
     self.d = {}
     self.options = options.Options(self)
+    # options value watching
+    self.maxWatchId = 0
+    self.watches = {}
 
     # class varibales
     self.fullscreen = False
@@ -40,8 +43,6 @@ class Mieru:
     (x,y,w,h) = self.viewport
 #    self.continuousReading = self.get('continuousReading',True)
     self.continuousReading = False
-    self.fitMode = self.get('fitMode','original')
-
 
     # create a new window
     if maemo5:
@@ -98,13 +99,13 @@ class Mieru:
     if keyName == 'f':
       self.toggleFullscreen()
     elif keyName == 'o':
-      self.setFitMode("original")
+      self.set('fitMode',"original")
     elif keyName == 'i':
-      self.setFitMode("width")
+      self.set('fitMode',"width")
     elif keyName == 'u':
-      self.setFitMode("height")
+      self.set('fitMode',"height")
     elif keyName == 'z':
-      self.setFitMode("screen")
+      self.set('fitMode', "screen")
     elif keyName == 'n':
       self.platform.startFolderChooser() # TODO: rewrite this for multiplatform ability and file opening
     elif keyName == 'q':
@@ -133,13 +134,6 @@ class Mieru:
     print "notification: %s" % message
     self.platform.notify(message,icon)
 
-  def setFitMode(self, mode):
-    self.set('fitMode',mode)
-    self.fitMode = mode
-
-    if self.activeManga:
-      self.activeManga.updateFitMode()
-
   def openManga(self, path, startOnPage=0):
     if self.activeManga:
       print "closing previously open manga"
@@ -162,12 +156,32 @@ class Mieru:
         self.openManga(path, startOnPage=0) # start from the firstpage of the next manga
 
 
+  def watch(self, key, callback, *args):
+    """add a callback on an options key"""
+    id = self.maxWatchId + 1 # TODO remove watch based on id
+    self.maxWatchId = id # TODO: recycle ids ? (alla PID)
+    if key not in self.watches:
+      self.watches[key] = [] # create the initial list
+    self.watches[key].append((id,callback,args))
+    return id
+
+  def _notify(self, key, value):
+    """run callbacks registered on an options key"""
+    callbacks = self.watches.get(key, None)
+    if callbacks:
+      for item in callbacks:
+        (id,callback,args) = item
+        callback(key,value,*args)
+
   def get(self, key, default):
     return self.d.get(key, default)
 
   def set(self, key, value):
     self.d[key] = value
     self.options.save()
+    if key in self.watches.keys():
+      self._notify(key, value)
+
 
   def saveState(self):
     print "saving state"
