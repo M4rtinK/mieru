@@ -16,7 +16,7 @@ class Manga:
     self.mieru = mieru
     self.group = clutter.Group()
     mieru.stage.add(self.group)
-    mieru.stage.lower_child(self.group,self.mieru.buttons)
+    mieru.stage.lower_child(self.group,self.mieru.buttons.getLayer())
     self.fitMode = mieru.fitMode
     self.path = path
     self.name = ""

@@ -16,7 +16,8 @@ if maemo5:
 import cluttergtk
 import clutter
 
-import declutter
+# Mieru modules import
+import buttons
 import manga
 import maemo5
 import options
@@ -71,12 +72,8 @@ class Mieru:
     self.stage.set_color("White")
 
     # activate clutter based buttons
-    self.buttons = clutter.Group()
-    self.stage.add(self.buttons)
-    self.fsButton = None
-    self.fsButtonActive = False
-    self.fsButtonTimer = None
-    self._activateButtons()
+    self.buttons = buttons.Buttons(self)
+
     
     self.activeManga = None
 
@@ -185,55 +182,8 @@ class Mieru:
       print "restoring last open manga"
       self.activeManga = manga.fromState(self, lastOpenMangaState)
 
-  def _activateButtons(self):
-    fsToggleButton = clutter.Texture('icons/view-fullscreen.png')
-    (w,h) = fsToggleButton.get_size()
-    fsToggleButton.set_size(2*w,2*h)
-    fsToggleButton.set_anchor_point(2*w,2*h)
-    fsToggleButton.set_reactive(True)
-    fsToggleButton.set_opacity(0)
-
-#    self.stage.add(fsToggleButton)
-    self.buttons.add(fsToggleButton)
-    fsToggleButton.show()
-    fsToggleButton.raise_top()
-
-    (x,y,w1,h1) = self.viewport
-
-    fsToggleButton.set_position(w1,h1)
-
-    fsToggleButton.connect('button-release-event',self.do_button_press_event)
-
-    self.fsButton = fsToggleButton
-
-    declutter.animate(self.fsButton,clutter.LINEAR,300,[('opacity',255)])
-    gobject.timeout_add(3000,self._hideFSButton, self.fsButton)
-
-#    self.showButton = declutter.Opacity(self.fsButton,clutter.LINEAR, 1000, 255, 0)
-#    print self.showButton
-#    self.showButton.start()
-
-#    self.fsButton.set_opacity(0)
-#    self.animation = self.fsButton.animate(clutter.LINEAR, 1000, 'x', 200)
 
 
-  def do_button_press_event (self, button, event):
-    print "pressed"
-    if self.fsButtonActive:
-      print "starting hiding"
-      self.toggleFullscreen()
-#      self._hideFSButton(button)
-      self.fsButtonActive = False
-    else:
-      self.fsButtonActive = True
-      declutter.animate(self.fsButton,clutter.LINEAR,300,[('opacity',255)])
-      print "showing"
-      timer = gobject.timeout_add(2000,self._hideFSButton, button)
-
-  def _hideFSButton(self, button):
-    print "hiding"
-    self.fsButtonActive = False
-    declutter.animate(button,clutter.LINEAR,300,[('opacity',0)])
 
 
 
