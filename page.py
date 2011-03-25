@@ -94,8 +94,8 @@ class Page(clutter.Texture):
         newY = 0
       if newY > pageH-h:
         newY = pageH-h
-
     page.move_by(newX - pageX,newY - pageY)
+
 
   def activate(self):
     self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
@@ -123,7 +123,9 @@ class Page(clutter.Texture):
   def setOriginalSize(self):
     print "original"
     """resize back to original size"""
-    self.set_size(*self.originalSize)
+#    self.set_size(*self.originalSize)
+    (w, h) = self.originalSize
+    self.animate(clutter.LINEAR,100, 'width', w, 'height', h)
 
   def fitToWidth(self):
     (x,y,width,h) = self.mieru.viewport
@@ -131,7 +133,8 @@ class Page(clutter.Texture):
     (w,h) = self.get_size()
     factor = float(width) / w
     (newW,newH) = (w*factor,h*factor)
-    self.set_size(newW,newH)
+#    self.set_size(newW,newH)
+    self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
     return(newW,newH)
 
   def fitToHeight(self):
@@ -140,9 +143,11 @@ class Page(clutter.Texture):
     (w,h) = self.get_size()
     factor = float(height) / h
     (newW,newH) = (w*factor,h*factor)
-    self.set_size(newW,newH)
+#    self.set_size(newW,newH)
+    self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
     if width > newW: # is screen wider than the image ?
-      self.move_by((width-newW)/2.0, 0) # center the image
+#      self.move_by((width-newW)/2.0, 0) # center the image
+       self.animate(clutter.LINEAR,100, 'x', (width-newW)/2.0)
     return(newW,newH)
 
   def fitToScreen(self):
@@ -158,10 +163,14 @@ class Page(clutter.Texture):
     shiftY = (screenH-newH)/2.0
     self.movementEnabled = False
     print self.movementEnabled
-    self.set_position(shiftX,shiftY)
+#    self.set_position(shiftX,shiftY)
+    self.animate(clutter.LINEAR,100, 'x', shiftX, 'y', shiftY)
 
   def resetPosition(self):
-    self.set_position(*self.initialPosition)
+    (x,y) = self.initialPosition
+    self.animate(clutter.LINEAR,100, 'x', x, 'y', y)
+
+#    self.set_position(*self.initialPosition)
     self.movementEnabled = True
 
   def getPath(self):
