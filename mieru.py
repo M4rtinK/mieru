@@ -42,7 +42,7 @@ class Mieru:
     self.viewport = (0,0,800,480)
     (x,y,w,h) = self.viewport
 #    self.continuousReading = self.get('continuousReading',True)
-    self.continuousReading = False
+    self.continuousReading = True
 
     # create a new window
     if maemo5:
@@ -142,18 +142,6 @@ class Mieru:
     print "opening %s on page %d" % (path,startOnPage)
     self.activeManga = manga.Manga(self, path, startOnPage)
     self.saveState()
-
-  def loadPreviousManga(self):
-    if self.continuousReading:
-      path = self.activeManga.getNextMangaPath()
-      if path:
-        self.openManga(path, startOnPage=-1) # start from the last page of the previous manga
-
-  def loadNextManga(self):
-    if self.continuousReading:
-      path = self.activeManga.getPrevMangaPath()
-      if path:
-        self.openManga(path, startOnPage=0) # start from the firstpage of the next manga
 
   def watch(self, key, callback, *args):
     """add a callback on an options key"""

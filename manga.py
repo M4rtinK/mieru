@@ -27,6 +27,9 @@ class Manga:
     self.cacheSize = 5
     self.activePageId = None
     self.activePage = None
+    self.nextArmed = False
+    self.previousArmed = False
+
     # animation
     self.pageTurnTl = clutter.Timeline(200)
 #    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.LINEAR)
@@ -170,8 +173,10 @@ class Manga:
         return True
 
   def getPageById(self, id):
-    file = self.container.getImageFileById(id)
-    if file:
+    """return a Page instance together with its id in  a tuple"""
+    result = self.container.getImageFileById(id)
+    if result:
+      (file,id) = self.container.getImageFileById(id) # return correct id of negative addressing (id=-1, etc.)
       # load the image from a pixbuf, created from the file object
       # we can like this easily unpack selected files from archives entirely in memmory
       pl = gtk.gdk.PixbufLoader()
@@ -181,8 +186,9 @@ class Manga:
       # TODO: do this with callbacks
       page = pageModule.Page(pl.get_pixbuf(),self.mieru)
       del pl
-      return page
+      return (page, id)
     else:
+      print "manga: page not found, id:" % id
       return None
 
   def getMaxId(self):
@@ -194,8 +200,9 @@ class Manga:
   def gotoPageId(self, id):
     # get page for the given id
     oldPage = self.activePage
-    newPage = self.getPageById(id)
-    if newPage:
+    newPageQuery = self.getPageById(id)
+    if newPageQuery:
+      (newPage,newPageId) = newPageQuery
       print "switching to page: ", id
       self.addToStage(newPage)
       # hide the old page
@@ -219,7 +226,7 @@ class Manga:
 #        self._quicklyDestroyPage(oldPage)
 
       # update the id
-      self.activePageId = id
+      self.activePageId = newPageId
       self.activePage = newPage
       self.pageTurnTl.start()
       return True
@@ -229,27 +236,56 @@ class Manga:
 
   def next(self):
     """go one page forward"""
+    self.previousArmed = False
+    nextArmed = self.nextArmed
+    if nextArmed: # should we load next manga in folder after this press ?
+      (isTrue, path) = nextArmed # get the path
+      self.mieru.openManga(path, 0) # open it on first page
+      return # done
+
     currentId = self.activePageId
     nextId = currentId + 1
     # sanity check the id
     if nextId < len(self.pages):
       self.gotoPageId(nextId)
     else:
-      print "manga: end reached, no more pages"
-      self.mieru.notify('this is the <b>last</b> page')
-      self.mieru.loadNextManga()
+      print "manga: end reached"
+      if self.mieru.continuousReading:
+        nextMangaPath = self.getNextMangaPath()
+        if nextMangaPath:
+          (folder, tail) = os.path.split(nextMangaPath)
+          self.mieru.notify('this is the <b>last</b> page,\n<u>press again</u> to load:\n<b>%s</b>' % tail)
+          self.nextArmed = (True, nextMangaPath)
+        else:
+          self.mieru.notify('this is the <b>last</b> page,\n there is no <i>previous</i> to load')
+      else:
+        self.mieru.notify('this is the <b>last</b> page')
 
   def previous(self):
     """go one page back"""
+    self.nextArmed = False
+    previousArmed = self.previousArmed
+    if previousArmed: # should we load next manga in folder after this press ?
+      (isTrue, path) = previousArmed # get the path
+      self.mieru.openManga(path, -1) # open it on last page
+      return # done
     currentId = self.activePageId
     prevId = currentId - 1
     # sanity check the id
     if prevId >= 0:
       self.gotoPageId(prevId)
     else:
-      print "manga: start reached, no more pages" # TODO: display a notification & go to next archive/folder (?)
-      self.mieru.notify('this is the <b>first</b> page')
-      self.mieru.loadPreviousManga()
+      print "manga: start reached" # TODO: display a notification & go to next archive/folder (?)
+      if self.mieru.continuousReading:
+        previousMangaPath = self.getPrevMangaPath()
+        if previousMangaPath:
+          (folder, tail) = os.path.split(previousMangaPath)
+          self.mieru.notify('this is the <b>first</b> page,\n <u>press again</u> to load:\n<b>%s</b>' % tail)
+          self.previousArmed = (True, previousMangaPath)
+        else:
+          self.mieru.notify('this is the <b>first</b> page,\n there is no <i>next</i> to load')
+      else:
+        self.mieru.notify('this is the <b>first</b> page')
 
 
   def onFitModeChanged(self, key, value, oldValue):
@@ -278,10 +314,22 @@ class Manga:
 
   def getPrevMangaPath(self):
     (prevPath,nextPath) = self.getNeighborPaths()
+    if prevPath:
+      containerModule.testPath(prevPath)
+      return prevPath
+    else:
+      print "manga: previous path uses unsupported format:\n%s" % prevPath
+      return False
     return prevPath
         
   def getNextMangaPath(self):
     (prevPath,nextPath) = self.getNeighborPaths()
+    if nextPath:
+      containerModule.testPath(nextPath)
+      return nextPath
+    else:
+      print "manga: next path uses unsupported format:\n%s" % nextPath
+      return False
     return nextPath
 
   def _nameFromPath(self,path):

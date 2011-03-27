@@ -102,7 +102,7 @@ class Container:
   def getFileById(self, id):
     try:
       filename = self.files[id]
-      return self.getFile(filename)
+      return (self.getFile(filename),self.files.index(filename))
     except IndexError:
       print "no file with index:", id
       return None
@@ -126,8 +126,8 @@ class Container:
   def getImageFileById(self, id):
     try:
       filename = self.imageFiles[id]
-      return self.getFile(filename)
-    except IndexError:
+      return (self.getFile(filename),self.imageFiles.index(filename))
+    except IndexError, ValueError:
       print "no image file with index:", id
       return None
     
