@@ -46,7 +46,7 @@ class Manga:
     if path and load:
       self.name = self._nameFromPath(path)
       if self.load(path,startOnPage):
-        self.mieru.notify('<b>%s</b> loaded' % self.name)
+        self.mieru.notify('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
       else:
         self.mieru.notify('<b>%s</b> loading failed' % self.name)
 
@@ -84,7 +84,7 @@ class Manga:
     if path:
       self.name = self._nameFromPath(path)
       if self.load(path, pageNumber):
-        self.mieru.notify('<b>%s</b> restored to page %d' % (self.name, pageNumber+1))
+        self.mieru.notify('<b>%s</b> restored to page <b>%d</b>' % (self.name, self.ID2PageNumber(self.activePageId)))
       else:
         self.mieru.notify('<b>%s</b> restore failed' % self.name)
 
@@ -118,6 +118,16 @@ class Manga:
       page.unrealize()
       page.destroy()
       del page
+
+  def ID2PageNumber(self, id):
+    """guess page number from id"""
+    if id >= 0:
+      return id + 1
+    else: # negative addressing
+      return (len(self.pages) + id + 1)
+
+
+
 
 
 #  def loadFolder(self, path):
