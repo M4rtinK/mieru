@@ -155,7 +155,6 @@ class Mieru:
       if path:
         self.openManga(path, startOnPage=0) # start from the firstpage of the next manga
 
-
   def watch(self, key, callback, *args):
     """add a callback on an options key"""
     id = self.maxWatchId + 1 # TODO remove watch based on id
@@ -165,13 +164,17 @@ class Mieru:
     self.watches[key].append((id,callback,args))
     return id
 
-  def _notify(self, key, value):
+  def _notifyWatcher(self, key, value):
     """run callbacks registered on an options key"""
     callbacks = self.watches.get(key, None)
     if callbacks:
       for item in callbacks:
         (id,callback,args) = item
-        callback(key,value,*args)
+        oldValue = self.get(key, None)
+        if callback:
+          callback(key,value,oldValue, *args)
+        else:
+          print "invalid watcher callback :", callback
 
   def get(self, key, default):
     return self.d.get(key, default)
@@ -180,7 +183,7 @@ class Mieru:
     self.d[key] = value
     self.options.save()
     if key in self.watches.keys():
-      self._notify(key, value)
+      self._notifyWatcher(key, value)
 
 
   def saveState(self):

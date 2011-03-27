@@ -23,34 +23,59 @@ def getFileDescription(path):
 
 def from_path(path):
   # does the path exist ?
-  if os.path.exists(path) == False:
+  if os.path.exists(path):
+    testResult = testPath(path)
+    if testResult:
+      (type, path, mime, desc) = testResult
+      if type == "folder":
+        return FolderContainer(path)
+      elif type == "zip":
+        return ZipContainer(path)
+      elif type == "rar":
+        return RarContainer(path)
+      else:
+        print "manga: loading failed, unsupported storage formate"
+        return False
+  else:
     print "manga: loading failed, path does not exist or is inaccessible"
-    return(False)
+    return False
 
-  (folderPath, tail) = os.path.split(path)
+  
 
+def testPath(path):
+  print "testing path: %s" % path
   #is it file or folder ?
   if os.path.isfile(path):
     print "manga: path is a file"
-    print "file type: %s" % getFileDescription(path)
+    desc = getFileDescription(path)
+    print "file type: %s" % desc
     mime = getFilePathMime(path)
     print "file mime: %s" % mime
     mimeSplit = mime.split('/')
     m1 = mimeSplit[0]
     m2 = mimeSplit[1]
     if m1 == 'image':
-      print "image file selected,\nloading containing folder as a manga"
-      return FolderContainer(folderPath)
+      print "image file selected,\ncontaining folder could be loaded as a manga"
+      (folderPath, tail) = os.path.split(path)
+      return ("folder", folderPath, desc, mime)
     elif mime == 'application/zip' or mime == 'application/x-zip' or zipfile.is_zipfile(path):
       print "file is probably a zip file"
-      return ZipContainer(path)
+      return ("zip", path, desc, mime)
     elif mime == 'application/rar' or mime == 'application/x-rar' or rarfile.is_rarfile(path):
       print "file is probably a rar file"
-      return RarContainer(path)
+      return ('rar', path, desc, mime)
+    else:
+      print "the path: %s is an unsupported file"
+      print "it has this mime: %s" % mime
+      print "and this description: %s" % desc
+      return False
+      
   elif os.path.isdir(path):
     print "manga: path is a directory"
+    return ("folder", path, None, "a folder")
   else:
     print "manga: loading failed, path is neither file nor directory"
+    return False
 
 
 

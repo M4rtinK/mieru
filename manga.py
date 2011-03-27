@@ -8,7 +8,7 @@ import clutter
 
 import declutter
 import page as pageModule
-import container
+import container as containerModule
 
 
 class Manga:
@@ -89,9 +89,11 @@ class Manga:
     """try to load manga from the given path"""
     print "manga: loading from path: %s" % path
     self.path = path
-    self.container = container.from_path(path)
-    self.pages = self.container.getFileList()
-    return self.gotoPageId(pageNumber) # return if the first-selected page loaded successfully
+    container = containerModule.from_path(path)
+    if container: # was a container created successfully ?
+      self.container = container
+      self.pages = self.container.getFileList()
+      return self.gotoPageId(pageNumber) # return if the first-selected page loaded successfully
 
   def close(self):
     if self.activePage:
@@ -250,7 +252,7 @@ class Manga:
       self.mieru.loadPreviousManga()
 
 
-  def onFitModeChanged(self, key, value):
+  def onFitModeChanged(self, key, value, oldValue):
     # notifiy all pages that the fit mode has changed
     if self.activePage:
       self.activePage.setFitMode(value)
