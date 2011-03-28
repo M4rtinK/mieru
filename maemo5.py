@@ -1,7 +1,9 @@
 """
 Mieru hildon UI (for Maemo 5@N900)
 """
+import os
 import gtk
+import gobject
 import hildon
 
 class Maemo5:
@@ -20,9 +22,24 @@ class Maemo5:
     fullscreenButton = gtk.Button("Fullscreen")
     fullscreenButton.connect('clicked',self.mieru.toggleFullscreen)
 
+    # last open mangas list
+    selector = hildon.TouchSelector()
+    selector.set_column_selection_mode(hildon.TOUCH_SELECTOR_SELECTION_MODE_SINGLE)
+    self.historyStore = gtk.ListStore(gobject.TYPE_STRING)
+    self.historyLocked = False
+    self._updateHistory()
+    selector.append_text_column(self.historyStore, True)
+    selector.connect('changed', self._historyRowSelected)
+    historyPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO,hildon.BUTTON_ARRANGEMENT_VERTICAL)
+    historyPickerButton.set_title("History")
+    historyPickerButton.set_selector(selector)
+    self.mieru.watch('openMangasHistory', self._updateHistoryCB)
+
     menu.append(openFileButton)
     menu.append(openFolderButton)
     menu.append(fullscreenButton)
+    menu.append(historyPickerButton)
+
     # Show all menu items
     menu.show_all()
 
@@ -41,6 +58,44 @@ class Maemo5:
                   enable_zoom_cb(window)
           else:
                   window.connect("realize", self.enable_zoom_cb)
+
+  def _updateHistoryCB(self, key=None, value=None, oldValue=None):
+    print "update history"
+    self._updateHistory()
+
+  def _historyRowSelected(self, selector, column):
+    id = selector.get_active(0)
+    if not self.historyLocked:
+      print "ROW SELECTED", column, id
+  #    print selector.get_selected_rows(0)
+      if id >= 0:
+        state = self.currentHistory[id]['state']
+        path = state['path']
+        activeMangaPath = self.mieru.getActiveMangaPath()
+        if path != activeMangaPath: # infinite loop defence
+          self.mieru.openMangaFromState(state)
+    else:
+      print "history lcoked"
+
+  def _updateHistory(self):
+    """
+    due to the fact that the touch selector emits the same signal when an
+    item is selected like when an item is clicked on, we need to do this
+    primitive locking
+    """
+    self.historyLocked = True
+    sortedHistory = self.mieru.getSortedHistory()
+    if sortedHistory:
+      self.historyStore.clear()
+      for item in sortedHistory:
+        state = item['state']
+        path = state['path']
+
+        (folderPath,tail) = os.path.split(path)
+        self.historyStore.append((tail,))
+      self.currentHistory = sortedHistory
+    self.historyLocked = False
+      
 
   def startChooser(self, button, type):
     dialog = hildon.FileChooserDialog(self.mieru.window, type)

@@ -66,6 +66,9 @@ class Manga:
 
   def setName(self, name):
     self.name = name
+
+  def getPath(self):
+    return self.path
     
   def getState(self):
     """save current satte to a dictionary"""
@@ -73,6 +76,7 @@ class Manga:
     state = {}
     state['path'] = self.path
     state['pageNumber'] = self.activePageId
+    state['pageCount'] = len(self.pages) # for displaying in the history list
     return state
 
   def setState(self, state):

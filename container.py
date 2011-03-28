@@ -158,7 +158,7 @@ class Container:
       if extension:
         extension = extension.lower()[1:] # remove the leading dot and make lowercase
         if extension.lower() in self.imageFileExtensions:
-          print "%s, extension: %s" % (filename, extension)
+#          print "%s, extension: %s" % (filename, extension)
           return True
         else:
           return False # not a "supported" extension

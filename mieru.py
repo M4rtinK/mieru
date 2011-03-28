@@ -5,6 +5,7 @@ pygtk.require('2.0')
 import gtk
 import gobject
 import sys
+import time
 maemo5 = False
 if len (sys.argv) > 1:
   firstParam = sys.argv[1]
@@ -141,7 +142,58 @@ class Mieru:
 
     print "opening %s on page %d" % (path,startOnPage)
     self.activeManga = manga.Manga(self, path, startOnPage)
+    mangaState = self.activeManga.getState()
+    self.addToHistory(mangaState)
     self.saveState()
+
+  def openMangaFromState(self, state):
+    if self.activeManga:
+      print "closing previously open manga"
+      self.activeManga.close()
+
+    print "opening manga from state"
+#    print "opening %s on page %d" % (path,startOnPage)
+    self.activeManga = manga.fromState(self, state)
+    mangaState = self.activeManga.getState()
+    self.addToHistory(mangaState)
+    self.saveState()
+
+  def getActiveMangaPath(self):
+    if self.activeManga:
+      return self.activeManga.getPath()
+
+  def addToHistory(self,mangaState):
+    """add a saved manga state to the history"""
+    openMangasHistory = self.get('openMangasHistory',None)
+    if openMangasHistory == None: # history has not yet taken place
+      openMangasHistory = {}
+
+    if mangaState['path'] != None:
+      path = mangaState['path']
+      print "adding to history: %s" % path
+      openMangasHistory[path] = {"state":mangaState,"timestamp":time.time()}
+      """the states are saved under their path to store only unique mangas,
+         when the same manga is opened again, its state is replaced by the new one
+         the timestamp is used for chrnological sorting of the list
+      """
+    # save the history back to the persistant store
+    # TODO: limit the size of the history + clearing of history
+    self.set('openMangasHistory', openMangasHistory)
+
+  def getSortedHistory(self):
+    openMangasHistory = self.get('openMangasHistory',None)
+    if openMangasHistory:
+      sortedList = []
+      for path in sorted(openMangasHistory, key=lambda path: openMangasHistory[path]['timestamp'], reverse=True):
+        sortedList.append(openMangasHistory[path])
+      return sortedList
+    else:
+      return None
+
+  def clearHistory(self):
+    """clear the history of opened mangas"""
+    self.set('openMangasHistory', {})
+
 
   def watch(self, key, callback, *args):
     """add a callback on an options key"""
@@ -173,19 +225,21 @@ class Mieru:
     if key in self.watches.keys():
       self._notifyWatcher(key, value)
 
-
   def saveState(self):
     print "saving state"
     if self.activeManga: # is some manga actually loaded ?
       state = self.activeManga.getState()
-      if state['path'] != None: # no need to save mangas with empty path
-        self.set('lastOpenMangaState', state)
+      self.addToHistory(state)
 
   def _restoreState(self):
-    lastOpenMangaState = self.get('lastOpenMangaState',None)
-    if lastOpenMangaState:
+    openMangasHistory = self.getSortedHistory()
+    if openMangasHistory:
       print "restoring last open manga"
-      self.activeManga = manga.fromState(self, lastOpenMangaState)
+      lastOpenMangaState = openMangasHistory[0]['state']
+      self.openMangaFromState(lastOpenMangaState)
+#      self.activeManga = manga.fromState(self, lastOpenMangaState)
+    else:
+      print "no history found"
 
 
 
