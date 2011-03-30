@@ -52,8 +52,10 @@ class Mieru:
       self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
 
     self.window.resize(w,h)
+    # resize the viewport when window size changes
+    self.window.connect('size-allocate', self._resizeViewport)
 
-    # suthodwn when the main window is destroyed
+    # suhtdown when the main window is destroyed
     self.window.connect("destroy", self.destroy)
 
     # get the platform module
@@ -247,14 +249,8 @@ class Mieru:
     else:
       print "no history found"
 
-
-
-
-
-
-
-
-
+  def _resizeViewport(self,widget,allocation):
+    self.viewport = allocation
 
 
 #  def do_button_press_event(actor, event):

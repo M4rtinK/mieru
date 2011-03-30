@@ -35,6 +35,7 @@ class Page(clutter.Texture):
 
     self.connect('button-press-event', self.do_button_press_event)
     self.connect('button-release-event', self.do_button_release_event)
+    self.mieru.stage.connect('allocation-changed', self._handleResize)
 
     self.set_keep_aspect_ratio(True) # we want to preserve the aspect ratio
 
@@ -176,6 +177,10 @@ class Page(clutter.Texture):
   def getPath(self):
     return self.imagePath
 
+  def _handleResize(self,widget,event,foo):
+    # resize and refit the page when viewport size changes
+    fitMode = self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
+    self.setFitMode(fitMode)
 #  def fitToWidth(self):
 #    (x,y,w,h) = self.mieru.viewport
 #    self.set_width(w)
