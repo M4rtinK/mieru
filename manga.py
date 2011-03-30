@@ -202,7 +202,7 @@ class Manga:
       del pl
       return (page, id)
     else:
-      print "manga: page not found, id:" % id
+      print "manga: page not found, id: ", id
       return None
 
   def getMaxId(self):

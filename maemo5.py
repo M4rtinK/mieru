@@ -35,10 +35,14 @@ class Maemo5:
     historyPickerButton.set_selector(selector)
     self.mieru.watch('openMangasHistory', self._updateHistoryCB)
 
+    clearHistoryButton = gtk.Button("Clear history") # TODO: move this somewhere into settings
+    clearHistoryButton.connect('clicked',self._clearHistoryCB)
+
     menu.append(openFileButton)
     menu.append(openFolderButton)
     menu.append(fullscreenButton)
     menu.append(historyPickerButton)
+    menu.append(clearHistoryButton)
 
     # Show all menu items
     menu.show_all()
@@ -102,7 +106,13 @@ class Maemo5:
         self.historyStore.append((rowText,))
       self.currentHistory = sortedHistory
     self.historyLocked = False
-      
+
+  def _clearHistoryCB(self, button):
+    self.mieru.clearHistory()
+    self.historyLocked = True
+    self.historyStore.clear()
+    self.historyLocked = False
+
 
   def startChooser(self, button, type):
     dialog = hildon.FileChooserDialog(self.mieru.window, type)
