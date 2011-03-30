@@ -28,7 +28,7 @@ class Maemo5:
     self.historyStore = gtk.ListStore(gobject.TYPE_STRING)
     self.historyLocked = False
     self._updateHistory()
-    selector.append_text_column(self.historyStore, True)
+    selector.append_text_column(self.historyStore, False)
     selector.connect('changed', self._historyRowSelected)
     historyPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO,hildon.BUTTON_ARRANGEMENT_VERTICAL)
     historyPickerButton.set_title("History")
@@ -64,18 +64,22 @@ class Maemo5:
     self._updateHistory()
 
   def _historyRowSelected(self, selector, column):
-    id = selector.get_active(0)
-    if not self.historyLocked:
-      print "ROW SELECTED", column, id
-  #    print selector.get_selected_rows(0)
-      if id >= 0:
-        state = self.currentHistory[id]['state']
-        path = state['path']
-        activeMangaPath = self.mieru.getActiveMangaPath()
-        if path != activeMangaPath: # infinite loop defence
-          self.mieru.openMangaFromState(state)
-    else:
-      print "history lcoked"
+      if not self.historyLocked:
+        try:
+          id = selector.get_active(0)
+          if id >= 0:
+            state = self.currentHistory[id]['state']
+            path = state['path']
+            print "path selected: %s" % path
+            activeMangaPath = self.mieru.getActiveMangaPath()
+            if path != activeMangaPath: # infinite loop defence
+              self.mieru.openMangaFromState(state)
+        except Exception, e:
+          print "error while restoring manga from history"
+          print e
+#      else:
+#        print "history locked"
+
 
   def _updateHistory(self):
     """
@@ -90,9 +94,12 @@ class Maemo5:
       for item in sortedHistory:
         state = item['state']
         path = state['path']
-
+        pageNumber = state['pageNumber']+1
+        pageCount = state['pageCount']+1
         (folderPath,tail) = os.path.split(path)
-        self.historyStore.append((tail,))
+        rowText = "%s %d/%d" % (tail, pageNumber, pageCount)
+
+        self.historyStore.append((rowText,))
       self.currentHistory = sortedHistory
     self.historyLocked = False
       
