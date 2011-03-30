@@ -49,7 +49,7 @@ class Buttons:
 
     self.fsButton = fsToggleButton
 
-    declutter.animate(self.fsButton,clutter.LINEAR,300,[('opacity',255)])
+    declutter.animate(self.fsButton,clutter.LINEAR,100,[('opacity',255)])
     gobject.timeout_add(3000,self._hideFSButton, self.fsButton)
 
 #    self.showButton = declutter.Opacity(self.fsButton,clutter.LINEAR, 1000, 255, 0)
@@ -66,18 +66,17 @@ class Buttons:
     if self.fsButtonActive:
       print "starting hiding"
       self.mieru.toggleFullscreen()
-      self.fsButtonR = self.fsButton.animate(clutter.LINEAR, 1000, 'rotation-angle-z', 360)
       self.fsButtonActive = False
     else:
       self.fsButtonActive = True
-      declutter.animate(self.fsButton,clutter.LINEAR,300,[('opacity',255)])
+      declutter.animate(self.fsButton,clutter.LINEAR,100,[('opacity',255)])
       print "showing"
       timer = gobject.timeout_add(2000,self._hideFSButton, button)
 
   def _hideFSButton(self, button):
     print "hiding"
     self.fsButtonActive = False
-    declutter.animate(button,clutter.LINEAR,300,[('opacity',0)])
+    declutter.animate(button,clutter.LINEAR,200,[('opacity',0)])
 
 #class Button(clutter.Texture):
 #  pass
