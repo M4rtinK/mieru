@@ -103,6 +103,9 @@ class Manga:
       return self.gotoPageId(pageNumber) # return if the first-selected page loaded successfully
 
   def close(self):
+    # save current state to history
+    self.mieru.addMangaToHistory(self)
+    # cleanup
     if self.activePage:
       page = self.activePage
       self.activePage = None

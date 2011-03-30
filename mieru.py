@@ -180,6 +180,12 @@ class Mieru:
     # TODO: limit the size of the history + clearing of history
     self.set('openMangasHistory', openMangasHistory)
 
+  def addMangaToHistory(self, manga):
+    """add a manga instance to history"""
+    state = manga.getState()
+    if state:
+      self.addToHistory(state)
+
   def getSortedHistory(self):
     openMangasHistory = self.get('openMangasHistory',None)
     if openMangasHistory:
