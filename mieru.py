@@ -154,7 +154,6 @@ class Mieru:
       self.activeManga.close()
 
     print "opening manga from state"
-#    print "opening %s on page %d" % (path,startOnPage)
     self.activeManga = manga.fromState(self, state)
     mangaState = self.activeManga.getState()
     self.addToHistory(mangaState)

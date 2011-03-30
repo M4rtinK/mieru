@@ -10,9 +10,10 @@ class Buttons:
     self.mieru = mieru
     self.layer = clutter.Group()
     self.mieru.stage.add(self.layer)
+    self.pressLength = 175 # in ms, higher than this and it will be considered to a drag
     self.fsButton = None
     self.fsButtonActive = False
-    self.fsButtonActive = False
+    self.fsButtonLastPressTimestamp = None
     self._addButtons()
     self.mieru.stage.connect('allocation-changed', self._handleResize)
 
@@ -45,7 +46,8 @@ class Buttons:
 
     fsToggleButton.set_position(w1,h1)
 
-    fsToggleButton.connect('button-release-event',self.do_button_press_event)
+    fsToggleButton.connect('button-release-event',self.do_button_release_event)
+    fsToggleButton.connect('button-press-event',self.do_button_press_event)
 
     self.fsButton = fsToggleButton
 
@@ -60,21 +62,25 @@ class Buttons:
 #    self.animation = self.fsButton.animate(clutter.LINEAR, 1000, 'x', 200)
 
 
-
   def do_button_press_event (self, button, event):
-    print "pressed"
-    if self.fsButtonActive:
-      print "starting hiding"
-      self.mieru.toggleFullscreen()
-      self.fsButtonActive = False
-    else:
-      self.fsButtonActive = True
-      declutter.animate(self.fsButton,clutter.LINEAR,100,[('opacity',255)])
-      print "showing"
-      timer = gobject.timeout_add(2000,self._hideFSButton, button)
+    self.fsButtonLastPressTimestamp = event.time
+
+  def do_button_release_event(self, button, event):
+    if self.fsButtonLastPressTimestamp:
+      """we only want to react on presses that start and end on the button and last a short time,
+         so that the button does not interfere with dragging the page content"""
+      if (event.time - self.fsButtonLastPressTimestamp) <= self.pressLength:
+        if self.fsButtonActive:
+          self.mieru.toggleFullscreen()
+          self.fsButtonActive = False
+        else:
+          self.fsButtonActive = True
+          declutter.animate(self.fsButton,clutter.LINEAR,100,[('opacity',255)])
+          print "showing"
+          timer = gobject.timeout_add(2000,self._hideFSButton, button)
+      
 
   def _hideFSButton(self, button):
-    print "hiding"
     self.fsButtonActive = False
     declutter.animate(button,clutter.LINEAR,200,[('opacity',0)])
 

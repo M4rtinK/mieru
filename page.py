@@ -122,9 +122,7 @@ class Page(clutter.Texture):
 
 
   def setOriginalSize(self):
-    print "original"
     """resize back to original size"""
-#    self.set_size(*self.originalSize)
     (w, h) = self.originalSize
     self.animate(clutter.LINEAR,100, 'width', w, 'height', h)
 
@@ -134,7 +132,6 @@ class Page(clutter.Texture):
     (w,h) = self.get_size()
     factor = float(width) / w
     (newW,newH) = (w*factor,h*factor)
-#    self.set_size(newW,newH)
     self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
     return(newW,newH)
 
@@ -144,10 +141,8 @@ class Page(clutter.Texture):
     (w,h) = self.get_size()
     factor = float(height) / h
     (newW,newH) = (w*factor,h*factor)
-#    self.set_size(newW,newH)
     self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
     if width > newW: # is screen wider than the image ?
-#      self.move_by((width-newW)/2.0, 0) # center the image
        self.animate(clutter.LINEAR,100, 'x', (width-newW)/2.0)
     return(newW,newH)
 
@@ -163,8 +158,6 @@ class Page(clutter.Texture):
     shiftX = (screenW-newW)/2.0
     shiftY = (screenH-newH)/2.0
     self.movementEnabled = False
-    print self.movementEnabled
-#    self.set_position(shiftX,shiftY)
     self.animate(clutter.LINEAR,100, 'x', shiftX, 'y', shiftY)
 
   def resetPosition(self):
