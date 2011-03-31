@@ -32,6 +32,9 @@ class Page(clutter.Texture):
     self.pressStart = None
     self.lastMotion = None
     self.movementEnabled = True # the page is fit to screen so it should not be moved
+    self.zoomIn=True
+    self.fsButtonLastPressTimestamp = None
+    self.pressLength = 100
 
     self.connect('button-press-event', self.do_button_press_event)
     self.connect('button-release-event', self.do_button_release_event)
@@ -40,6 +43,13 @@ class Page(clutter.Texture):
     self.set_keep_aspect_ratio(True) # we want to preserve the aspect ratio
 
   def do_button_press_event (self, actor, event):
+#    clickCount = event.get_click_count()
+#    print "press", clickCount
+#    if clickCount >= 3:
+#      self._toggleZoom()
+    self.fsButtonLastPressTimestamp = event.time
+
+      
     self.isPressed = True
     (x,y) = event.x,event.y
     self.pressStart = (x,y)
@@ -48,6 +58,17 @@ class Page(clutter.Texture):
     return False
 
   def do_button_release_event (self, actor, event):
+    clickCount = event.get_click_count()
+    if clickCount >= 3 and self.fsButtonLastPressTimestamp:
+      if (event.time - self.fsButtonLastPressTimestamp)<self.pressLength:
+        print (event.time - self.fsButtonLastPressTimestamp)
+        (x1,y1) = self.pressStart
+        (x,y) = (x1-event.x,y1-event.y)
+        print (x,y)
+
+
+        self._toggleZoom()
+
     self.isPressed = False
     self.pressStart = None
     self.lastMotion = None
@@ -123,16 +144,20 @@ class Page(clutter.Texture):
 
   def setOriginalSize(self):
     """resize back to original size"""
+    self.resetPosition()
     (w, h) = self.originalSize
     self.animate(clutter.LINEAR,100, 'width', w, 'height', h)
 
   def fitToWidth(self):
-    (x,y,width,h) = self.mieru.viewport
+    print "to width"
+    (x,y,width,height) = self.mieru.viewport
     self.resetPosition()
     (w,h) = self.get_size()
     factor = float(width) / w
     (newW,newH) = (w*factor,h*factor)
     self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
+    if height > newH: # is screen wider than the image ?
+      self.animate(clutter.LINEAR,100, 'y', (height-newH)/2.0)
     return(newW,newH)
 
   def fitToHeight(self):
@@ -148,12 +173,11 @@ class Page(clutter.Texture):
 
   def fitToScreen(self):
     (x,y,screenW,screenH) = self.mieru.viewport
-    (w,h) = self.get_size()
     # resize to fit to screen
-    if w > h:
-      (newW,newH) = self.fitToWidth()
-    else:
+    if screenW > screenH:
       (newW,newH) = self.fitToHeight()
+    else:
+      (newW,newH) = self.fitToWidth()
     # move to the center
     shiftX = (screenW-newW)/2.0
     shiftY = (screenH-newH)/2.0
@@ -174,6 +198,19 @@ class Page(clutter.Texture):
     # resize and refit the page when viewport size changes
     fitMode = self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
     self.setFitMode(fitMode)
+
+  def _toggleZoom(self):
+    if self.zoomIn:
+      (x,y,screenW,screenH) = self.mieru.viewport
+      # resize to fit to longest side of the screen
+      if screenW > screenH:
+        self.setFitMode("width")
+      else:
+        self.setFitMode("height")
+      self.zoomIn = False
+    else:
+      self.setFitMode(self.mieru.get('fitMode', 'original'))
+      self.zoomIn = True
 #  def fitToWidth(self):
 #    (x,y,w,h) = self.mieru.viewport
 #    self.set_width(w)
