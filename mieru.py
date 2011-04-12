@@ -238,6 +238,9 @@ class Mieru:
       state = self.activeManga.getState()
       self.addToHistory(state)
 
+  def setWindowTitle(self, title):
+    self.window.set_title(title)
+
   def _restoreState(self):
     openMangasHistory = self.getSortedHistory()
     if openMangasHistory:

@@ -69,7 +69,7 @@ class Manga:
 
   def getPath(self):
     return self.path
-    
+  
   def getState(self):
     """save current satte to a dictionary"""
 
@@ -208,6 +208,9 @@ class Manga:
       print "manga: page not found, id: ", id
       return None
 
+  def getActivePageId(self):
+    return self.activePageId
+
   def getMaxId(self):
     if self.pages:
       return (len(self.pages)-1)
@@ -246,9 +249,14 @@ class Manga:
       self.activePageId = newPageId
       self.activePage = newPage
       self.pageTurnTl.start()
+      self._updateTitleText()
       return True
     else:
       print "switching to page failed, id: ", id
+      # enable to skip invalid pages that have valid id
+      if id <= self.getMaxId() and id >= 0:
+        self.activePageId = id
+        self._updateTitleText()
       return False
 
   def next(self):
@@ -353,6 +361,17 @@ class Manga:
     (tail,name) = os.path.split(path)
     return name
 
+  def _getTitleText(self):
+    """return a string suitable for window header"""
+    name = self.getName()
+    pageNumber = self.getActivePageId()+1
+    maxPages = self.getMaxId()+1
+    return "%d/%d %s" % (pageNumber, maxPages, name)
+
+  def _updateTitleText(self):
+    """update the title text on the mieru window (and possibly elswhere)"""
+    title = self._getTitleText()
+    self.mieru.setWindowTitle(title)
 
 def fromState(parent, state):
   """create a Manga from the given state"""
