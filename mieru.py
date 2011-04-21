@@ -3,7 +3,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
 import sys
 import time
 maemo5 = False
@@ -12,10 +11,8 @@ if len (sys.argv) > 1:
   if firstParam == "n900":
     maemo5 = True
 if maemo5:
-  sys.path.append('temp_clutter')
   import hildon
 import cluttergtk
-import clutter
 
 # Mieru modules import
 import buttons
