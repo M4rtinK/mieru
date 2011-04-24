@@ -4,7 +4,7 @@ import clutter
 import gtk
 
 class Page(clutter.Texture):
-  def __init__(self, pb, mieru, name=""):
+  def __init__(self, pb, mieru, name="", fitOnStart=True):
 #    clutter.Texture.__init__(self,imagePath,load_data_async=True)
     clutter.Texture.__init__(self)
     if pb.props.has_alpha:
@@ -26,7 +26,8 @@ class Page(clutter.Texture):
     self.initialPosition = (0,0)
     self.motionCallbackId = None
 
-    self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
+    if fitOnStart:
+      self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
     self._color = clutter.color_from_string('White')
     self.isPressed = False
     self.pressStart = None
