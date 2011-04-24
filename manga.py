@@ -6,17 +6,20 @@ import os
 import gtk
 import clutter
 
+import manga as mangaModule
+#from rounded_rectangle import RoundedRectangle
 import declutter
 import page as pageModule
 import container as containerModule
 
 
 class Manga:
-  def __init__(self, mieru, path=None, startOnPage=0, load=True):
+  def __init__(self, mieru, path=None, startOnPage=0, load=True, loadNotify=True):
     self.mieru = mieru
     self.group = clutter.Group()
     mieru.stage.add(self.group)
     mieru.stage.lower_child(self.group,self.mieru.buttons.getLayer())
+    self.mieru.stage.connect('allocation-changed', self._handleResize)
     self.fitMode = self.mieru.get('fitMode', 'original')
     self.mieru.watch('fitMode', self.onFitModeChanged)
     self.path = path
@@ -29,9 +32,13 @@ class Manga:
     self.activePage = None
     self.nextArmed = False
     self.previousArmed = False
+    self.previewBox = None
+    self.previewBoxStartingPoint = (0,0)
 
     # animation
     self.pageTurnTl = clutter.Timeline(200)
+    # update the window header once a new page finishes animating in
+    self.pageTurnTl.connect('completed', self._updateTitleTextCB)
 #    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.LINEAR)
 #    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.EASE_OUT_CUBIC)
 #    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.EASE_IN_CUBIC)
@@ -46,9 +53,13 @@ class Manga:
     if path and load:
       self.name = self._nameFromPath(path)
       if self.load(path,startOnPage):
-        self.mieru.notify('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
+        if loadNotify:
+          self.mieru.notify('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
+        print '<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage))
       else:
-        self.mieru.notify('<b>%s</b> loading failed' % self.name)
+        if loadNotify:
+          self.mieru.notify('<b>%s</b> loading failed' % self.name)
+        print '<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage))
 
   def fadeInOpac(self, page):
     self.a1 = clutter.BehaviourOpacity(0,255,self.pageTurnAlpha)
@@ -99,8 +110,15 @@ class Manga:
     container = containerModule.from_path(path)
     if container: # was a container created successfully ?
       self.container = container
-      self.pages = self.container.getFileList()
-      return self.gotoPageId(pageNumber) # return if the first-selected page loaded successfully
+      self.pages = self.container.getImageFileList()
+      if pageNumber == None: # None means we dont show a page yet
+        return True # nothing to go wrong here :)
+      else:
+        return self.gotoPageId(pageNumber) # return if the first-selected page loaded successfully
+    else:
+      print "manga: container initialization failed"
+      return False
+
 
   def close(self):
     # save current state to history
@@ -128,6 +146,8 @@ class Manga:
 
   def ID2PageNumber(self, id):
     """guess page number from id"""
+    if id == None:
+      return -1
     if id >= 0:
       return id + 1
     else: # negative addressing
@@ -189,8 +209,8 @@ class Manga:
       else:
         return True
 
-  def getPageById(self, id):
-    """return a Page instance together with its id in  a tuple"""
+  def getPageById(self, id, fitOnStart=True):
+    """return a Page instance together with its id in a tuple"""
     result = self.container.getImageFileById(id)
     if result:
       (file,id) = self.container.getImageFileById(id) # return correct id of negative addressing (id=-1, etc.)
@@ -201,7 +221,7 @@ class Manga:
       file.close()
       pl.close() # this  blocks until the image is completely loaded
       # TODO: do this with callbacks
-      page = pageModule.Page(pl.get_pixbuf(),self.mieru)
+      page = pageModule.Page(pl.get_pixbuf(),self.mieru, fitOnStart=fitOnStart)
       del pl
       return (page, id)
     else:
@@ -249,22 +269,19 @@ class Manga:
       self.activePageId = newPageId
       self.activePage = newPage
       self.pageTurnTl.start()
-      self._updateTitleText()
       return True
     else:
       print "switching to page failed, id: ", id
       # enable to skip invalid pages that have valid id
       if id <= self.getMaxId() and id >= 0:
         self.activePageId = id
-        self._updateTitleText()
       return False
 
   def next(self):
     """go one page forward"""
-    self.previousArmed = False
-    nextArmed = self.nextArmed
-    if nextArmed: # should we load next manga in folder after this press ?
-      (isTrue, path) = nextArmed # get the path
+    self._disarm("previous")
+    if self.nextArmed: # should we load next manga in folder after this press ?
+      (isTrue, path) = self.nextArmed # get the path
       self.mieru.openManga(path, 0) # open it on first page
       return # done
 
@@ -281,6 +298,7 @@ class Manga:
           (folder, tail) = os.path.split(nextMangaPath)
           self.mieru.notify('this is the <b>last</b> page,\n<u>press again</u> to load:\n<b>%s</b>' % tail)
           self.nextArmed = (True, nextMangaPath)
+          self._showPreview(nextMangaPath, "next")
         else:
           self.mieru.notify('this is the <b>last</b> page,\n there is no <i>previous</i> to load')
       else:
@@ -288,10 +306,9 @@ class Manga:
 
   def previous(self):
     """go one page back"""
-    self.nextArmed = False
-    previousArmed = self.previousArmed
-    if previousArmed: # should we load next manga in folder after this press ?
-      (isTrue, path) = previousArmed # get the path
+    self._disarm("next")
+    if self.previousArmed: # should we load next manga in folder after this press ?
+      (isTrue, path) = self.previousArmed # get the path
       self.mieru.openManga(path, -1) # open it on last page
       return # done
     currentId = self.activePageId
@@ -304,9 +321,12 @@ class Manga:
       if self.mieru.continuousReading:
         previousMangaPath = self.getPrevMangaPath()
         if previousMangaPath:
+          # get a preview
           (folder, tail) = os.path.split(previousMangaPath)
           self.mieru.notify('this is the <b>first</b> page,\n <u>press again</u> to load:\n<b>%s</b>' % tail)
           self.previousArmed = (True, previousMangaPath)
+
+          self._showPreview(previousMangaPath, "previous")
         else:
           self.mieru.notify('this is the <b>first</b> page,\n there is no <i>next</i> to load')
       else:
@@ -368,30 +388,104 @@ class Manga:
     maxPages = self.getMaxId()+1
     return "%d/%d %s" % (pageNumber, maxPages, name)
 
-  def _updateTitleText(self):
+  def _updateTitleTextCB(self, timeline=None):
     """update the title text on the mieru window (and possibly elswhere)"""
     title = self._getTitleText()
     self.mieru.setWindowTitle(title)
+
+  def _showPreview(self, path, type):
+    if not self.previewBox: # we show only one preview
+      print "manga: showing preview"
+      manga = mangaModule.Manga(self.mieru, path, load=True, loadNotify=False, startOnPage=None)
+      if manga: # only continue if the next manga was successfully loaded
+        previewId = 0
+        (x,y,w,h) = self.mieru.viewport
+        pBoxSide = h/2.0
+        border = pBoxSide/20.0
+        pBoxInSide = pBoxSide-2*border
+
+        pBoxY = x/2.0+pBoxSide/2.0
+        pBoxX = w
+        pBoxXshown = w - pBoxSide
+        """ previous - box on the left, next - box on the right
+        (corresponding to the volume buttons)"""
+        if type == "previous":
+          previewId = -1
+          pBoxX = 0 - pBoxSide
+          pBoxXshown = 0
+        # get and scale to fit the next(prev page
+        thumbnail = manga.getPageById(previewId, fitOnStart=False)[0]
+        if thumbnail: # no need to do a preview if there is none
+          # 50% transparent yellow TODO: take this from current OS theme ?
+          backgroundColor = clutter.color_from_string("yellow")
+          backgroundColor.alpha=128
+          background = clutter.Rectangle(color=backgroundColor)
+          background.set_size(pBoxSide,pBoxSide)
+
+          # resize and fit in the thumbnail
+          thumbnail.set_keep_aspect_ratio(True)
+          (tw,th) = thumbnail.get_size()
+          wf = float(pBoxInSide)/tw
+          hf = float(pBoxInSide)/th
+          if tw >= th:
+            thumbnail.set_size(tw*wf, th*wf)
+          else:
+            thumbnail.set_size(tw*hf, th*hf)
+          (tw,th) = thumbnail.get_size()
+          print (tw,th)
+          thumbnail.move_by(border+(pBoxInSide-tw)/2.0,border+(pBoxInSide-th)/2.0)
+
+          # create a container for the thumbnail and background
+          box = clutter.Group()
+          box.add(background)
+          box.add(thumbnail)
+          self.mieru.buttons.getLayer().add(box)
+          box.show()
+          box.set_position(pBoxX,pBoxY)
+          self.previewBoxStartingPoint = (pBoxX,pBoxY)
+          box.animate(clutter.LINEAR,300,"x", pBoxXshown)
+          self.previewBox = box
+
+  def _hidePreview(self):
+    """hide a displayed preview"""
+    if self.previewBox:
+      (x,y) = self.previewBoxStartingPoint
+      print "manga: hiding preview"
+      print x
+      animation = self.previewBox.animate(clutter.LINEAR,300,"x", x)
+      animation.get_timeline().connect('completed', self._killActorCB, self.previewBox)
+      
+  def _killActorCB(self, timeline, actor):
+    """hide and unrealize a given actor"""
+    print "killing actor"
+    print actor.get_position()
+    actor.hide()
+    actor.unrealize()
+    self.mieru.buttons.getLayer().remove(actor)
+    self.previewBox = None
+
+  
+  def _disarm(self,type):
+    """a next/previous button is armed when it loads next/previous manga after pressing
+       calling this method disarms the button"""
+    if self.previewBox:
+      self._hidePreview()
+    if type == "previous":
+      self.previousArmed = False
+    elif type == "next":
+      self.nextArmed = False
+      
+  def _handleResize(self,widget,event,foo):
+    """handle resizing of the stage"""
+    if self.previewBox:
+      (x,y,w,h) = self.mieru.viewport
+      pBoxSide = h/2.0
+      newY = x/2.0+pBoxSide/2.0
+
+      self.previewBox.animate(clutter.LINEAR,100,"y", newY, "width",pBoxSide, "height", pBoxSide)
 
 def fromState(parent, state):
   """create a Manga from the given state"""
   m = Manga(parent, load=False)
   m.setState(state)
   return m
-
-
-#
-#  def showPageID(self, id):
-#    if self.pages:
-#      if id in self.pages:
-#        page =
-#      else:
-#        print "page id out of range: %d" % id
-
-
-
-
-
-
-
-
