@@ -5,6 +5,7 @@
 import os
 import gtk
 import clutter
+import gobject
 
 import manga as mangaModule
 #from rounded_rectangle import RoundedRectangle
@@ -377,6 +378,12 @@ class Manga:
       return False
     return nextPath
 
+  def getPrevisousMangaStartID(self):
+    return -1
+
+  def getNextMangaStartID(self):
+    return 0
+
   def _nameFromPath(self,path):
     (tail,name) = os.path.split(path)
     return name
@@ -409,7 +416,9 @@ class Manga:
         pBoxXshown = w - pBoxSide
         """ previous - box on the left, next - box on the right
         (corresponding to the volume buttons)"""
+        action = self.next
         if type == "previous":
+          action = self.previous
           previewId = -1
           pBoxX = 0 - pBoxSide
           pBoxXshown = 0
@@ -421,6 +430,8 @@ class Manga:
           backgroundColor.alpha=128
           background = clutter.Rectangle(color=backgroundColor)
           background.set_size(pBoxSide,pBoxSide)
+          background.set_reactive(True)
+          background.connect('button-release-event',self._previewPressedCB, action)
 
           # resize and fit in the thumbnail
           thumbnail.set_keep_aspect_ratio(True)
@@ -474,6 +485,19 @@ class Manga:
       self.previousArmed = False
     elif type == "next":
       self.nextArmed = False
+
+  def _previewPressedCB(self, actor, event, action):
+    """the preview box has been pressed,
+    load next/previous manga - the action is a binding to the
+    next/previous method
+
+    we use the gobject idle_add mathod so that it does not block
+    right after clicking the preview
+    """
+    gobject.idle_add(action)
+
+
+
       
   def _handleResize(self,widget,event,foo):
     """handle resizing of the stage"""
