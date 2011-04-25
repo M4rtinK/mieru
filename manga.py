@@ -462,14 +462,12 @@ class Manga:
     if self.previewBox:
       (x,y) = self.previewBoxStartingPoint
       print "manga: hiding preview"
-      print x
       animation = self.previewBox.animate(clutter.LINEAR,300,"x", x)
       animation.get_timeline().connect('completed', self._killActorCB, self.previewBox)
       
   def _killActorCB(self, timeline, actor):
     """hide and unrealize a given actor"""
     print "killing actor"
-    print actor.get_position()
     actor.hide()
     actor.unrealize()
     self.mieru.buttons.getLayer().remove(actor)
@@ -497,8 +495,6 @@ class Manga:
     gobject.idle_add(action)
 
 
-
-      
   def _handleResize(self,widget,event,foo):
     """handle resizing of the stage"""
     if self.previewBox:

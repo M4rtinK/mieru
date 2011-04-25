@@ -131,7 +131,13 @@ class Page(clutter.Texture):
       self.motionCallbackId = None
 
 
-  def setFitMode(self, mode):
+  def setFitMode(self, mode, resetPosition=True):
+    # recentre first (if enabled)
+    if recentre:
+      resetAnimation = self.resetPosition()
+      resetAnimation.connect("completed", self._fitAfterResetCB, mode)
+      return
+
     # implement the fit mode
     if mode == "original":
       self.setOriginalSize()
@@ -141,6 +147,10 @@ class Page(clutter.Texture):
       self.fitToHeight()
     elif mode == "screen":
       self.fitToScreen()
+
+  def _fitAfterResetCB(self, timeline, mode):
+    # NOTE: always set resetPosition=False, it will couase an infinite lopp otherwise
+    self.setFitMode(mode, resetPosition=False)
 
 
   def setOriginalSize(self):
@@ -152,7 +162,6 @@ class Page(clutter.Texture):
   def fitToWidth(self):
     print "to width"
     (x,y,width,height) = self.mieru.viewport
-    self.resetPosition()
     (w,h) = self.get_size()
     factor = float(width) / w
     (newW,newH) = (w*factor,h*factor)
@@ -163,7 +172,6 @@ class Page(clutter.Texture):
 
   def fitToHeight(self):
     (x,y,width,height) = self.mieru.viewport
-    self.resetPosition()
     (w,h) = self.get_size()
     factor = float(height) / h
     (newW,newH) = (w*factor,h*factor)
@@ -186,11 +194,11 @@ class Page(clutter.Texture):
     self.animate(clutter.LINEAR,100, 'x', shiftX, 'y', shiftY)
 
   def resetPosition(self):
+    """reset the current position to the upper left corner and return animation instance
+    so that other functions can connect to the "completed" signal, etc. """
     (x,y) = self.initialPosition
-    self.animate(clutter.LINEAR,100, 'x', x, 'y', y)
-
-#    self.set_position(*self.initialPosition)
     self.movementEnabled = True
+    return self.animate(clutter.LINEAR,100, 'x', x, 'y', y)
 
   def getPath(self):
     return self.imagePath

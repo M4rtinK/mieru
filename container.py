@@ -40,8 +40,6 @@ def from_path(path):
     print "manga: loading failed, path does not exist or is inaccessible"
     return False
 
-  
-
 def testPath(path):
   print "testing path: %s" % path
   #is it file or folder ?
