@@ -133,10 +133,7 @@ class Page(clutter.Texture):
 
   def setFitMode(self, mode, resetPosition=True):
     # recentre first (if enabled)
-    if recentre:
-      resetAnimation = self.resetPosition()
-      resetAnimation.connect("completed", self._fitAfterResetCB, mode)
-      return
+#    self.resetPosition()
 
     # implement the fit mode
     if mode == "original":
@@ -152,20 +149,37 @@ class Page(clutter.Texture):
     # NOTE: always set resetPosition=False, it will couase an infinite lopp otherwise
     self.setFitMode(mode, resetPosition=False)
 
+  def _enableMovementCB(self, timeline):
+    """enable movement after an animation finishes"""
+    self.movementEnabled = True
 
   def setOriginalSize(self):
     """resize back to original size"""
-    self.resetPosition()
     (w, h) = self.originalSize
+    (x,y,width,height) = self.mieru.viewport
+    if w<=width and h<=height:
+      # center and lock images smaller than viewport
+      self.movementEnabled=False
+      self.animate(clutter.LINEAR,100, 'x', 0, 'y', 0) # align with left border
+#    elif w<=width:
+#      self.movementEnabled=False
+#      alignAnim = self.animate(clutter.LINEAR,100, 'x', 0) # align with left border
+#      alignAnim.connect("completed", self._enableMovementCB)
     self.animate(clutter.LINEAR,100, 'width', w, 'height', h)
+
+
 
   def fitToWidth(self):
     print "to width"
     (x,y,width,height) = self.mieru.viewport
+    (cx,cy,cw,ch) = self.get_geometry()
     (w,h) = self.get_size()
     factor = float(width) / w
     (newW,newH) = (w*factor,h*factor)
     self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
+    self.movementEnabled=False
+    alignAnim = self.animate(clutter.LINEAR,100, 'x', 0) # align with left border
+    alignAnim.connect("completed", self._enableMovementCB)
     if height > newH: # is screen wider than the image ?
       self.animate(clutter.LINEAR,100, 'y', (height-newH)/2.0)
     return(newW,newH)
@@ -176,6 +190,9 @@ class Page(clutter.Texture):
     factor = float(height) / h
     (newW,newH) = (w*factor,h*factor)
     self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
+    self.movementEnabled=False
+    alignAnim = self.animate(clutter.LINEAR,100, 'y', 0) # align with left border
+    alignAnim.connect("completed", self._enableMovementCB)
     if width > newW: # is screen wider than the image ?
        self.animate(clutter.LINEAR,100, 'x', (width-newW)/2.0)
     return(newW,newH)
@@ -197,8 +214,10 @@ class Page(clutter.Texture):
     """reset the current position to the upper left corner and return animation instance
     so that other functions can connect to the "completed" signal, etc. """
     (x,y) = self.initialPosition
+    self.animate(clutter.LINEAR,100, 'x', x, 'y', y)
+
+#    self.set_position(*self.initialPosition)
     self.movementEnabled = True
-    return self.animate(clutter.LINEAR,100, 'x', x, 'y', y)
 
   def getPath(self):
     return self.imagePath
