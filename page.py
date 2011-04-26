@@ -157,17 +157,15 @@ class Page(clutter.Texture):
     """resize back to original size"""
     (w, h) = self.originalSize
     (x,y,width,height) = self.mieru.viewport
+    (cx,cy) = self.get_position()
     if w<=width and h<=height:
       # center and lock images smaller than viewport
       self.movementEnabled=False
       self.animate(clutter.LINEAR,100, 'x', 0, 'y', 0) # align with left border
-#    elif w<=width:
-#      self.movementEnabled=False
-#      alignAnim = self.animate(clutter.LINEAR,100, 'x', 0) # align with left border
-#      alignAnim.connect("completed", self._enableMovementCB)
+    elif w+cy < y+height:
+      alignAnim = self.animate(clutter.LINEAR,100, 'y', y-h+height) # align with left border
+      alignAnim.connect("completed", self._enableMovementCB)
     self.animate(clutter.LINEAR,100, 'width', w, 'height', h)
-
-
 
   def fitToWidth(self):
     print "to width"
@@ -180,8 +178,18 @@ class Page(clutter.Texture):
     self.movementEnabled=False
     alignAnim = self.animate(clutter.LINEAR,100, 'x', 0) # align with left border
     alignAnim.connect("completed", self._enableMovementCB)
-    if height > newH: # is screen wider than the image ?
+    if height > newH: # is screen higher than the image ?
       self.animate(clutter.LINEAR,100, 'y', (height-newH)/2.0)
+    elif newH+cy < y+height:
+      alignAnim = self.animate(clutter.LINEAR,100, 'y', y-newH+height) # align with left border
+      alignAnim.connect("completed", self._enableMovementCB)
+
+    print (cx,cy,cw,ch)
+    print (x,y,width,height)
+
+
+
+
     return(newW,newH)
 
   def fitToHeight(self):
