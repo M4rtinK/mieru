@@ -92,32 +92,33 @@ class Page(clutter.Texture):
   def movePage(self,page,dx,dy):
     """move the page so that the voewport either stays inside it
        or the page stays inside the viewport if it is smaller"""
-    (x,y,w,h) = self.mieru.viewport
-    (pageX,pageY,pageW,pageH) = page.get_geometry()
-    (newX,newY) = (pageX+dx,pageY+dy)
+    if self.isPressed:
+      (x,y,w,h) = self.mieru.viewport
+      (pageX,pageY,pageW,pageH) = page.get_geometry()
+      (newX,newY) = (pageX+dx,pageY+dy)
 
-    if pageW > w: # page is wider than screen
-      if newX < w-pageW:
-        newX = w-pageW
-      elif newX > 0:
-        newX = 0
-    else: # screen is wider than page
-      if newX < 0:
-        newX = 0
-      if newX > w-pageW:
-        newX = w-pageW
+      if pageW > w: # page is wider than screen
+        if newX < w-pageW:
+          newX = w-pageW
+        elif newX > 0:
+          newX = 0
+      else: # screen is wider than page
+        if newX < 0:
+          newX = 0
+        if newX > w-pageW:
+          newX = w-pageW
 
-    if pageH > h: # page is longer than screen
-      if newY < h-pageH:
-        newY = h-pageH
-      elif newY > 0:
-        newY = 0
-    else: # screen is longer than page
-      if newY < 0:
-        newY = 0
-      if newY > pageH-h:
-        newY = pageH-h
-    page.move_by(newX - pageX,newY - pageY)
+      if pageH > h: # page is longer than screen
+        if newY < h-pageH:
+          newY = h-pageH
+        elif newY > 0:
+          newY = 0
+      else: # screen is longer than page
+        if newY < 0:
+          newY = 0
+        if newY > pageH-h:
+          newY = pageH-h
+      page.move_by(newX - pageX,newY - pageY)
 
 
   def activate(self):
@@ -126,6 +127,7 @@ class Page(clutter.Texture):
     self.motionCallbackId = self.connect('motion-event', self.on_page_motion)
 
   def deactivate(self):
+    self.set_reactive(False)
     if self.motionCallbackId != None:
       self.disconnect(self.motionCallbackId)
       self.motionCallbackId = None
@@ -183,12 +185,6 @@ class Page(clutter.Texture):
     elif newH+cy < y+height:
       alignAnim = self.animate(clutter.LINEAR,100, 'y', y-newH+height) # align with left border
       alignAnim.connect("completed", self._enableMovementCB)
-
-    print (cx,cy,cw,ch)
-    print (x,y,width,height)
-
-
-
 
     return(newW,newH)
 

@@ -287,6 +287,8 @@ class Manga:
       return # done
 
     currentId = self.activePageId
+    if currentId == None:
+      return
     nextId = currentId + 1
     # sanity check the id
     if nextId < len(self.pages):
@@ -313,6 +315,8 @@ class Manga:
       self.mieru.openManga(path, -1) # open it on last page
       return # done
     currentId = self.activePageId
+    if currentId == None:
+      return
     prevId = currentId - 1
     # sanity check the id
     if prevId >= 0:
@@ -400,6 +404,23 @@ class Manga:
     title = self._getTitleText()
     self.mieru.setWindowTitle(title)
 
+  def _getPBoxCoords(self, type):
+    """compute coordinates for the preview box"""
+    (x,y,w,h) = self.mieru.viewport
+    pBoxSide = h/2.0
+    border = pBoxSide/20.0
+    pBoxInSide = pBoxSide-2*border
+
+    pBoxY = x/2.0+pBoxSide/2.0
+    pBoxX = w
+    pBoxShownX = w - pBoxSide
+    """ previous - box on the left, next - box on the right
+    (corresponding to the volume buttons)"""
+    if type == "previous":
+      pBoxX = 0 - pBoxSide
+      pBoxShownX = 0
+    return (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border)
+
   def _showPreview(self, path, type):
     if not self.previewBox: # we show only one preview
       print "manga: showing preview"
@@ -407,21 +428,23 @@ class Manga:
       if manga: # only continue if the next manga was successfully loaded
         previewId = 0
         (x,y,w,h) = self.mieru.viewport
-        pBoxSide = h/2.0
-        border = pBoxSide/20.0
-        pBoxInSide = pBoxSide-2*border
-
-        pBoxY = x/2.0+pBoxSide/2.0
-        pBoxX = w
-        pBoxXshown = w - pBoxSide
+#        pBoxSide = h/2.0
+#        border = pBoxSide/20.0
+#        pBoxInSide = pBoxSide-2*border
+#
+#        pBoxY = x/2.0+pBoxSide/2.0
+#        pBoxX = w
+#        pBoxShownX = w - pBoxSide
         """ previous - box on the left, next - box on the right
         (corresponding to the volume buttons)"""
         action = self.next
         if type == "previous":
           action = self.previous
           previewId = -1
-          pBoxX = 0 - pBoxSide
-          pBoxXshown = 0
+#          pBoxX = 0 - pBoxSide
+#          pBoxShownX = 0
+
+        (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
         # get and scale to fit the next(prev page
         thumbnail = manga.getPageById(previewId, fitOnStart=False)[0]
         if thumbnail: # no need to do a preview if there is none
@@ -454,20 +477,30 @@ class Manga:
           box.show()
           box.set_position(pBoxX,pBoxY)
           self.previewBoxStartingPoint = (pBoxX,pBoxY)
-          box.animate(clutter.LINEAR,300,"x", pBoxXshown)
+          box.animate(clutter.LINEAR,300,"x", pBoxShownX)
           self.previewBox = box
 
+  def _previewPressedCB(self, actor, event, action):
+    """the preview box has been pressed,
+    load next/previous manga - the action is a binding to the
+    next/previous method
+
+    we use the gobject idle_add mathod so that it does not block
+    right after clicking the preview
+    """
+    gobject.idle_add(action)
+    
   def _hidePreview(self):
     """hide a displayed preview"""
     if self.previewBox:
       (x,y) = self.previewBoxStartingPoint
       print "manga: hiding preview"
       animation = self.previewBox.animate(clutter.LINEAR,300,"x", x)
-      animation.get_timeline().connect('completed', self._killActorCB, self.previewBox)
+      animation.get_timeline().connect('completed', self._killPreviewCB, self.previewBox)
       
-  def _killActorCB(self, timeline, actor):
+
+  def _killPreviewCB(self, timeline, actor):
     """hide and unrealize a given actor"""
-    print "killing actor"
     actor.hide()
     actor.unrealize()
     self.mieru.buttons.getLayer().remove(actor)
@@ -484,15 +517,6 @@ class Manga:
     elif type == "next":
       self.nextArmed = False
 
-  def _previewPressedCB(self, actor, event, action):
-    """the preview box has been pressed,
-    load next/previous manga - the action is a binding to the
-    next/previous method
-
-    we use the gobject idle_add mathod so that it does not block
-    right after clicking the preview
-    """
-    gobject.idle_add(action)
 
 
   def _handleResize(self,widget,event,foo):
@@ -503,6 +527,51 @@ class Manga:
       newY = x/2.0+pBoxSide/2.0
 
       self.previewBox.animate(clutter.LINEAR,100,"y", newY, "width",pBoxSide, "height", pBoxSide)
+
+  def _transition(self, direction):
+    """replace the currently open manga with the previewed one"""
+
+    alpha = clutter.LINEAR
+    transition = clutter.Score()
+    minimizeTl = clutter.Timeline(duration=300)
+    maximizeTl = clutter.Timeline(duration=300)
+    bgInTl = clutter.Timeline(duration=300)
+    bgOutTl = clutter.Timeline(duration=300)
+
+    # transform currently visible page to a preview
+    self.activePage.deactivate()
+
+    (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
+
+    (tw,th) = self.activePage.get_size()
+    wf = float(pBoxInSide)/tw
+    hf = float(pBoxInSide)/th
+    if tw >= th:
+      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*wf, "height", th*wf)
+    else:
+      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*hf, "height", th*hf)
+
+#    self.activePage.animate_with_timeline(minimizeTl, alpha, "x", ,"y", )
+
+
+#    (tw,th) = thumbnail.get_size()
+#    print (tw,th)
+#    thumbnail.move_by(border+(pBoxInSide-tw)/2.0,border+(pBoxInSide-th)/2.0)
+
+
+
+
+
+    # show a yellow background behind it
+
+    # hide both the preview and background
+
+    # hide the background of the new page preview
+
+    # maximize the new page
+
+    # replace this manga instance by the new one
+
 
 def fromState(parent, state):
   """create a Manga from the given state"""

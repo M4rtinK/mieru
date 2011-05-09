@@ -6,8 +6,12 @@ import gtk
 import gobject
 import hildon
 
+from base_platform import BasePlatform
+
 class Maemo5:
   def __init__(self, mieru):
+    BasePlatform.__init__(self)
+
     self.mieru = mieru
 
     # enbale zoom/volume keys for usage by mieru
@@ -114,7 +118,7 @@ class Maemo5:
     self.historyLocked = False
 
 
-  def startChooser(self, button, type):
+  def startChooser(self, type):
     dialog = hildon.FileChooserDialog(self.mieru.window, type)
     lastFolder = self.mieru.get('lastChooserFolder', None)
     currentFolder = None
@@ -130,7 +134,6 @@ class Maemo5:
     if currentFolder != None:
       self.mieru.set('lastChooserFolder', currentFolder)
     if selectedPath:
-      print "open"
       self.mieru.openManga(selectedPath)
 
   def notify(self, message, icon):

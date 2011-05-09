@@ -3,22 +3,14 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import sys
 import time
-maemo5 = False
-if len (sys.argv) > 1:
-  firstParam = sys.argv[1]
-  if firstParam == "n900":
-    maemo5 = True
-if maemo5:
-  import hildon
 import cluttergtk
 
 # Mieru modules import
 import buttons
 import manga
-import maemo5
 import options
+import startup
 
 class Mieru:
 
@@ -29,6 +21,10 @@ class Mieru:
 
   def __init__(self):
     # restore persistent options
+    start = startup.Startup()
+    args = start.args
+
+
     self.d = {}
     self.options = options.Options(self)
     # options value watching
@@ -42,8 +38,17 @@ class Mieru:
 #    self.continuousReading = self.get('continuousReading',True)
     self.continuousReading = True
 
+    # get the platform module
+    if args.u == "hildon":
+      import maemo5
+      self.platform = maemo5.Maemo5(self)
+    else:
+      import pc
+      self.platform = pc.PC(self)
+
     # create a new window
-    if maemo5:
+    if args.u == "hildon":
+      # hildon should be imported by now by the Maemo5 platform module
       self.window = hildon.StackableWindow()
     else:
       self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -55,8 +60,6 @@ class Mieru:
     # suhtdown when the main window is destroyed
     self.window.connect("destroy", self.destroy)
 
-    # get the platform module
-    self.platform = maemo5.Maemo5(self)
 
     # get the Clutter embed and add it to the window
     self.embed = cluttergtk.Embed()
@@ -107,16 +110,16 @@ class Mieru:
     elif keyName == 'z':
       self.set('fitMode', "screen")
     elif keyName == 'n':
-      self.platform.startFolderChooser() # TODO: rewrite this for multiplatform ability and file opening
+      self.platform.startChooser(gtk.FILE_CHOOSER_ACTION_OPEN)
     elif keyName == 'q':
       self.destroy(self.window)
-    elif keyName == 'F8':
+    elif keyName == 'F8' or keyName == 'Page_Up':
       if self.activeManga:
         self.activeManga.previous()
-    elif keyName == 'F7':
+    elif keyName == 'F7' or keyName == 'Page_Down':
       if self.activeManga:
         self.activeManga.next()
-    else:
+    elif not self.platform.handleKeyPress(embed, event):
       print "key: %s" % keyName
 
   def on_button_press_event(actor, event):
