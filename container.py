@@ -272,4 +272,24 @@ class TarContainer(Container):
   """This class represents a tar archive containing pictures."""
   def __init__(self, path):
     Container.__init__(self, path)
+    self.tf = None
+    if rarfile.is_tarfile(path):
+      try:
+        self.tf = tarfile.TarFile(path,'r')
+      except Exception, e:
+        "error, loading rar file failed: %s" % e
+    else:
+      print "error, this is not a tar file - wrong mime ?"
+      print "path: %s" % path
+    if self.tf:
+      self._setFileList(self.tf.namelist())
+
+  def getFile(self, filename):
+    print filename
+    if self.tf:
+      try:
+        return self.tf.open(filename,'r')
+      except Exception, e:
+        print "TarContainer: reading file from archive failed: %s" % e
+        return None
 
