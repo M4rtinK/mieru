@@ -32,7 +32,11 @@ class Page(clutter.Texture):
     self.isPressed = False
     self.pressStart = None
     self.lastMotion = None
-    self.movementEnabled = True # the page is fit to screen so it should not be moved
+    """first number id for the horizontal and seccond for the vertical axis,
+    0 means movement in this axis is disabled, 1 means movement is enabled"""
+    self.movementEnabled = (1,1) # the page is fit to screen so it should not be move
+
+
     self.zoomIn=True
     self.fsButtonLastPressTimestamp = None
     self.pressLength = 100
@@ -84,9 +88,7 @@ class Page(clutter.Texture):
     else:
       (dx,dy) = (0,0)
     page.lastMotion = (x,y)
-    if page.movementEnabled:
-      self.movePage(page,dx,dy)
-
+    self.movePage(page,dx*page.movementEnabled[0],dy*page.movementEnabled[1])
     return False
 
   def movePage(self,page,dx,dy):
@@ -151,9 +153,18 @@ class Page(clutter.Texture):
     # NOTE: always set resetPosition=False, it will couase an infinite lopp otherwise
     self.setFitMode(mode, resetPosition=False)
 
-  def _enableMovementCB(self, timeline):
+  def _enableMovementCB(self, timeline, movementTupple=None):
     """enable movement after an animation finishes"""
-    self.movementEnabled = True
+    (we,he) = self.movementEnabled
+    (we1,he1) = movementTupple
+    if movementTupple == None:
+      self.movementEnabled = (1,1)
+    else:
+      if we1 == None:
+        we1 = we
+      if he1 == None:
+        he1 = he
+      self.movementEnabled = (we1,he1)
 
   def setOriginalSize(self):
     """resize back to original size"""
@@ -162,11 +173,14 @@ class Page(clutter.Texture):
     (cx,cy) = self.get_position()
     if w<=width and h<=height:
       # center and lock images smaller than viewport
-      self.movementEnabled=False
+      self.movementEnabled=(0,0)
       self.animate(clutter.LINEAR,100, 'x', 0, 'y', 0) # align with left border
     elif w+cy < y+height:
       alignAnim = self.animate(clutter.LINEAR,100, 'y', y-h+height) # align with left border
-      alignAnim.connect("completed", self._enableMovementCB)
+      alignAnim.connect("completed", self._enableMovementCB, (1,1))
+    if w < width:
+      alignAnim1 = self.animate(clutter.LINEAR,100, 'x', x+((width-w)/2.0) ) # align with left border
+      alignAnim1.connect("completed", self._enableMovementCB, (0,None))
     self.animate(clutter.LINEAR,100, 'width', w, 'height', h)
 
   def fitToWidth(self):
@@ -177,7 +191,7 @@ class Page(clutter.Texture):
     factor = float(width) / w
     (newW,newH) = (w*factor,h*factor)
     self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
-    self.movementEnabled=False
+    self.movementEnabled=(0,0)
     alignAnim = self.animate(clutter.LINEAR,100, 'x', 0) # align with left border
     alignAnim.connect("completed", self._enableMovementCB)
     if height > newH: # is screen higher than the image ?
@@ -194,7 +208,7 @@ class Page(clutter.Texture):
     factor = float(height) / h
     (newW,newH) = (w*factor,h*factor)
     self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
-    self.movementEnabled=False
+    self.movementEnabled=(0,0)
     alignAnim = self.animate(clutter.LINEAR,100, 'y', 0) # align with left border
     alignAnim.connect("completed", self._enableMovementCB)
     if width > newW: # is screen wider than the image ?
@@ -211,7 +225,7 @@ class Page(clutter.Texture):
     # move to the center
     shiftX = (screenW-newW)/2.0
     shiftY = (screenH-newH)/2.0
-    self.movementEnabled = False
+    self.movementEnabled = (0,0)
     self.animate(clutter.LINEAR,100, 'x', shiftX, 'y', shiftY)
 
   def resetPosition(self):
@@ -221,7 +235,7 @@ class Page(clutter.Texture):
     self.animate(clutter.LINEAR,100, 'x', x, 'y', y)
 
 #    self.set_position(*self.initialPosition)
-    self.movementEnabled = True
+    self.movementEnabled = (1,1)
 
   def getPath(self):
     return self.imagePath
