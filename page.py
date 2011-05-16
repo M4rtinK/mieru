@@ -235,13 +235,23 @@ class Page(clutter.Texture):
     if w<=width and h<=height:
       # center and lock images smaller than viewport
       self.movementEnabled=(0,0)
-      self.animate(clutter.LINEAR,100, 'x', 0, 'y', 0) # align with left border
-    elif w+cy < y+height:
-      alignAnim = self.animate(clutter.LINEAR,100, 'y', y-h+height) # align with left border
+      # move to the middle of the screen and lock it there
+      self.animate(clutter.LINEAR,100, 'x', (width-w)/2.0, 'y', (height-h)/2.0)
+
+    elif w >= width: #page is wider than viewport
+      self.movementEnabled=(0,0)
+      # align with left border
+      alignAnim = self.animate(clutter.LINEAR,100, 'x', 0)
       alignAnim.connect("completed", self._enableMovementCB, (1,1))
-    if w < width:
-      alignAnim1 = self.animate(clutter.LINEAR,100, 'x', x+((width-w)/2.0) ) # align with left border
+    elif w < width: # viewport is wider than page
+      # position in the middle and lock horizontal movement
+      alignAnim1 = self.animate(clutter.LINEAR,100, 'x', x+((width-w)/2.0) )
       alignAnim1.connect("completed", self._enableMovementCB, (0,None))
+    if h < height: # viewport is higher than page
+      # position in the middle and lock vertical movement
+      alignAnim2 = self.animate(clutter.LINEAR,100, 'y', y+((height-h)/2.0) )
+      alignAnim2.connect("completed", self._enableMovementCB, (None,0))
+
     self.animate(clutter.LINEAR,100, 'width', w, 'height', h)
 
   def fitToWidth(self):
@@ -271,7 +281,7 @@ class Page(clutter.Texture):
     self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
     self.movementEnabled=(0,0)
     alignAnim = self.animate(clutter.LINEAR,100, 'y', 0) # align with left border
-    alignAnim.connect("completed", self._enableMovementCB)
+    alignAnim.connect("completed", self._enableMovementCB, (0, None))
     if width > newW: # is screen wider than the image ?
        self.animate(clutter.LINEAR,100, 'x', (width-newW)/2.0)
     return(newW,newH)
