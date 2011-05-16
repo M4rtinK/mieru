@@ -38,17 +38,10 @@ class Mieru:
 #    self.continuousReading = self.get('continuousReading',True)
     self.continuousReading = True
 
-    # get the platform module
-    if args.u == "hildon":
-      import maemo5
-      self.platform = maemo5.Maemo5(self)
-    else:
-      import pc
-      self.platform = pc.PC(self)
-
     # create a new window
     if args.u == "hildon":
       # hildon should be imported by now by the Maemo5 platform module
+      import hildon
       self.window = hildon.StackableWindow()
     else:
       self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -59,6 +52,14 @@ class Mieru:
 
     # suhtdown when the main window is destroyed
     self.window.connect("destroy", self.destroy)
+
+    # get the platform module
+    if args.u == "hildon":
+      import maemo5
+      self.platform = maemo5.Maemo5(self)
+    else:
+      import pc
+      self.platform = pc.PC(self)
 
 
     # get the Clutter embed and add it to the window
@@ -111,6 +112,15 @@ class Mieru:
       self.set('fitMode', "screen")
     elif keyName == 'n':
       self.platform.startChooser(gtk.FILE_CHOOSER_ACTION_OPEN)
+    elif keyName == 'k':
+      """toggle kinetic scrolling"""
+      kinetic = self.get('kineticScrolling', False)
+      if kinetic:
+        self.set('kineticScrolling', False)
+        self.notify('kinetic scrolling <b>disabled</b>')
+      else:
+        self.set('kineticScrolling', True)
+        self.notify('kinetic scrolling <b>enabled</b>')
     elif keyName == 'q':
       self.destroy(self.window)
     elif keyName == 'F8' or keyName == 'Page_Up':
