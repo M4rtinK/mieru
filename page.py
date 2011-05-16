@@ -1,8 +1,6 @@
 """page.py - a manga/comix book page"""
 
 import clutter
-import gtk
-import time
 
 class Page(clutter.Texture):
   def __init__(self, pb, mieru, name="", fitOnStart=True):
