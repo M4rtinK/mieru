@@ -232,6 +232,9 @@ class Manga:
   def getActivePageId(self):
     return self.activePageId
 
+  def getActivePageNumber(self):
+    return self.ID2PageNumber(self.activePageId)
+
   def getMaxId(self):
     if self.pages:
       return (len(self.pages)-1)
