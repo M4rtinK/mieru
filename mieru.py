@@ -103,12 +103,16 @@ class Mieru:
     if keyName == 'f':
       self.toggleFullscreen()
     elif keyName == 'o':
+      self.notify('fit to <b>original size</b>')
       self.set('fitMode',"original")
     elif keyName == 'i':
+      self.notify('fit to <b>width</b>')
       self.set('fitMode',"width")
     elif keyName == 'u':
+      self.notify('fit to <b>height</b>')
       self.set('fitMode',"height")
     elif keyName == 'z':
+      self.notify('fit to <b>screen</b>')
       self.set('fitMode', "screen")
     elif keyName == 'n':
       self.platform.startChooser(gtk.FILE_CHOOSER_ACTION_OPEN)
