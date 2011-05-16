@@ -8,7 +8,7 @@ import hildon
 
 from base_platform import BasePlatform
 
-class Maemo5:
+class Maemo5(BasePlatform):
   def __init__(self, mieru):
     BasePlatform.__init__(self)
 
@@ -42,11 +42,15 @@ class Maemo5:
     clearHistoryButton = gtk.Button("Clear history") # TODO: move this somewhere into settings
     clearHistoryButton.connect('clicked',self._clearHistoryCB)
 
+    pagingButton = gtk.Button("paging")
+    pagingButton.connect('clicked',self.showPagingDialog)
+
     menu.append(openFileButton)
     menu.append(openFolderButton)
     menu.append(fullscreenButton)
     menu.append(historyPickerButton)
     menu.append(clearHistoryButton)
+    menu.append(pagingButton)
 
     # Show all menu items
     menu.show_all()
