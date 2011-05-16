@@ -98,6 +98,12 @@ class Mieru:
 
     gtk.main()
 
+  def getViewport(self):
+    return self.viewport
+
+  def getActiveManga(self):
+    return self.activeManga
+
   def on_key_press_event(self, embed, event):
     keyName = gtk.gdk.keyval_name(event.keyval)
     if keyName == 'f':
@@ -125,6 +131,11 @@ class Mieru:
       else:
         self.set('kineticScrolling', True)
         self.notify('kinetic scrolling <b>enabled</b>')
+    elif keyName == 'p':
+      """show paging dialog"""
+      self.platform.showPagingDialog()
+
+
     elif keyName == 'q':
       self.destroy(self.window)
     elif keyName == 'F8' or keyName == 'Page_Up':

@@ -25,7 +25,11 @@ class BasePlatform:
     """show a notification, if possible"""
     pass
 
-  def showPagingDialog(self, button):
+  def showPagingDialogCB(self, button):
+    """for showing paging diloag from button CB"""
+    self.showPagingDialog()
+
+  def showPagingDialog(self):
     # get data
     activeManga = self.mieru.getActiveManga()
     if activeManga:
