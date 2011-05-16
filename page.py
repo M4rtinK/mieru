@@ -2,6 +2,7 @@
 
 import clutter
 import gtk
+import time
 
 class Page(clutter.Texture):
   def __init__(self, pb, mieru, name="", fitOnStart=True):
@@ -32,6 +33,12 @@ class Page(clutter.Texture):
     self.isPressed = False
     self.pressStart = None
     self.lastMotion = None
+    self.lastMotionTimestamp = 0
+    self.lastDTDXDY = (0,0,0)
+
+    self.decelTl = None
+    self.lastdecelElapsed = 0
+
     """first number id for the horizontal and seccond for the vertical axis,
     0 means movement in this axis is disabled, 1 means movement is enabled"""
     self.movementEnabled = (1,1) # the page is fit to screen so it should not be move
@@ -47,40 +54,68 @@ class Page(clutter.Texture):
 
     self.set_keep_aspect_ratio(True) # we want to preserve the aspect ratio
 
-  def do_button_press_event (self, actor, event):
+  def do_button_press_event (self, page, event):
 #    clickCount = event.get_click_count()
 #    print "press", clickCount
 #    if clickCount >= 3:
 #      self._toggleZoom()
-    self.fsButtonLastPressTimestamp = event.time
-
-      
+    t = event.time
     self.isPressed = True
     (x,y) = event.x,event.y
+    self.fsButtonLastPressTimestamp = t
+#    self.lastMovement = (t,x,y)
+#    self.lastLastMovement = (t,x,y)
+    self.lastDTDXDY = (0,0,0)
+    page.lastMotionTimestamp = event.time
+    if self.decelTl:
+      self.decelTl.stop()
+      
     self.pressStart = (x,y)
     self.lastMotion = (x,y)
 
     return False
 
-  def do_button_release_event (self, actor, event):
+  def do_button_release_event (self, page, event):
     clickCount = event.get_click_count()
     if clickCount >= 3 and self.fsButtonLastPressTimestamp:
       if (event.time - self.fsButtonLastPressTimestamp)<self.pressLength:
-        print (event.time - self.fsButtonLastPressTimestamp)
         (x1,y1) = self.pressStart
         (x,y) = (x1-event.x,y1-event.y)
         print (x,y)
-
-
         self._toggleZoom()
+    else:
+      if self.mieru.get('kineticScrolling', False):
+#        print "kinetic"
+#        self.
+
+
+        (dt, dx, dy) = self.lastDTDXDY
+        ppms = (dx/dt,dy/dt)
+        self.lastdecelElapsed = 0
+        self.decelTl = clutter.Timeline(10000)
+        self.decelTl.connect('new_frame', self._decelerateCB, ppms[0], ppms[1])
+        self.decelTl.start()
+
+
+
+#      print event.time - self.lastMovementTimestamp
+#      (x,y) = event.x,event.y
+#      if page.lastMotion:
+#        (lasX,lastY) = page.lastMotion
+#        (dx,dy) = (x-lasX,y-lastY)
+#        print (dx,dy)
+#        print page.lastMotion
+#        print event.x,event.y
 
     self.isPressed = False
     self.pressStart = None
     self.lastMotion = None
-    
+
     return False
 
   def on_page_motion(self, page, event):
+#    print page, event
+#    print dir(event)
     (x,y) = event.x,event.y
     if page.lastMotion:
       (lasX,lastY) = page.lastMotion
@@ -88,40 +123,55 @@ class Page(clutter.Texture):
     else:
       (dx,dy) = (0,0)
     page.lastMotion = (x,y)
-    self.movePage(page,dx*page.movementEnabled[0],dy*page.movementEnabled[1])
+    page.lastDTDXDY = (event.time - page.lastMotionTimestamp, dx,dy)
+    page.lastMotionTimestamp = event.time
+
+    if self.isPressed:
+      self.movePage(page,dx*page.movementEnabled[0],dy*page.movementEnabled[1])
     return False
 
   def movePage(self,page,dx,dy):
     """move the page so that the voewport either stays inside it
        or the page stays inside the viewport if it is smaller"""
-    if self.isPressed:
-      (x,y,w,h) = self.mieru.viewport
-      (pageX,pageY,pageW,pageH) = page.get_geometry()
-      (newX,newY) = (pageX+dx,pageY+dy)
+    (x,y,w,h) = self.mieru.viewport
+    (pageX,pageY,pageW,pageH) = page.get_geometry()
+    (newX,newY) = (pageX+dx,pageY+dy)
+    wCollision = False
+    hCollision = False
 
-      if pageW > w: # page is wider than screen
-        if newX < w-pageW:
-          newX = w-pageW
-        elif newX > 0:
-          newX = 0
-      else: # screen is wider than page
-        if newX < 0:
-          newX = 0
-        if newX > w-pageW:
-          newX = w-pageW
+    if pageW > w: # page is wider than screen
+      if newX < w-pageW:
+        newX = w-pageW
+        wCollision = True
+      elif newX > 0:
+        newX = 0
+        wCollision = True
+    else: # screen is wider than page
+      if newX < 0:
+        newX = 0
+        wCollision = True
+      if newX > w-pageW:
+        newX = w-pageW
+        wCollision = True
 
-      if pageH > h: # page is longer than screen
-        if newY < h-pageH:
-          newY = h-pageH
-        elif newY > 0:
-          newY = 0
-      else: # screen is longer than page
-        if newY < 0:
-          newY = 0
-        if newY > pageH-h:
-          newY = pageH-h
-      page.move_by(newX - pageX,newY - pageY)
+    if pageH > h: # page is longer than screen
+      if newY < h-pageH:
+        newY = h-pageH
+        hCollision = True
+      elif newY > 0:
+        newY = 0
+        hCollision = True
+    else: # screen is longer than page
+      if newY < 0:
+        newY = 0
+        hCollision = True
+      if newY > pageH-h:
+        newY = pageH-h
+        hCollision = True
+#    page.set_clip(newX*(-1), newY*(-1), w, h)
+    page.move_by(newX - pageX,newY - pageY)
 
+    return (wCollision, hCollision)
 
   def activate(self):
     self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
@@ -165,6 +215,17 @@ class Page(clutter.Texture):
       if he1 == None:
         he1 = he
       self.movementEnabled = (we1,he1)
+
+  def _decelerateCB(self, timeline, timeFromStart, dxPMS, dyPMS):
+    t = timeline.get_elapsed_time()
+    dt = t - self.lastdecelElapsed
+    self.lastdecelElapsed = t
+#    print "decel"
+    print (dxPMS*dt, dyPMS*dt)
+    if self.movePage(self, dxPMS*dt, dyPMS*dt) == (True, True):
+      print "stopping"
+      timeline.stop()
+      self.decelTl = None
 
   def setOriginalSize(self):
     """resize back to original size"""
@@ -225,7 +286,7 @@ class Page(clutter.Texture):
     # move to the center
     shiftX = (screenW-newW)/2.0
     shiftY = (screenH-newH)/2.0
-    self.movementEnabled = (0,0)
+    self.movementEnabled=(0,0)
     self.animate(clutter.LINEAR,100, 'x', shiftX, 'y', shiftY)
 
   def resetPosition(self):
