@@ -206,10 +206,10 @@ class Page(clutter.Texture):
   def _enableMovementCB(self, timeline, movementTupple=None):
     """enable movement after an animation finishes"""
     (we,he) = self.movementEnabled
-    (we1,he1) = movementTupple
     if movementTupple == None:
       self.movementEnabled = (1,1)
     else:
+      (we1,he1) = movementTupple
       if we1 == None:
         we1 = we
       if he1 == None:
