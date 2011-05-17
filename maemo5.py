@@ -42,7 +42,7 @@ class Maemo5(BasePlatform):
     clearHistoryButton = gtk.Button("Clear history") # TODO: move this somewhere into settings
     clearHistoryButton.connect('clicked',self._clearHistoryCB)
 
-    pagingButton = gtk.Button("paging")
+    pagingButton = gtk.Button("Paging")
     pagingButton.connect('clicked',self.showPagingDialogCB)
 
     menu.append(openFileButton)
