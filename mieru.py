@@ -53,6 +53,11 @@ class Mieru:
     # suhtdown when the main window is destroyed
     self.window.connect("destroy", self.destroy)
 
+    # get the Clutter embed and add it to the window
+    self.embed = cluttergtk.Embed()
+    self.vbox = gtk.VBox(False, 2)
+    self.window.add(self.vbox)
+    
     # get the platform module
     if args.u == "hildon":
       import maemo5
@@ -61,10 +66,9 @@ class Mieru:
       import pc
       self.platform = pc.PC(self)
 
+    self.vbox.pack_start(self.embed)
+    self.vbox.show_all()
 
-    # get the Clutter embed and add it to the window
-    self.embed = cluttergtk.Embed()
-    self.window.add(self.embed)
 
     # we need to realize the widget before we get the stage
     self.embed.realize()
@@ -100,6 +104,12 @@ class Mieru:
 
   def getViewport(self):
     return self.viewport
+
+  def getWindow(self):
+    return self.window
+
+  def getVbox(self):
+    return self.vbox
 
   def getActiveManga(self):
     return self.activeManga
