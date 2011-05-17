@@ -33,7 +33,12 @@ class BasePlatform:
   def showPagingDialog(self):
     manga = self.mieru.getActiveManga()
     if manga:
+      self.pagingDialogBeforeOpen()
       paging_dialog.PagingDialog(manga)
     else:
       self.notify("nothing loaded - paging disabled")
+
+  def pagingDialogBeforeOpen(self):
+    """do something before opening the paging dialog"""
+    pass
 

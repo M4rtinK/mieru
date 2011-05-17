@@ -140,10 +140,11 @@ class Maemo5(BasePlatform):
     if selectedPath:
       self.mieru.openManga(selectedPath)
 
-  def notify(self, message, icon):
+  def notify(self, message, icon=None):
     print message
 #    hildon.hildon_banner_show_information_with_markup(self.mieru.window, "", message)
     hildon.hildon_banner_show_information_with_markup(self.mieru.window, "icon_text", message)
 
-
-
+  def pagingDialogBeforeOpen(self):
+    """notify the user that the window in tha bakcground does not live-update"""
+    self.notify("<b>Note:</b> the page in background does not refresh automatically", None)
