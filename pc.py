@@ -90,6 +90,10 @@ class PC(BasePlatform):
         if self.mb:
           self.mb.show()
 
+  def minimize(self):
+    """minimize the main window"""
+    self.mieru.getWindow().iconify()
+
 
 
 

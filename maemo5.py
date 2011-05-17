@@ -148,3 +148,7 @@ class Maemo5(BasePlatform):
   def pagingDialogBeforeOpen(self):
     """notify the user that the window in tha bakcground does not live-update"""
     self.notify("<b>Note:</b> the page in background does not refresh automatically", None)
+
+  def minimize(self):
+    """minimizing is not supported on Maemo :)"""
+    self.notify('hiding to panel is not supported ona Maemo (no panel :)', None)

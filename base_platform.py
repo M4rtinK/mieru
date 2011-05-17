@@ -42,3 +42,7 @@ class BasePlatform:
     """do something before opening the paging dialog"""
     pass
 
+  def minimize(self):
+    """minimize the main window"""
+    pass
+
