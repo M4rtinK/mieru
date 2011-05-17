@@ -240,6 +240,14 @@ class Manga:
       return (len(self.pages)-1)
     else:
       return None
+
+  def getMaxPageNumber(self):
+    maxId = self.getMaxId()
+    if maxId == None:
+      return 0
+    else:
+      return self.ID2PageNumber(maxId)
+
       
   def gotoPageId(self, id):
     # get page for the given id
