@@ -144,8 +144,9 @@ class Mieru:
     elif keyName == 'p':
       """show paging dialog"""
       self.platform.showPagingDialog()
-
-
+    elif keyName == 'm':
+      """minimize the main window"""
+      self.minimize()
     elif keyName == 'q':
       self.destroy(self.window)
     elif keyName == 'F8' or keyName == 'Page_Up':
@@ -167,6 +168,10 @@ class Mieru:
     else:
       self.window.fullscreen()
       self.fullscreen = True
+
+  def minimize(self):
+    """minimize the main window"""
+    self.getWindow().iconify()
 
   def notify(self, message, icon=""):
     print "notification: %s" % message
