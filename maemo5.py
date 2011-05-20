@@ -5,6 +5,7 @@ import os
 import gtk
 import gobject
 import hildon
+import info
 
 from base_platform import BasePlatform
 
@@ -20,9 +21,9 @@ class Maemo5(BasePlatform):
     # add application menu
     menu = hildon.AppMenu()
     openFolderButton = gtk.Button("Open folder")
-    openFolderButton.connect('clicked',self.startChooser, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    openFolderButton.connect('clicked',self.startChooserCB, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     openFileButton = gtk.Button("Open file")
-    openFileButton.connect('clicked',self.startChooser, gtk.FILE_CHOOSER_ACTION_OPEN)
+    openFileButton.connect('clicked',self.startChooserCB, gtk.FILE_CHOOSER_ACTION_OPEN)
     fullscreenButton = gtk.Button("Fullscreen")
     fullscreenButton.connect('clicked',self.mieru.toggleFullscreen)
 
@@ -42,6 +43,12 @@ class Maemo5(BasePlatform):
     clearHistoryButton = gtk.Button("Clear history") # TODO: move this somewhere into settings
     clearHistoryButton.connect('clicked',self._clearHistoryCB)
 
+    optionsButton = gtk.Button("Options")
+    optionsButton.connect('clicked',self._showOptionsCB)
+
+    infoButton = gtk.Button("Info")
+    infoButton.connect('clicked',self._showInfoCB)
+
     pagingButton = gtk.Button("Paging")
     pagingButton.connect('clicked',self.showPagingDialogCB)
 
@@ -49,8 +56,9 @@ class Maemo5(BasePlatform):
     menu.append(openFolderButton)
     menu.append(fullscreenButton)
     menu.append(historyPickerButton)
-    menu.append(clearHistoryButton)
     menu.append(pagingButton)
+    menu.append(optionsButton)
+    menu.append(infoButton)
 
     # Show all menu items
     menu.show_all()
@@ -58,6 +66,36 @@ class Maemo5(BasePlatform):
     # Add the menu to the window
     self.mieru.window.set_app_menu(menu)
 
+  def _showOptionsCB(self, button):
+    self.showOptions()
+
+  def showOptions(self):
+    win = hildon.StackableWindow()
+    win.set_title("Options")
+
+    # Setting a label in the new window
+    label = gtk.Label("This is a subview")
+
+    vbox = gtk.VBox(False, 0)
+    vbox.pack_start(label, True, True, 0)
+
+    win.add(vbox)
+
+    win.show_all()
+
+  def _showInfoCB(self, button):
+    self.showInfo()
+
+  def showInfo(self):
+    win = hildon.StackableWindow()
+    win.set_title("Options")
+
+    pann = hildon.PannableArea()
+    pann.add_with_viewport(info.InfoNotebook(self.mieru))
+
+    win.add(pann)
+
+    win.show_all()
 
   def enable_zoom_cb(self, window):
     window.window.property_change(gtk.gdk.atom_intern("_HILDON_ZOOM_KEY_ATOM"), gtk.gdk.atom_intern("INTEGER"), 32, gtk.gdk.PROP_MODE_REPLACE, [1]);
@@ -122,6 +160,9 @@ class Maemo5(BasePlatform):
     self.historyLocked = False
 
 
+  def startChooserCB(self,button, type):
+    self.startChooser(type)
+
   def startChooser(self, type):
     dialog = hildon.FileChooserDialog(self.mieru.window, type)
     lastFolder = self.mieru.get('lastChooserFolder', None)
@@ -152,3 +193,18 @@ class Maemo5(BasePlatform):
   def minimize(self):
     """minimizing is not supported on Maemo :)"""
     self.notify('hiding to panel is not supported ona Maemo (no panel :)', None)
+
+  def getButton(self, label=""):
+    """return hildon button"""
+#    b = hildon.Button(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT, hildon.BUTTON_ARRANGEMENT_VERTICAL)
+    b = hildon.Button(gtk.HILDON_SIZE_FINGER_HEIGHT, hildon.BUTTON_ARRANGEMENT_VERTICAL)
+    b.set_title(label)
+    return b
+
+
+  def getCheckButton(self, label=""):
+    """return hildon check button"""
+    c = hildon.CheckButton(gtk.HILDON_SIZE_FINGER_HEIGHT)
+    c.set_label(label)
+    return c
+
