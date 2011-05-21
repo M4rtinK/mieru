@@ -5,14 +5,26 @@ class Stats:
     self.mieru = mieru
 
   def isOn(self):
-    """infort if taking statistics is enabled"""
+    """inform if keeping statistics is enabled"""
     if self.mieru.get('statsOn', True):
       return True
     else:
       return False
 
+  def turnOn(self):
+    self.mieru.set('statsOn', True)
+
+  def turnOff(self):
+    self.mieru.set('statsOn', False)
+
+
   def getStats(self):
     return self._getStats()
+
+  def resetStats(self):
+    """wipe stats"""
+    self._saveStats({})
+    self.mieru.set('statsPageCount', 0)
 
   def _getStats(self):
     """get the statistics dictionary and create a new one if none exists"""
@@ -57,13 +69,23 @@ class Stats:
     # TODO: more efficient string concatenation ? (if it makes sense here)
     stats = self._getStats()
     text = "Usage statistics:"
-    if "\nunitCount" in stats:
-      text+= "\nunits total: %d" % stats["unitCount"]
-    pageCount = self.mieru.get("statsPageCount", None)
-    if pageCount:
-      text+= "\npages total: %d" % pageCount
-    if "usageTime" in stats:
-      text+= "\ntime open: %.1f hours" % (stats["usageTime"]/3600.0) #TODO: nicer conversion
+    if self.isOn():
+      statsFound = False
+      if "\nunitCount" in stats:
+        statsFound = True
+        text+= "\nunits total: %d" % stats["unitCount"]
+      pageCount = self.mieru.get("statsPageCount", None)
+      if pageCount:
+        statsFound = True
+        text+= "\npages total: %d" % pageCount
+      if "usageTime" in stats:
+        statsFound = True
+        text+= "\ntime open: %.1f hours" % (stats["usageTime"]/3600.0) #TODO: nicer conversion
+      if statsFound == False:
+        text+="<b>empty</b>"
+    else:
+      text+="<b>disabled</b>"
+
     return text
 
 
