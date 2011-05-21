@@ -11,25 +11,37 @@ import buttons
 import manga
 import options
 import startup
+import stats
 
 class Mieru:
 
   def destroy(self, widget, data=None):
+    # log elapsed time
+    sessionTime = time.time() - self.startupTimeStamp
+    self.stats.updateUsageTime(sessionTime)
+
     self.saveState()
     print "mieru quiting"
     gtk.main_quit()
 
   def __init__(self):
-    # restore persistent options
+    # log start
+    self.startupTimeStamp = time.time()
+
+    # parse startup arguments
     start = startup.Startup()
     args = start.args
 
 
+    # restore persistent options
     self.d = {}
     self.options = options.Options(self)
     # options value watching
     self.maxWatchId = 0
     self.watches = {}
+
+    # enable stats
+    self.stats = stats.Stats(self)
 
     # class varibales
     self.fullscreen = False
@@ -181,6 +193,9 @@ class Mieru:
     print "opening %s on page %d" % (path,startOnPage)
     self.activeManga = manga.Manga(self, path, startOnPage)
     mangaState = self.activeManga.getState()
+    # increment count
+    self.stats.incrementUnitCount()
+
     self.addToHistory(mangaState)
     self.saveState()
 
