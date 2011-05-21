@@ -143,7 +143,11 @@ class Mieru:
       self.notify('fit to <b>screen</b>')
       self.set('fitMode', "screen")
     elif keyName == 'n':
+      """launch file chooser"""
       self.platform.startChooser(gtk.FILE_CHOOSER_ACTION_OPEN)
+    elif keyName == 'b':
+      """launch folder chooser"""
+      self.platform.startChooser(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     elif keyName == 'k':
       """toggle kinetic scrolling"""
       kinetic = self.get('kineticScrolling', False)
@@ -156,6 +160,12 @@ class Mieru:
     elif keyName == 'p':
       """show paging dialog"""
       self.platform.showPagingDialog()
+    elif keyName == 'c':
+      """show options window"""
+      self.platform.showOptions()
+    elif keyName == 'a':
+      """show info window"""
+      self.platform.showInfo()
     elif keyName == 'm':
       """minimize the main window"""
       self.platform.minimize()

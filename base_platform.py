@@ -42,6 +42,14 @@ class BasePlatform:
     """do something before opening the paging dialog"""
     pass
 
+  def showInfo(self):
+    """show/witch to the options info"""
+    pass
+
+  def showOptions(self):
+    """show/witch to the options window"""
+    pass
+
   def minimize(self):
     """minimize the main window"""
     pass
