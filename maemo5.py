@@ -223,7 +223,7 @@ class Maemo5(BasePlatform):
     """minimizing is not supported on Maemo :)"""
     self.notify('hiding to panel is not supported ona Maemo (no panel :)', None)
 
-  def getButton(self, label=""):
+  def Button(self, label=""):
     """return hildon button"""
 #    b = hildon.Button(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT, hildon.BUTTON_ARRANGEMENT_VERTICAL)
     b = hildon.Button(gtk.HILDON_SIZE_FINGER_HEIGHT, hildon.BUTTON_ARRANGEMENT_VERTICAL)
@@ -231,7 +231,7 @@ class Maemo5(BasePlatform):
     return b
 
 
-  def getCheckButton(self, label=""):
+  def CheckButton(self, label=""):
     """return hildon check button"""
     c = hildon.CheckButton(gtk.HILDON_SIZE_FINGER_HEIGHT)
     c.set_label(label)

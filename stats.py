@@ -17,7 +17,6 @@ class Stats:
   def turnOff(self):
     self.mieru.set('statsOn', False)
 
-
   def getStats(self):
     return self._getStats()
 

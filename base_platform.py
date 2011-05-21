@@ -54,11 +54,11 @@ class BasePlatform:
     """minimize the main window"""
     pass
 
-  def getButton(self, label=""):
+  def Button(self, label=""):
     """return classic GTK button"""
     return gtk.Button(label)
 
-  def getCheckButton(self, label=""):
+  def CheckButton(self, label=""):
     """return classic GTK check button"""
     return gtk.CheckButton(label)
 
