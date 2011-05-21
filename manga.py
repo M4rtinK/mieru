@@ -281,6 +281,10 @@ class Manga:
       self.activePageId = newPageId
       self.activePage = newPage
       self.pageTurnTl.start()
+      
+      # increment page count
+      self.mieru.stats.incrementPageCount()
+
       return True
     else:
       print "switching to page failed, id: ", id
