@@ -8,8 +8,8 @@ import hildon
 def getShortcutsContent():
   vbox = gtk.VBox()
   shortcuts = gtk.Label()
-  text = "<b>Keyboard shortcuts</b>\n"
-  text+= "\n\n<b>Main</b>"
+  text = "<b><u>Keyboard shortcuts</u></b>\n"
+  text+= "\n<b>Main</b>"
   text+= "\n<b>f</b> - fullscreen"
   text+= "\n<b>n</b> - open file chooser"
   text+= "\n<b>p</b> - show paging dialog"
@@ -60,6 +60,25 @@ def getAboutContent(versionString="unknown"):
   vbox.show_all()
   return vbox
 
+def getVersionString():
+  versionString = "unknown version"
+  versionFilePath = 'version.txt'
+
+  # try read the version file
+  if os.path.exists(versionFilePath):
+    try:
+      f = open(versionFilePath, 'r')
+      versionString = f.read()
+      f.close()
+      # is it really string ?
+      versionString = str(versionString)
+
+    except Exception, e:
+      print "loading version info failed"
+      print e
+
+  return versionString
+
 def _getLabel(name, spacing=0):
   vbox = gtk.VBox(False, spacing)
   vbox.pack_start(gtk.Label(name),padding=spacing)
@@ -70,6 +89,7 @@ class InfoNotebook(gtk.Notebook):
   def __init__(self, mieru):
     gtk.Notebook.__init__(self)
     self.mieru = mieru
+    self.versionString = getVersionString()
     enlargeTabs = 15
     versionString = self.getVersionString()
     self.append_page(getShortcutsContent(),_getLabel("Shortcuts",enlargeTabs))
@@ -77,25 +97,6 @@ class InfoNotebook(gtk.Notebook):
     self.append_page(getAboutContent(versionString),_getLabel("About", enlargeTabs))
     self.show_all()
 
-
-  def getVersionString(self):
-    versionString = "unknown version"
-    versionFilePath = 'version.txt'
-
-    # try read the version file
-    if os.path.exists(versionFilePath):
-      try:
-        f = open(versionFilePath, 'r')
-        versionString = f.read()
-        f.close()
-        # is it really string ?
-        versionString = str(versionString)
-        self.versionString = versionString
-      except Exception, e:
-        print "loading version info failed"
-        print e
-
-    return versionString
 
 
 

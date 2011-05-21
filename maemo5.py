@@ -93,12 +93,38 @@ class Maemo5(BasePlatform):
     win = hildon.StackableWindow()
     win.set_title("Info")
 
+    """enlarge the tabs in the notebook vertically
+    to be more finger friendly"""
+    enlargeTabs = 15
+    versionString = info.getVersionString()
+    notebook = gtk.Notebook()
+    
+    # shortcuts need to be pannable
     pann = hildon.PannableArea()
-    pann.add_with_viewport(info.InfoNotebook(self.mieru))
+    pann.add_with_viewport(info.getShortcutsContent())
+    # add shortcuts tab
+    notebook.append_page(pann,self._getLabel("Shortcuts",enlargeTabs))
+    # add stats tab
+    notebook.append_page(info.getStatsContent(self.mieru),self._getLabel("Stats", enlargeTabs))
+    # add about tab
+    notebook.append_page(info.getAboutContent(versionString),self._getLabel("About", enlargeTabs))
 
-    win.add(pann)
+    # add the netebook to the new stackable window
+    win.add(notebook)
 
+    # show it
     win.show_all()
+
+
+  def _getLabel(self, name, spacing=0):
+    """get a label fort notebook with adjustable spacing"""
+    vbox = gtk.VBox(False, spacing)
+    vbox.pack_start(gtk.Label(name),padding=spacing)
+    vbox.show_all()
+    return vbox
+
+
+
 
   def enable_zoom_cb(self, window):
     window.window.property_change(gtk.gdk.atom_intern("_HILDON_ZOOM_KEY_ATOM"), gtk.gdk.atom_intern("INTEGER"), 32, gtk.gdk.PROP_MODE_REPLACE, [1]);
