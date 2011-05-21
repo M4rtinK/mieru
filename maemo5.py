@@ -40,9 +40,6 @@ class Maemo5(BasePlatform):
     historyPickerButton.set_selector(selector)
     self.mieru.watch('openMangasHistory', self._updateHistoryCB)
 
-    clearHistoryButton = gtk.Button("Clear history") # TODO: move this somewhere into settings
-    clearHistoryButton.connect('clicked',self._clearHistoryCB)
-
     optionsButton = gtk.Button("Options")
     optionsButton.connect('clicked',self._showOptionsCB)
 
@@ -73,11 +70,17 @@ class Maemo5(BasePlatform):
     win = hildon.StackableWindow()
     win.set_title("Options")
 
-    # Setting a label in the new window
-    label = gtk.Label("This is a subview")
+    padding = 5
 
-    vbox = gtk.VBox(False, 0)
-    vbox.pack_start(label, True, True, 0)
+    # Setting a label in the new window
+    label = gtk.Label("History")
+    clearHistoryButton = hildon.Button(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT, hildon.BUTTON_ARRANGEMENT_VERTICAL) # TODO: move this somewhere into settings
+    clearHistoryButton.set_title("Clear history")
+    clearHistoryButton.connect('clicked',self._clearHistoryCB)
+
+    vbox = gtk.VBox(False, padding)
+    vbox.pack_start(label, False, False, 0)
+    vbox.pack_start(clearHistoryButton, False, False, 0)
 
     win.add(vbox)
 
@@ -88,7 +91,7 @@ class Maemo5(BasePlatform):
 
   def showInfo(self):
     win = hildon.StackableWindow()
-    win.set_title("Options")
+    win.set_title("Info")
 
     pann = hildon.PannableArea()
     pann.add_with_viewport(info.InfoNotebook(self.mieru))
