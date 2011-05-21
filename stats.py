@@ -63,7 +63,7 @@ class Stats:
     if pageCount:
       text+= "\npages total: %d" % pageCount
     if "usageTime" in stats:
-      text+= "\ntime open: %d" % stats["usageTime"]
+      text+= "\ntime open: %.1f hours" % (stats["usageTime"]/3600.0) #TODO: nicer conversion
     return text
 
 
