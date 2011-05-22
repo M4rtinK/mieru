@@ -11,11 +11,11 @@ class Stats:
     else:
       return False
 
-  def turnOn(self):
-    self.mieru.set('statsOn', True)
-
-  def turnOff(self):
-    self.mieru.set('statsOn', False)
+  def setOn(self, value):
+    if value == True or value == False:
+      self.mieru.set('statsOn', value)
+    else:
+      print "stats: valu must be True or False, not: ", value
 
   def getStats(self):
     return self._getStats()
@@ -81,9 +81,9 @@ class Stats:
         statsFound = True
         text+= "\ntime open: %.1f hours" % (stats["usageTime"]/3600.0) #TODO: nicer conversion
       if statsFound == False:
-        text+="<b>empty</b>"
+        text+=" <b>empty</b>"
     else:
-      text+="<b>disabled</b>"
+      text+=" <b>disabled</b>"
 
     return text
 

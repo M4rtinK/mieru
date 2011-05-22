@@ -3,8 +3,6 @@
 import gtk
 import os
 
-import hildon
-
 def getShortcutsContent():
   vbox = gtk.VBox()
   shortcuts = gtk.Label()
@@ -30,17 +28,34 @@ def getShortcutsContent():
   vbox.show_all()
   return vbox
 
+def _updateStatsText(stats, label):
+  statsText = stats.getStatsText()
+  label.set_markup(statsText)
+
+def _wipeStatsCB(button, stats, label):
+  stats.resetStats()
+  _updateStatsText(stats, label)
+
+def _setStatsOnCB(button, stats, label):
+  stats.setOn(button.get_active())
+  _updateStatsText(stats, label)
+
 def getStatsContent(mieru):
+  """get content for the statistics monitoring tab"""
   vbox = gtk.VBox(False,0)
   statsText = mieru.stats.getStatsText()
-  stats = gtk.Label()
-  stats.set_markup(statsText)
-  vbox.pack_start(stats)
+  statsLabel = gtk.Label()
+  statsLabel.set_markup(statsText)
+  vbox.pack_start(statsLabel)
   hbox = gtk.HBox()
-#  statsOnOff = gtk.CheckButton("Keep statistics")
-#  resetStats = gtk.Button("Reset statistics")
+  # stats toggle button
   statsOnOff = mieru.platform.CheckButton("Keep statistics")
+  statsOnOff.set_active(mieru.stats.isOn())
+  statsOnOff.connect('toggled', _setStatsOnCB, mieru.stats, statsLabel)
+  # stats reset button
   resetStats = mieru.platform.Button("Reset statistics")
+  resetStats.connect('clicked', _wipeStatsCB, mieru.stats, statsLabel)
+
   hbox.pack_end(resetStats)
   hbox.pack_end(statsOnOff)
   vbox.pack_start(hbox, False, False, 5)
