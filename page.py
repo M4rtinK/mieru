@@ -215,10 +215,7 @@ class Page(clutter.Texture):
       self.movementEnabled = (we1,he1)
 
   def _decelerateCB(self, timeline, timeFromStart, dxPMS, dyPMS):
-    t = timeline.get_elapsed_time()
-    dt = t - self.lastdecelElapsed
-    self.lastdecelElapsed = t
-#    print "decel"
+    dt = timeline.get_delta()
     print (dxPMS*dt, dyPMS*dt)
     if self.movePage(self, dxPMS*dt, dyPMS*dt) == (True, True):
       print "stopping"
