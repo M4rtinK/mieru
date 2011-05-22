@@ -11,6 +11,8 @@ def getShortcutsContent():
   text+= "\n<b>f</b> - fullscreen"
   text+= "\n<b>n</b> - open file chooser"
   text+= "\n<b>p</b> - show paging dialog"
+  text+= "\n<b>c</b> - show show options window"
+  text+= "\n<b>a</b> - show info window"
   text+= "\n<b>m</b> - minimize the main window"
   text+= "\n<b>k</b> - toggle kinetic scrolling"
   text+= "\n<b>q</b> - quit"
