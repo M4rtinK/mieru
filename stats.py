@@ -19,7 +19,7 @@ class Stats:
       else:
         print("stats: OFF")
     else:
-      print "stats: value must be True or False, not: ", value
+      print("stats: value must be True or False, not: ", value)
 
   def getStats(self):
     return self._getStats()

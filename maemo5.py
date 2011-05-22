@@ -49,11 +49,14 @@ class Maemo5(BasePlatform):
     pagingButton = gtk.Button("Paging")
     pagingButton.connect('clicked',self.showPagingDialogCB)
 
+    fittPickerButton = self._getFittingPickerButton("Page fitting")
+
     menu.append(openFileButton)
     menu.append(openFolderButton)
     menu.append(fullscreenButton)
     menu.append(historyPickerButton)
     menu.append(pagingButton)
+    menu.append(fittPickerButton)
     menu.append(optionsButton)
     menu.append(infoButton)
 
@@ -63,6 +66,46 @@ class Maemo5(BasePlatform):
     # Add the menu to the window
     self.mieru.window.set_app_menu(menu)
 
+  def _getFittingSelector(self):
+    """load fitting modes to the touch selector,
+    also make active the last used fitting mode"""
+    touchSelector = hildon.TouchSelector(text=True)
+    touchSelector.set_column_selection_mode(hildon.TOUCH_SELECTOR_SELECTION_MODE_SINGLE)
+    modes = self.mieru.getFittingModes()
+    lastUsedValue = self.mieru.get('fitMode', None)
+    lastUsedValueId = None
+    id = 0
+    for mode in modes:
+      touchSelector.append_text(mode[1])
+      if lastUsedValue == mode[0]:
+        lastUsedValueId = id
+      id+=1
+    if lastUsedValue != None:
+      touchSelector.set_active(0,lastUsedValueId)
+    return touchSelector
+
+  def _applyFittingModeCB(self, pickerButton):
+    """handle the selector callback and set the appropriate fitting mode"""
+    index = pickerButton.get_selector().get_active(0)
+    modes = self.mieru.getFittingModes()
+    try:
+      (key, desc) = modes[index]
+      self.mieru.set('fitMode',key)
+    except Exception, e:
+      print("maemo 5: wrong fitting touch selector index", e)
+
+  def _getFittingPickerButton(self, title=None):
+    """get a pciker button with an asociated touch selector,
+    also load the last used value on startup"""
+    fittPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO,hildon.BUTTON_ARRANGEMENT_VERTICAL)
+    if title:
+      fittPickerButton.set_title(title)
+    selector = self._getFittingSelector()
+    fittPickerButton.set_selector(selector)
+    fittPickerButton.connect('value-changed', self._applyFittingModeCB)
+    return fittPickerButton
+
+
   def _showOptionsCB(self, button):
     self.showOptions()
 
@@ -71,14 +114,20 @@ class Maemo5(BasePlatform):
     win.set_title("Options")
 
     padding = 5
+    vbox = gtk.VBox(False, padding)
 
-    # Setting a label in the new window
-    label = gtk.Label("History")
+    # page fitting
+    pLabel = gtk.Label("Page")
+    fittPickerButton = self._getFittingPickerButton("Page fitting")
+    vbox.pack_start(pLabel, False, False, padding*2)
+    vbox.pack_start(fittPickerButton, False, False, 0)
+
+    # clear history
+    hLabel = gtk.Label("History")
     clearHistoryButton = self.Button("Clear history") # TODO: move this somewhere into settings
     clearHistoryButton.connect('clicked',self._clearHistoryCB)
 
-    vbox = gtk.VBox(False, padding)
-    vbox.pack_start(label, False, False, 0)
+    vbox.pack_start(hLabel, False, False, padding*2)
     vbox.pack_start(clearHistoryButton, False, False, 0)
 
     win.add(vbox)

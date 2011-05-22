@@ -315,6 +315,16 @@ class Mieru:
   def _resizeViewport(self,widget,allocation):
     self.viewport = allocation
 
+  def getFittingModes(self):
+    """return list of fitting mode with key and description"""
+    modes = [
+            ("original", "fit to original size"),
+            ("width", "fit to width"),
+            ("height", "fit to height"),
+            ("screen", "fit to screen")
+            ]
+    return modes
+
 
 #  def do_button_press_event(actor, event):
 #    print "button press event"
