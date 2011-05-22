@@ -74,8 +74,7 @@ class Maemo5(BasePlatform):
 
     # Setting a label in the new window
     label = gtk.Label("History")
-    clearHistoryButton = hildon.Button(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT, hildon.BUTTON_ARRANGEMENT_VERTICAL) # TODO: move this somewhere into settings
-    clearHistoryButton.set_title("Clear history")
+    clearHistoryButton = self.Button("Clear history") # TODO: move this somewhere into settings
     clearHistoryButton.connect('clicked',self._clearHistoryCB)
 
     vbox = gtk.VBox(False, padding)
