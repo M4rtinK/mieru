@@ -14,8 +14,12 @@ class Stats:
   def setOn(self, value):
     if value == True or value == False:
       self.mieru.set('statsOn', value)
+      if value == True:
+        print("stats: ON")
+      else:
+        print("stats: OFF")
     else:
-      print "stats: valu must be True or False, not: ", value
+      print "stats: value must be True or False, not: ", value
 
   def getStats(self):
     return self._getStats()
