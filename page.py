@@ -2,6 +2,8 @@
 
 import clutter
 
+import utils
+
 class Page(clutter.Texture):
   def __init__(self, pb, mieru, name="", fitOnStart=True):
 #    clutter.Texture.__init__(self,imagePath,load_data_async=True)
@@ -34,8 +36,11 @@ class Page(clutter.Texture):
     self.lastMotionTimestamp = 0
     self.lastDTDXDY = (0,0,0)
 
-    self.decelTl = None
+    self.ppms = (1,1)
+    self.decelTl = clutter.Timeline(10000)
+    self.decelTl.connect('new_frame', self._decelerateCB)
     self.lastdecelElapsed = 0
+    self.stopDecel = True
 
     """first number id for the horizontal and seccond for the vertical axis,
     0 means movement in this axis is disabled, 1 means movement is enabled"""
@@ -65,8 +70,11 @@ class Page(clutter.Texture):
 #    self.lastLastMovement = (t,x,y)
     self.lastDTDXDY = (0,0,0)
     page.lastMotionTimestamp = event.time
-    if self.decelTl:
-      self.decelTl.stop()
+    
+    # stop any decelaration in progress
+    self.decelTl.stop()
+
+    self.stopDecel = True
       
     self.pressStart = (x,y)
     self.lastMotion = (x,y)
@@ -83,16 +91,22 @@ class Page(clutter.Texture):
         self._toggleZoom()
     else:
       if self.mieru.get('kineticScrolling', False):
-#        print "kinetic"
-#        self.
 
 
-        (dt, dx, dy) = self.lastDTDXDY
-        ppms = (dx/dt,dy/dt)
-        self.lastdecelElapsed = 0
-        self.decelTl = clutter.Timeline(10000)
-        self.decelTl.connect('new_frame', self._decelerateCB, ppms[0], ppms[1])
-        self.decelTl.start()
+        """if the user clicked - dont start any kinetic scrolling
+           if the user crossed the drag treshold, start kinetic scrolling"""
+        decel = True
+        if self.lastDTDXDY == (0,0,0):
+          decel = False
+          print("sharp click")
+        if decel:
+          (dt, dx, dy) = self.lastDTDXDY
+          utils.wasClick(dt, dx, dy)
+          self.ppms = (dx/dt,dy/dt)
+          self.lastdecelElapsed = 0
+          self.stopDecel = False
+
+          self.decelTl.start()
 
 
 
@@ -214,13 +228,13 @@ class Page(clutter.Texture):
         he1 = he
       self.movementEnabled = (we1,he1)
 
-  def _decelerateCB(self, timeline, timeFromStart, dxPMS, dyPMS):
+  def _decelerateCB(self, timeline, foo):
+    (dxPMS, dyPMS) = self.ppms
     dt = timeline.get_delta()
-    print (dxPMS*dt, dyPMS*dt)
-    if self.movePage(self, dxPMS*dt, dyPMS*dt) == (True, True):
+#    print (dxPMS*dt, dyPMS*dt)
+    if self.stopDecel or self.movePage(self, dxPMS*dt, dyPMS*dt) == (True, True):
       print "stopping"
       timeline.stop()
-      self.decelTl = None
 
   def setOriginalSize(self):
     """resize back to original size"""
