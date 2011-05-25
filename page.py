@@ -320,7 +320,7 @@ class Page(clutter.Texture):
   def getPath(self):
     return self.imagePath
 
-  def _handleResize(self,widget,event,foo):
+  def _handleResize(self,widget,event,flags):
     # resize and refit the page when viewport size changes
     fitMode = self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
     self.setFitMode(fitMode)
