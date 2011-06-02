@@ -66,16 +66,24 @@ def getStatsContent(mieru):
 
 def getAboutContent(versionString="unknown"):
   vbox = gtk.VBox(False,0)
-  about = gtk.Label()
-  text = "<b>Mieru</b> version: <b>%s</b>\n" % versionString
-  text+= "\nadd icon here\n"
-  text+= "\nContact the <b>Mieru</b> project:"
-  text+= "\nmain developer: <b>Martin Kolman</b>"
-  text+= "\nemail: <b>mieru.info@gmail.com</b>"
-  text+= "\nwww: add WWW :)"
+  textVersion = "<b>Mieru</b>, version: <b>%s</b>" % versionString
+  about0 = gtk.Label()
+  about0.set_markup(textVersion)
 
-  about.set_markup(text)
-  vbox.pack_start(about)
+  mieruIcon = gtk.image_new_from_file('icons/mieru.svg')
+  mieruIcon.set_pixel_size(200)
+
+  text= "<i><b>Mieru</b> project contact info:</i>"
+  text+= "\n<u>main developer:</u> <b>Martin Kolman</b>"
+  text+= "\n<u>email</u>: <b>mieru.info@gmail.com</b>"
+  text+= "\n<u>www</u>: <b>http://www.gitorious.org/mieru/</b>"
+  text+= "\n<u>discusion</u>: check <b>http://talk.maemo.org</b>"
+
+  about1 = gtk.Label()
+  about1.set_markup(text)
+  vbox.pack_start(about0)
+  vbox.pack_start(mieruIcon)
+  vbox.pack_start(about1)
   vbox.show_all()
   return vbox
 
