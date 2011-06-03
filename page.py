@@ -1,6 +1,9 @@
 """page.py - a manga/comix book page"""
 
+import math
 import clutter
+
+import buttons
 
 import utils
 
@@ -82,14 +85,18 @@ class Page(clutter.Texture):
     return False
 
   def do_button_release_event (self, page, event):
-    clickCount = event.get_click_count()
-    if clickCount >= 3 and self.fsButtonLastPressTimestamp:
-      if (event.time - self.fsButtonLastPressTimestamp)<self.pressLength:
-        (x1,y1) = self.pressStart
-        (x,y) = (x1-event.x,y1-event.y)
-        print (x,y)
+    if event.get_click_count() >=3: # first we check the click count
+      # then we compute all the info for further analysis
+      (x1,y1) = self.pressStart
+      (dx,dy) = (x1-event.x,y1-event.y)
+      pxDistance = math.hypot(dx,dy)
+      if buttons.wasDoubleclick(event.get_click_count(), pxDistance , event.time - self.fsButtonLastPressTimestamp):
+        print "DOUBLE"
         self._toggleZoom()
-    else:
+#      print event.time - self.fsButtonLastPressTimestamp
+#      print (dx,dy)
+#      print pxDistance
+    else: # continue drag as kinetic scrolling (if enabled)
       if self.mieru.get('kineticScrolling', False):
 
 

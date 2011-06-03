@@ -5,6 +5,16 @@ import gobject
 
 import declutter
 
+# taken from Clutter 1.6 defaults
+PX_DOBLECLICK_DISTANCE = 10
+MS_DOUBLECLICK_DURATION = 250
+
+def wasDoubleclick(clickCount, pxDistance, msDuration):
+  # yeah, for some reason Clutter count a doubleclick as 3 clicks
+  return (clickCount >= 3 and pxDistance <= PX_DOBLECLICK_DISTANCE and msDuration <= MS_DOUBLECLICK_DURATION)
+
+
+
 class Buttons:
   def __init__(self, mieru):
     self.mieru = mieru
