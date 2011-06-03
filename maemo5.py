@@ -278,7 +278,6 @@ class Maemo5(BasePlatform):
     b.set_title(label)
     return b
 
-
   def CheckButton(self, label=""):
     """return hildon check button"""
     c = hildon.CheckButton(gtk.HILDON_SIZE_FINGER_HEIGHT)
