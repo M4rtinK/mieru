@@ -38,6 +38,8 @@ class Page(clutter.Texture):
     self.lastMotion = None
     self.lastMotionTimestamp = 0
     self.lastDTDXDY = (0,0,0)
+    self.clickCount = 0
+    self.msButtonLastReleaseTimestamp = 0
 
     self.ppms = (1,1)
     self.decelTl = clutter.Timeline(10000)
@@ -51,7 +53,7 @@ class Page(clutter.Texture):
 
 
     self.zoomIn=True
-    self.fsButtonLastPressTimestamp = None
+    self.msButtonLastPressTimestamp = None
     self.pressLength = 100
 
     self.connect('button-press-event', self.do_button_press_event)
@@ -61,16 +63,9 @@ class Page(clutter.Texture):
     self.set_keep_aspect_ratio(True) # we want to preserve the aspect ratio
 
   def do_button_press_event (self, page, event):
-#    clickCount = event.get_click_count()
-#    print "press", clickCount
-#    if clickCount >= 3:
-#      self._toggleZoom()
-    t = event.time
     self.isPressed = True
     (x,y) = event.x,event.y
-    self.fsButtonLastPressTimestamp = t
-#    self.lastMovement = (t,x,y)
-#    self.lastLastMovement = (t,x,y)
+    self.msButtonLastPressTimestamp = event.time
     self.lastDTDXDY = (0,0,0)
     page.lastMotionTimestamp = event.time
     
@@ -85,37 +80,46 @@ class Page(clutter.Texture):
     return False
 
   def do_button_release_event (self, page, event):
-    if event.get_click_count() >=3: # first we check the click count
-      # then we compute all the info for further analysis
-      (x1,y1) = self.pressStart
-      (dx,dy) = (x1-event.x,y1-event.y)
-      pxDistance = math.hypot(dx,dy)
-      if buttons.wasDoubleclick(event.get_click_count(), pxDistance , event.time - self.fsButtonLastPressTimestamp):
-        print "DOUBLE"
-        self._toggleZoom()
-#      print event.time - self.fsButtonLastPressTimestamp
-#      print (dx,dy)
-#      print pxDistance
+    (x1,y1) = self.pressStart
+    (dx,dy) = (x1-event.x,y1-event.y)
+    # time from last button release
+    dt = event.time - self.msButtonLastReleaseTimestamp
+
+    # check if event was a click or drag
+    if buttons.wasClick(dx, dy):
+      if dt < 500:
+        self.clickCount+=1 # dlouble click +
+      else:
+        self.clickCount=1 # single click
+    else:
+      self.clickCount=0 # drag
+
+    if self.clickCount >=2: # is this a doubleclick ?
+      self._toggleZoom() # toggle zoom in/out
     else: # continue drag as kinetic scrolling (if enabled)
       if self.mieru.get('kineticScrolling', False):
-
-
         """if the user clicked - dont start any kinetic scrolling
            if the user crossed the drag treshold, start kinetic scrolling"""
-        decel = True
-        if self.lastDTDXDY == (0,0,0):
-          decel = False
-          print("sharp click")
-        if decel:
+        if not self.clickCount: # last event was a drag
           (dt, dx, dy) = self.lastDTDXDY
-          utils.wasClick(dt, dx, dy)
           self.ppms = (dx/dt,dy/dt)
           self.lastdecelElapsed = 0
           self.stopDecel = False
-
           self.decelTl.start()
+      """any previous kinetic scrolling is stopped once the screen is pressed,
+      no need to stop it here"""
 
+    self.isPressed = False
+    self.pressStart = None
+    self.lastMotion = None
+    self.msButtonLastReleaseTimestamp = event.time
 
+    return False
+
+  
+# in case this this is needed someday :
+#    pxDistance = math.hypot(dx,dy)
+#    buttons.wasDoubleclick(event.get_click_count(), pxDistance , event.time - self.fsButtonLastPressTimestamp)
 
 #      print event.time - self.lastMovementTimestamp
 #      (x,y) = event.x,event.y
@@ -126,11 +130,6 @@ class Page(clutter.Texture):
 #        print page.lastMotion
 #        print event.x,event.y
 
-    self.isPressed = False
-    self.pressStart = None
-    self.lastMotion = None
-
-    return False
 
   def on_page_motion(self, page, event):
 #    print page, event

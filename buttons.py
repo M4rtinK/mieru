@@ -8,12 +8,17 @@ import declutter
 # taken from Clutter 1.6 defaults
 PX_DOBLECLICK_DISTANCE = 10
 MS_DOUBLECLICK_DURATION = 250
+CLICK_TRESHOLD = 2048 # anything more and its a drag
 
 def wasDoubleclick(clickCount, pxDistance, msDuration):
+  """decide if an event was a click or a doubleclick"""
   # yeah, for some reason Clutter count a doubleclick as 3 clicks
   return (clickCount >= 3 and pxDistance <= PX_DOBLECLICK_DISTANCE and msDuration <= MS_DOUBLECLICK_DURATION)
 
-
+def wasClick(dx,dy):
+  """ check if a screen press event was adrag or just a click/tap"""
+  distSq = dx * dx + dy * dy
+  return distSq <= CLICK_TRESHOLD
 
 class Buttons:
   def __init__(self, mieru):
