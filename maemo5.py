@@ -124,15 +124,34 @@ class Maemo5(BasePlatform):
 
     # clear history
     hLabel = gtk.Label("History")
-    clearHistoryButton = self.Button("Clear history") # TODO: move this somewhere into settings
+    clearHistoryButton = self.Button("Clear history")
     clearHistoryButton.connect('clicked',self._clearHistoryCB)
 
     vbox.pack_start(hLabel, False, False, padding*2)
     vbox.pack_start(clearHistoryButton, False, False, 0)
 
+    # kinnetic scrolling
+    ksLabel = gtk.Label("Scrolling")
+    ksButton = self.CheckButton("Kinnetic scrolling")
+    ksButton.connect('clicked',self._clearHistoryCB)
+    ksButton.set_active(self.mieru.get('kineticScrolling', False))
+    ksButton.connect('toggled', self._toggleKSCB)
+    self.mieru.watch('kineticScrolling', self._updateKSCB, ksButton)
+
+    vbox.pack_start(ksLabel, False, False, padding*2)
+    vbox.pack_start(ksButton, False, False, 0)
+
     win.add(vbox)
 
     win.show_all()
+
+  def _toggleKSCB(self, button):
+    old = self.mieru.get('kineticScrolling', False)
+    self.mieru.set('kineticScrolling', not old)
+
+  def _updateKSCB(self, key, oldValue, newValue, button):
+    button.set_active(newValue)
+
 
   def _showInfoCB(self, button):
     self.showInfo()
