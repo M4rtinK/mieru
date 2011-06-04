@@ -258,7 +258,6 @@ class RarContainer(Container):
       self._setFileList(self.rf.namelist())
 
   def getFile(self, filename):
-    print filename
     if self.rf:
       try:
         return self.rf.open(filename,'r')
@@ -285,7 +284,6 @@ class TarContainer(Container):
       self._setFileList(self.tf.namelist())
 
   def getFile(self, filename):
-    print filename
     if self.tf:
       try:
         return self.tf.open(filename,'r')

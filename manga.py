@@ -214,7 +214,8 @@ class Manga:
     """return a Page instance together with its id in a tuple"""
     result = self.container.getImageFileById(id)
     if result:
-      (file,id) = self.container.getImageFileById(id) # return correct id of negative addressing (id=-1, etc.)
+       # correct id is reutnerned for negative addressing (id=-1, etc.)
+      (file,id) = result 
       # load the image from a pixbuf, created from the file object
       # we can like this easily unpack selected files from archives entirely in memmory
       pl = gtk.gdk.PixbufLoader()
