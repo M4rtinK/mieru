@@ -122,6 +122,15 @@ class Maemo5(BasePlatform):
     vbox.pack_start(pLabel, False, False, padding*2)
     vbox.pack_start(fittPickerButton, False, False, 0)
 
+    # kinnetic scrolling
+    ksLabel = gtk.Label("Scrolling")
+    ksButton = self.CheckButton("Kinnetic scrolling")
+    ksButton.set_active(self.mieru.get('kineticScrolling', False))
+    ksButton.connect('toggled', self._toggleOptionCB, 'kineticScrolling', False)
+    self.mieru.watch('kineticScrolling', self._updateKSCB, ksButton)
+    vbox.pack_start(ksLabel, False, False, padding*2)
+    vbox.pack_start(ksButton, False, False, 0)
+
     # clear history
     hLabel = gtk.Label("History")
     clearHistoryButton = self.Button("Clear history")
@@ -130,24 +139,25 @@ class Maemo5(BasePlatform):
     vbox.pack_start(hLabel, False, False, padding*2)
     vbox.pack_start(clearHistoryButton, False, False, 0)
 
-    # kinnetic scrolling
-    ksLabel = gtk.Label("Scrolling")
-    ksButton = self.CheckButton("Kinnetic scrolling")
-    ksButton.connect('clicked',self._clearHistoryCB)
-    ksButton.set_active(self.mieru.get('kineticScrolling', False))
-    ksButton.connect('toggled', self._toggleKSCB)
-    self.mieru.watch('kineticScrolling', self._updateKSCB, ksButton)
+    # debug
+    debugLabel = gtk.Label("Debug")
+    debug1Button = self.CheckButton("Print page loading info")
+    debug1Button.set_active(self.mieru.get('debugPageLoading', False))
+    debug1Button.connect('toggled', self._toggleOptionCB, 'debugPageLoading', False)
+    vbox.pack_start(debugLabel, False, False, padding*2)
+    vbox.pack_start(debug1Button, False, False, 0)
 
-    vbox.pack_start(ksLabel, False, False, padding*2)
-    vbox.pack_start(ksButton, False, False, 0)
+    # as options are too long, add a pannable area
+    pann = hildon.PannableArea()
+    pann.add_with_viewport(vbox)
 
-    win.add(vbox)
+    win.add(pann)
 
     win.show_all()
 
-  def _toggleKSCB(self, button):
-    old = self.mieru.get('kineticScrolling', False)
-    self.mieru.set('kineticScrolling', not old)
+  def _toggleOptionCB(self, button, key, default):
+    old = self.mieru.get(key, default)
+    self.mieru.set(key, not old)
 
   def _updateKSCB(self, key, oldValue, newValue, button):
     button.set_active(newValue)
