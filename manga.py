@@ -6,6 +6,7 @@ import os
 import gtk
 import clutter
 import gobject
+import time
 
 import manga as mangaModule
 #from rounded_rectangle import RoundedRectangle
@@ -212,7 +213,9 @@ class Manga:
 
   def getPageById(self, id, fitOnStart=True):
     """return a Page instance together with its id in a tuple"""
+    t1 = time.clock()
     result = self.container.getImageFileById(id)
+    t2 = time.clock()
     if result:
        # correct id is reutnerned for negative addressing (id=-1, etc.)
       (file,id) = result 
@@ -220,11 +223,26 @@ class Manga:
       # we can like this easily unpack selected files from archives entirely in memmory
       pl = gtk.gdk.PixbufLoader()
       pl.write(file.read())
-      file.close()
       pl.close() # this  blocks until the image is completely loaded
+      t3 = time.clock()
       # TODO: do this with callbacks
-      page = pageModule.Page(pl.get_pixbuf(),self.mieru, fitOnStart=fitOnStart)
+      pb = pl.get_pixbuf()
+      (w,h) = (pb.get_width(),pb.get_height())
+      page = pageModule.Page(pb,self.mieru, fitOnStart=fitOnStart)
+      t4 = time.clock()
+      file.close()
       del pl
+      t5 = time.clock()
+      if self.mieru.get('debugPageLoading', False):
+        now = time.clock()
+        print("Page completely loaded in %1.2f ms" % (1000 * (now - t1)))
+        print("* loading from container: %1.2f ms" % (1000 * (t2 - t1)))
+        print("* loading to pixbuf: %1.2f ms" % (1000 * (t3 - t2)))
+        print("* initializing page object with pixbuf: %1.2f ms" % (1000 * (t4 - t3)))
+        print("* closing file and deleting pixbuf: %1.2f ms" % (1000 * (t5 - t4)))
+        print("- image resoution: %d x %d" % (w, h))
+        print("- image filename: %s" % self.container.getImageFilenameById(id))
+
       return (page, id)
     else:
       print "manga: page not found, id: ", id

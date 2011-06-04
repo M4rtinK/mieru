@@ -128,6 +128,16 @@ class Container:
     except IndexError, ValueError:
       print "no image file with index:", id
       return None
+
+  def getImageFilenameById(self, id):
+    try:
+      filename = self.imageFiles[id]
+      return filename
+    except IndexError, ValueError:
+      print "no image file with index:", id
+      return "does not exist"
+
+
     
   def _setFileList(self, filenames, sort=True):
     """NOTE: there can be not only files but also directories in the filelist"""
