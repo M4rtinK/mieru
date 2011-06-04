@@ -46,6 +46,10 @@ class Page(clutter.Texture):
     self.decelTl.connect('new_frame', self._decelerateCB)
     self.lastdecelElapsed = 0
     self.stopDecel = True
+    self.maxDecelerationSpeed = 30
+    self.maxFriction = 100.0 # intial amount
+    self.friction = 100 # current amount
+
 
     """first number id for the horizontal and seccond for the vertical axis,
     0 means movement in this axis is disabled, 1 means movement is enabled"""
@@ -101,6 +105,7 @@ class Page(clutter.Texture):
         """if the user clicked - dont start any kinetic scrolling
            if the user crossed the drag treshold, start kinetic scrolling"""
         if not self.clickCount: # last event was a drag
+          self.friction = self.maxFriction
           (dt, dx, dy) = self.lastDTDXDY
           self.ppms = (dx/dt,dy/dt)
           self.lastdecelElapsed = 0
@@ -236,11 +241,24 @@ class Page(clutter.Texture):
 
   def _decelerateCB(self, timeline, foo):
     (dxPMS, dyPMS) = self.ppms
-    dt = timeline.get_delta()
-#    print (dxPMS*dt, dyPMS*dt)
-    if self.stopDecel or self.movePage(self, dxPMS*dt, dyPMS*dt) == (True, True):
-      print "stopping"
+    n = timeline.get_delta() * (self.friction / self.maxFriction)
+    self.friction-=6
+
+    dx = dxPMS*n
+    dy = dyPMS*n
+
+    if self.friction < 0:
+      print "friction stopping"
       timeline.stop()
+      return
+    elif abs(dx) < 0.2 or abs(dy) < 0.2:
+      print "under treshold stopping"
+      timeline.stop()
+      return
+    elif self.stopDecel or self.movePage(self, dx, dy) == (True, True):
+      print "edge stopping"
+      timeline.stop()
+      return
 
   def setOriginalSize(self):
     """resize back to original size"""
