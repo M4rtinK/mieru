@@ -221,6 +221,8 @@ class Maemo5(BasePlatform):
       for item in sortedHistory:
         state = item['state']
         path = state['path']
+        if state['pageNumber'] == None: # some states can have unknown last open page
+          state['pageNumber'] = 0
         pageNumber = state['pageNumber']+1
         pageCount = state['pageCount']+1
         (folderPath,tail) = os.path.split(path)
