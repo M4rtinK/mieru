@@ -364,11 +364,27 @@ class Page(clutter.Texture):
 
   def fitToScreen(self):
     (x,y,screenW,screenH) = self.mieru.viewport
+    (w,h) = self.get_size()
     # resize to fit to screen
     if screenW > screenH:
-      (newW,newH) = self.fitToHeight()
+      if w >= h:
+        (newW,newH) = self.fitToWidth()
+        if newH > screenH:
+          (newW,newH) = self.fitToHeight()
+      else:
+        (newW,newH) = self.fitToHeight()
+        if newW > screenW:
+          (newW,newH) = self.fitToWidth()
     else:
-      (newW,newH) = self.fitToWidth()
+      if h >= w:
+        (newW,newH) = self.fitToWidth()
+        if newH > screenH:
+          (newW,newH) = self.fitToHeight()
+      else:
+        (newW,newH) = self.fitToHeight()
+        if newW > screenW:
+          (newW,newH) = self.fitToWidth()
+          
     # move to the center
     shiftX = (screenW-newW)/2.0
     shiftY = (screenH-newH)/2.0
