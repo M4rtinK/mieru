@@ -147,7 +147,7 @@ class Page(clutter.Texture):
     page.lastDTDXDY = (event.time - page.lastMotionTimestamp, dx,dy)
     page.lastMotionTimestamp = event.time
 
-    if self.isPressed:
+    if self.isPressed and self.movementEnabled != (0,0):      
       self.movePage(page,dx*page.movementEnabled[0],dy*page.movementEnabled[1])
     return False
 
@@ -333,11 +333,12 @@ class Page(clutter.Texture):
     alignAnim = self.animate(clutter.LINEAR,100, 'x', 0) # align with left border
     alignAnim.connect("completed", self._enableMovementCB)
     if height > newH: # is screen higher than the image ?
-      self.animate(clutter.LINEAR,100, 'y', (height-newH)/2.0)
+      centerAnim = self.animate(clutter.LINEAR,100, 'y', (height-newH)/2.0)
+      centerAnim.connect("completed", self._enableMovementCB,(0,0))
     elif newH+cy < y+height:
       alignAnim = self.animate(clutter.LINEAR,100, 'y', y-newH+height) # align with left border
       alignAnim.connect("completed", self._enableMovementCB)
-
+      
     return(newW,newH)
 
   def fitToHeight(self):
