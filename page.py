@@ -32,7 +32,7 @@ class Page(clutter.Texture):
       self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
     self._color = clutter.color_from_string('White')
     self.isPressed = False
-    self.pressStart = None
+    self.pressStart = (0,0)
     self.lastMotion = None
     self.lastMotionTimestamp = 0
     self.lastDTDXDY = (0,0,0)
@@ -113,7 +113,6 @@ class Page(clutter.Texture):
       no need to stop it here"""
 
     self.isPressed = False
-    self.pressStart = None
     self.lastMotion = None
     self.msButtonLastReleaseTimestamp = event.time
 
@@ -147,7 +146,7 @@ class Page(clutter.Texture):
     page.lastDTDXDY = (event.time - page.lastMotionTimestamp, dx,dy)
     page.lastMotionTimestamp = event.time
 
-    if self.isPressed and self.movementEnabled != (0,0):      
+    if self.isPressed and self.movementEnabled != (0,0):
       self.movePage(page,dx*page.movementEnabled[0],dy*page.movementEnabled[1])
     return False
 
@@ -346,12 +345,20 @@ class Page(clutter.Texture):
     (w,h) = self.get_size()
     factor = float(height) / h
     (newW,newH) = (w*factor,h*factor)
+    # resize
     self.animate(clutter.LINEAR,100, 'width', newW, 'height', newH)
+
     self.movementEnabled=(0,0)
+    # align with top of the screen
     alignAnim = self.animate(clutter.LINEAR,100, 'y', 0) # align with left border
-    alignAnim.connect("completed", self._enableMovementCB, (0, None))
-    if width > newW: # is screen wider than the image ?
-       self.animate(clutter.LINEAR,100, 'x', (width-newW)/2.0)
+    # unlock scrolling
+    alignAnim.connect("completed", self._enableMovementCB)
+
+    if width > newW: # is screen wider than the page ?
+      # center page in the middle and lock horizontal scrolling
+      centerAnim = self.animate(clutter.LINEAR,100, 'x', (width-newW)/2.0)
+      centerAnim.connect("completed", self._enableMovementCB,(0,None))
+
     return(newW,newH)
 
   def fitToScreen(self):
