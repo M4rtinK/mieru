@@ -358,7 +358,7 @@ class Page(clutter.Texture):
     if width > newW: # is screen wider than the page ?
       # center page in the middle and lock horizontal scrolling
       centerAnim = self.animate(clutter.LINEAR,100, 'x', (width-newW)/2.0)
-      centerAnim.connect("completed", self._enableMovementCB,(0,None))
+      centerAnim.connect("completed", self._enableMovementCB,(0,0))
 
     return(newW,newH)
 
