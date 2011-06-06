@@ -16,7 +16,7 @@ def getShortcutsContent():
   text+= "\n<b>m</b> - minimize the main window"
   text+= "\n<b>k</b> - toggle kinetic scrolling"
   text+= "\n<b>q</b> - quit"
-  text+= "\n<b>volume keys</b> - turn pages"
+  text+= "\n<b>volume keys</b> - turn page"
   text+= "\n\n<b>Page fitting</b>"
   text+= "\n<b>o</b> - original size"
   text+= "\n<b>i</b> - fit to width"
