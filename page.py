@@ -5,8 +5,6 @@ import clutter
 
 import buttons
 
-import utils
-
 class Page(clutter.Texture):
   def __init__(self, pb, mieru, name="", fitOnStart=True):
 #    clutter.Texture.__init__(self,imagePath,load_data_async=True)
@@ -41,14 +39,10 @@ class Page(clutter.Texture):
     self.clickCount = 0
     self.msButtonLastReleaseTimestamp = 0
 
-    self.ppms = (1,1)
-    self.decelTl = clutter.Timeline(10000)
+    self.decelTl = clutter.Timeline(3000)
     self.decelTl.connect('new_frame', self._decelerateCB)
-    self.lastdecelElapsed = 0
     self.stopDecel = True
-    self.maxDecelerationSpeed = 30
-    self.maxFriction = 100.0 # intial amount
-    self.friction = 100 # current amount
+    self._resetDecel()
 
 
     """first number id for the horizontal and seccond for the vertical axis,
@@ -65,6 +59,10 @@ class Page(clutter.Texture):
     self.mieru.stage.connect('allocation-changed', self._handleResize)
 
     self.set_keep_aspect_ratio(True) # we want to preserve the aspect ratio
+
+  def _resetDecel(self):
+    self.ppms = (1,1)
+    self.ppms1 = (1,1)
 
   def do_button_press_event (self, page, event):
     self.isPressed = True
@@ -104,11 +102,11 @@ class Page(clutter.Texture):
       if self.mieru.get('kineticScrolling', False):
         """if the user clicked - dont start any kinetic scrolling
            if the user crossed the drag treshold, start kinetic scrolling"""
-        if not self.clickCount: # last event was a drag
-          self.friction = self.maxFriction
+        if not self.clickCount: # last event was a drag  
+          self._resetDecel()
           (dt, dx, dy) = self.lastDTDXDY
           self.ppms = (dx/dt,dy/dt)
-          self.lastdecelElapsed = 0
+          self.ppms1 = (dx/dt,dy/dt)
           self.stopDecel = False
           self.decelTl.start()
       """any previous kinetic scrolling is stopped once the screen is pressed,
@@ -241,24 +239,60 @@ class Page(clutter.Texture):
 
   def _decelerateCB(self, timeline, foo):
     (dxPMS, dyPMS) = self.ppms
-    n = timeline.get_delta() * (self.friction / self.maxFriction)
-    self.friction-=6
+    (dxPMS1, dyPMS1) = self.ppms1
 
-    dx = dxPMS*n
-    dy = dyPMS*n
+    # how ofthen to update ideally
+    updateInterval = 16.7 # 1000 ms / 60 FPS
+    # how much real time elapsed from last frame
+    elapsedTime = timeline.get_delta()
 
-    if self.friction < 0:
-      print "friction stopping"
+    friction = 0.075
+    desiredTicks = elapsedTime / updateInterval
+
+    # gradually decrease the speed
+    (dxPMS, dyPMS) = (dxPMS-(dxPMS*friction*desiredTicks), dyPMS-(dyPMS*friction*desiredTicks))
+    self.ppms = (dxPMS, dyPMS)
+
+    dx = dxPMS*elapsedTime
+    dy = dyPMS*elapsedTime
+
+    # resolution independent check
+    if abs(dxPMS) <= abs(dxPMS1*0.20) and abs(dyPMS) <= abs(dyPMS1*0.20):
+      print "under pms treshold stopping"
       timeline.stop()
       return
-    elif abs(dx) < 0.2 or abs(dy) < 0.2:
+
+    # resolution dependent sanity check
+    elif abs(dx) < 2 and abs(dy) < 2:
       print "under treshold stopping"
       timeline.stop()
       return
-    elif self.stopDecel or self.movePage(self, dx, dy) == (True, True):
+
+    if self.stopDecel or self.movePage(self, dx, dy) == (True, True):
       print "edge stopping"
       timeline.stop()
       return
+    
+#  def _decelerateCB(self, timeline, foo):
+#    (dxPMS, dyPMS) = self.ppms
+#    n = timeline.get_delta() * (self.friction / self.maxFriction)
+#    self.friction-=6
+#
+#    dx = dxPMS*n
+#    dy = dyPMS*n
+#
+#    if self.friction < 0:
+#      print "friction stopping"
+#      timeline.stop()
+#      return
+#    elif abs(dx) < 0.2 or abs(dy) < 0.2:
+#      print "under treshold stopping"
+#      timeline.stop()
+#      return
+#    elif self.stopDecel or self.movePage(self, dx, dy) == (True, True):
+#      print "edge stopping"
+#      timeline.stop()
+#      return
 
   def setOriginalSize(self):
     """resize back to original size"""
