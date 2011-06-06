@@ -98,15 +98,16 @@ class Page(clutter.Texture):
 
     if self.clickCount >=2: # is this a doubleclick ?
       self._toggleZoom() # toggle zoom in/out
-    else: # continue drag as kinetic scrolling (if enabled)
-      if self.mieru.get('kineticScrolling', False):
+    else: # continue drag as kinetic scrolling (if enabled) and movement is enabled
+      if self.mieru.get('kineticScrolling', False) and self.movementEnabled != (0,0):
         """if the user clicked - dont start any kinetic scrolling
            if the user crossed the drag treshold, start kinetic scrolling"""
         if not self.clickCount: # last event was a drag  
           self._resetDecel()
           (dt, dx, dy) = self.lastDTDXDY
-          self.ppms = (dx/dt,dy/dt)
-          self.ppms1 = (dx/dt,dy/dt)
+          (dxPMS, dyPMS) = (dx/dt,dy/dt)
+          self.ppms = (dxPMS, dyPMS)
+          self.ppms1 = (dxPMS, dyPMS)
           self.stopDecel = False
           self.decelTl.start()
       """any previous kinetic scrolling is stopped once the screen is pressed,
