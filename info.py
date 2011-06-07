@@ -73,7 +73,7 @@ def getAboutContent(versionString="unknown"):
   mieruIcon = gtk.image_new_from_file('icons/mieru.svg')
   mieruIcon.set_pixel_size(200)
 
-  text= "<i><b>Mieru</b> project contact info:</i>"
+  text= "<i><b>Mieru project</b> contact info:</i>"
   text+= "\n<u>main developer:</u> <b>Martin Kolman</b>"
   text+= "\n<u>email</u>: <b>mieru.info@gmail.com</b>"
   text+= "\n<u>www</u>: <b>http://www.gitorious.org/mieru/</b>"
@@ -123,6 +123,7 @@ class InfoNotebook(gtk.Notebook):
     self.append_page(getStatsContent(self.mieru),_getLabel("Stats", enlargeTabs))
     self.append_page(getAboutContent(versionString),_getLabel("About", enlargeTabs))
     self.show_all()
+    self.set_current_page(0)
 
 
 

@@ -192,6 +192,9 @@ class Maemo5(BasePlatform):
     # show it
     win.show_all()
 
+    # start on first page
+    notebook.set_current_page(0)
+
 
   def _getLabel(self, name, spacing=0):
     """get a label fort notebook with adjustable spacing"""
