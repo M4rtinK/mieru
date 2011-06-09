@@ -62,7 +62,7 @@ class Page(clutter.Texture):
 
   def _resetDecel(self):
     self.ppms = (1,1)
-    self.ppms1 = (1,1)
+    self.elapsedTime = 0
 
   def do_button_press_event (self, page, event):
     self.isPressed = True
@@ -105,9 +105,11 @@ class Page(clutter.Texture):
         if not self.clickCount: # last event was a drag  
           self._resetDecel()
           (dt, dx, dy) = self.lastDTDXDY
+          """if a movement is disabled in some axis, the mex/mey variable
+          would be zero and will therefore effectivelly cancel scrolling in a given direction"""
+          (mex, mey) = self.movementEnabled
           (dxPMS, dyPMS) = (dx/dt,dy/dt)
-          self.ppms = (dxPMS, dyPMS)
-          self.ppms1 = (dxPMS, dyPMS)
+          self.ppms = (dxPMS*mex, dyPMS*mey)
           self.stopDecel = False
           self.decelTl.start()
       """any previous kinetic scrolling is stopped once the screen is pressed,
@@ -239,32 +241,27 @@ class Page(clutter.Texture):
 
   def _decelerateCB(self, timeline, foo):
     (dxPMS, dyPMS) = self.ppms
-    (dxPMS1, dyPMS1) = self.ppms1
 
-    # how ofthen to update ideally
+    # how often to update ideally
     updateInterval = 16.7 # 1000 ms / 60 FPS
     # how much real time elapsed from last frame
     elapsedTime = timeline.get_delta()
+    self.elapsedTime+= elapsedTime
 
-    friction = 0.075
-    desiredTicks = elapsedTime / updateInterval
+    friction = 0.05
+
+    elapsedTicks = self.elapsedTime / updateInterval
 
     # gradually decrease the speed
-    (dxPMS, dyPMS) = (dxPMS-(dxPMS*friction*desiredTicks), dyPMS-(dyPMS*friction*desiredTicks))
-    self.ppms = (dxPMS, dyPMS)
+    (dxp, dyp) = (dxPMS-(dxPMS*friction*elapsedTicks), dyPMS-(dyPMS*friction*elapsedTicks))
 
-    dx = dxPMS*elapsedTime
-    dy = dyPMS*elapsedTime
+    # how much to translate
+    dx = dxp*elapsedTime
+    dy = dyp*elapsedTime
 
     # resolution independent check
-    if abs(dxPMS) <= abs(dxPMS1*0.20) and abs(dyPMS) <= abs(dyPMS1*0.20):
+    if abs(dxp) <= abs(dxPMS*0.20) and abs(dyp) <= abs(dyPMS*0.20):
       print "under pms treshold stopping"
-      timeline.stop()
-      return
-
-    # resolution dependent sanity check
-    elif abs(dx) < 2 and abs(dy) < 2:
-      print "under treshold stopping"
       timeline.stop()
       return
 
@@ -272,7 +269,45 @@ class Page(clutter.Texture):
       print "edge stopping"
       timeline.stop()
       return
+
+# TRY nr. 2
+#  def _decelerateCB(self, timeline, foo):
+#    (dxPMS, dyPMS) = self.ppms
+#    (dxPMS1, dyPMS1) = self.ppms1
+#
+#    # how ofthen to update ideally
+#    updateInterval = 16.7 # 1000 ms / 60 FPS
+#    # how much real time elapsed from last frame
+#    elapsedTime = timeline.get_delta()
+#
+#    friction = 0.075
+#    desiredTicks = elapsedTime / updateInterval
+#
+#    # gradually decrease the speed
+#    (dxPMS, dyPMS) = (dxPMS-(dxPMS*friction*desiredTicks), dyPMS-(dyPMS*friction*desiredTicks))
+#    self.ppms = (dxPMS, dyPMS)
+#
+#    dx = dxPMS*elapsedTime
+#    dy = dyPMS*elapsedTime
+#
+#    # resolution independent check
+#    if abs(dxPMS) <= abs(dxPMS1*0.20) and abs(dyPMS) <= abs(dyPMS1*0.20):
+#      print "under pms treshold stopping"
+#      timeline.stop()
+#      return
+#
+#    # resolution dependent sanity check
+#    elif abs(dx) < 2 and abs(dy) < 2:
+#      print "under treshold stopping"
+#      timeline.stop()
+#      return
+#
+#    if self.stopDecel or self.movePage(self, dx, dy) == (True, True):
+#      print "edge stopping"
+#      timeline.stop()
+#      return
     
+# TRY nr. 2
 #  def _decelerateCB(self, timeline, foo):
 #    (dxPMS, dyPMS) = self.ppms
 #    n = timeline.get_delta() * (self.friction / self.maxFriction)
