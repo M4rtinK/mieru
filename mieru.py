@@ -248,6 +248,14 @@ class Mieru:
     if state:
       self.addToHistory(state)
 
+  def removeMangaFromHistory(self,path):
+    """delete manga described by path from history"""
+    openMangasHistory = self.get('openMangasHistory',None)
+    if openMangasHistory:
+      if path in openMangasHistory:
+        del openMangasHistory[path]
+    self.set('openMangasHistory', openMangasHistory)
+
   def getSortedHistory(self):
     openMangasHistory = self.get('openMangasHistory',None)
     if openMangasHistory:
