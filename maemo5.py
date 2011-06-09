@@ -5,6 +5,8 @@ import os
 import gtk
 import gobject
 import hildon
+import maemo5_autorotation
+
 import info
 
 from base_platform import BasePlatform
@@ -15,8 +17,11 @@ class Maemo5(BasePlatform):
 
     self.mieru = mieru
 
-    # enbale zoom/volume keys for usage by mieru
+    # enable zoom/volume keys for usage by mieru
     self.enableZoomKeys(self.mieru.window)
+
+    # enable rotation
+    self.rotationObject = self._startAutorotation()
 
     # add application menu
     menu = hildon.AppMenu()
@@ -38,6 +43,7 @@ class Maemo5(BasePlatform):
     historyPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO,hildon.BUTTON_ARRANGEMENT_VERTICAL)
     historyPickerButton.set_title("History")
     historyPickerButton.set_selector(selector)
+    historyPickerButton.set_active(-1) # mostly wont fit anyway & is kind of irrelevant
     self.mieru.watch('openMangasHistory', self._updateHistoryCB)
 
     optionsButton = gtk.Button("Options")
@@ -49,7 +55,7 @@ class Maemo5(BasePlatform):
     pagingButton = gtk.Button("Paging")
     pagingButton.connect('clicked',self.showPagingDialogCB)
 
-    fittPickerButton = self._getFittingPickerButton("Page fitting")
+    fittPickerButton = self._getFittingPickerButton("Page fitting", arangement=hildon.BUTTON_ARRANGEMENT_VERTICAL)
 
     menu.append(openFileButton)
     menu.append(openFolderButton)
@@ -94,16 +100,54 @@ class Maemo5(BasePlatform):
     except Exception, e:
       print("maemo 5: wrong fitting touch selector index", e)
 
-  def _getFittingPickerButton(self, title=None):
+  def _getFittingPickerButton(self, title=None, arangement=hildon.BUTTON_ARRANGEMENT_HORIZONTAL):
     """get a pciker button with an asociated touch selector,
     also load the last used value on startup"""
-    fittPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO,hildon.BUTTON_ARRANGEMENT_VERTICAL)
+    fittPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,arangement)
     if title:
       fittPickerButton.set_title(title)
     selector = self._getFittingSelector()
     fittPickerButton.set_selector(selector)
     fittPickerButton.connect('value-changed', self._applyFittingModeCB)
     return fittPickerButton
+
+  def getSelector(self, modes, lastUsedValue=None):
+    """get a selector"""
+    touchSelector = hildon.TouchSelector(text=True)
+    touchSelector.set_column_selection_mode(hildon.TOUCH_SELECTOR_SELECTION_MODE_SINGLE)
+
+    lastUsedValueId = None
+    id = 0
+    for mode in modes:
+      touchSelector.append_text(mode)
+      if lastUsedValue == mode:
+        lastUsedValueId = id
+      id+=1
+    if lastUsedValue != None:
+      touchSelector.set_active(0,lastUsedValueId)
+    return touchSelector
+
+  def _getRotationPickerButton(self, title=None):
+    """get a picker button with an asociated touch selector,
+    also load the last used value on startup"""
+    pb = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,hildon.BUTTON_ARRANGEMENT_HORIZONTAL)
+    if title:
+      pb.set_title(title)
+    modes = self._getRotationModes()
+    lastUsedValue = self.mieru.get('rotationMode', self._getDefaultRotationMode())
+    selector = self.getSelector(modes, lastUsedValue)
+    pb.set_selector(selector)
+    pb.connect('value-changed', self._applyRotationCB)
+    return pb
+
+
+  def _applyRotationCB(self, pickerButton):
+    """handle the selector callback and set the appropriate rotation"""
+    index = pickerButton.get_selector().get_active(0)
+    """the indexes of the modes in the selector are the same as the numbers
+    used for switching modes"""
+    print index
+    self._setRotationModeNumber(index)
 
 
   def _showOptionsCB(self, button):
@@ -122,6 +166,12 @@ class Maemo5(BasePlatform):
     vbox.pack_start(pLabel, False, False, padding*2)
     vbox.pack_start(fittPickerButton, False, False, 0)
 
+    # GUI rotation
+    rLabel = gtk.Label("GUI Rotation")
+    rPickerButton = self._getRotationPickerButton("Rotation mode")
+    vbox.pack_start(rLabel, False, False, padding*2)
+    vbox.pack_start(rPickerButton, False, False, 0)
+
     # kinnetic scrolling
     ksLabel = gtk.Label("Scrolling")
     ksButton = self.CheckButton("Kinnetic scrolling")
@@ -134,7 +184,8 @@ class Maemo5(BasePlatform):
     # clear history
     hLabel = gtk.Label("History")
     clearHistoryButton = self.Button("Clear history")
-    clearHistoryButton.connect('clicked',self._clearHistoryCB)
+    warning = "Are you sure, that you want to completely delete history ?"
+    clearHistoryButton.connect('clicked',self.areYouSureButtonCB, warning, self._clearHistory)
 
     vbox.pack_start(hLabel, False, False, padding*2)
     vbox.pack_start(clearHistoryButton, False, False, 0)
@@ -203,9 +254,6 @@ class Maemo5(BasePlatform):
     vbox.show_all()
     return vbox
 
-
-
-
   def enable_zoom_cb(self, window):
     window.window.property_change(gtk.gdk.atom_intern("_HILDON_ZOOM_KEY_ATOM"), gtk.gdk.atom_intern("INTEGER"), 32, gtk.gdk.PROP_MODE_REPLACE, [1]);
 
@@ -239,7 +287,6 @@ class Maemo5(BasePlatform):
 #      else:
 #        print "history locked"
 
-
   def _updateHistory(self):
     """
     due to the fact that the touch selector emits the same signal when an
@@ -264,7 +311,8 @@ class Maemo5(BasePlatform):
       self.currentHistory = sortedHistory
     self.historyLocked = False
 
-  def _clearHistoryCB(self, button):
+  def _clearHistory(self):
+    print "clearing history"
     self.mieru.clearHistory()
     self.historyLocked = True
     self.historyStore.clear()
@@ -304,6 +352,60 @@ class Maemo5(BasePlatform):
   def minimize(self):
     """minimizing is not supported on Maemo :)"""
     self.notify('hiding to panel is not supported ona Maemo (no panel :)', None)
+
+  def _getDefaultRotationMode(self):
+    return "auto"
+
+  def _startAutorotation(self):
+    """start the GUI autorotation feature"""
+    rotationMode = self.mieru.get('rotationMode', self._getDefaultRotationMode()) # get last used mode
+    lastModeNumber = self._getRotationModeNumber(rotationMode) # get last used mode number
+    applicationName = "mieru"
+    rObject = maemo5_autorotation.FremantleRotation(applicationName, main_window=self.mieru.getWindow(), mode=lastModeNumber)
+    return rObject
+
+  def _setRotationMode(self, rotationMode):
+    rotationModeNumber = self._getRotationModeNumber(rotationMode)
+    self.rotationObject.set_mode(rotationModeNumber)
+
+  def _setRotationModeNumber(self, rotationModeNumber):
+    self.rotationObject.set_mode(rotationModeNumber)
+
+  def _getRotationModeNumber(self, rotationMode):
+    if rotationMode == "auto":
+      return 0
+    elif rotationMode == "landscape":
+      return 1
+    elif rotationMode == "portrait":
+      return 2
+
+  def _getRotationModes(self):
+    """list the available modes in string form"""
+    return ["auto", "landscape", "portrait"]
+
+  def areYouSureButtonCB(self, button, text, okCB=None, cancelCB=None):
+    """this is used from callback comming from buttons"""
+    self.areYouSure(text, okCB, cancelCB)
+
+  def areYouSure(self, text, okCB=None, cancelCB=None):
+    """create a confirmation dialog with optional callbacks"""
+    
+    note = hildon.Note("confirmation", self.mieru.getWindow(), text)
+
+    retcode = gtk.Dialog.run(note)
+    note.destroy()
+
+    if retcode == gtk.RESPONSE_OK:
+        print "User pressed 'OK' button'"
+        if okCB != None:
+          okCB()
+        return True
+    else:
+        print "User pressed 'Cancel' button"
+        if cancelCB != None:
+          cancelCB()
+        return False
+
 
   def Button(self, label=""):
     """return hildon button"""
