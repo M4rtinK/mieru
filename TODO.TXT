@@ -2,17 +2,17 @@ TODO
 
 Format support
 * folders DONE
-* archives cointaining just images
-* archives containing folder with images
-* archives with nested folders (eq a volume archive that vontains per-chapter folders)
+* archives cointaining just images DONE
+* archives containing folder with images DONE
+* archives with nested folders (eq a volume archive that vontains per-chapter folders) DONE
 
-Unpacking
+Unpacking DONE
 
 Options storage DONE
 
 Hildon integration
-* notifications
-* options menu
+* notifications DONE
+* options menu DONE
 
 Maintenance
 * packaging
