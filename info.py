@@ -70,13 +70,13 @@ def getAboutContent(versionString="unknown"):
   about0 = gtk.Label()
   about0.set_markup(textVersion)
 
-  mieruIcon = gtk.image_new_from_file('icons/mieru.svg')
-  mieruIcon.set_pixel_size(200)
+  mieruIcon = gtk.image_new_from_file('icons/mieru_150x150.png')
+#  mieruIcon.set_pixel_size(200)
 
   text= "<i><b>Mieru project</b> contact info:</i>"
   text+= "\n<u>main developer:</u> <b>Martin Kolman</b>"
   text+= "\n<u>email</u>: <b>mieru.info@gmail.com</b>"
-  text+= "\n<u>www</u>: <b>http://www.gitorious.org/mieru/</b>"
+  text+= "\n<u>www</u>: <b>http://m4rtink.github.com/mieru/</b>"
   text+= "\n<u>discusion</u>: check <b>http://talk.maemo.org</b>"
 
   about1 = gtk.Label()
