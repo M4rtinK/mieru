@@ -33,17 +33,14 @@ class Maemo5(BasePlatform):
     fullscreenButton.connect('clicked',self.mieru.toggleFullscreen)
 
     # last open mangas list
-    selector = hildon.TouchSelector()
-    selector.set_column_selection_mode(hildon.TOUCH_SELECTOR_SELECTION_MODE_SINGLE)
     self.historyStore = gtk.ListStore(gobject.TYPE_STRING)
     self.historyLocked = False
     self._updateHistory()
-    selector.append_text_column(self.historyStore, False)
+    selector = self._getHistorySelector()
     selector.connect('changed', self._historyRowSelected)
-    historyPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO,hildon.BUTTON_ARRANGEMENT_VERTICAL)
-    historyPickerButton.set_title("History")
+    historyPickerButton = self.getVerticalPickerButton("History")
     historyPickerButton.set_selector(selector)
-    historyPickerButton.set_active(-1) # mostly wont fit anyway & is kind of irrelevant
+    self.historyPickerButton = historyPickerButton
     self.mieru.watch('openMangasHistory', self._updateHistoryCB)
 
     optionsButton = gtk.Button("Options")
@@ -71,6 +68,19 @@ class Maemo5(BasePlatform):
 
     # Add the menu to the window
     self.mieru.window.set_app_menu(menu)
+
+  def _getHistorySelector(self):
+    selector = hildon.TouchSelector()
+    selector.set_column_selection_mode(hildon.TOUCH_SELECTOR_SELECTION_MODE_SINGLE)
+    selector.append_text_column(self.historyStore, False)
+    return selector
+
+#  def _startHistorySelectorCB(self, button):
+#    picker = hildon.PickerDialog(self.mieru.getWindow())
+#    selector = self._getHistorySelector()
+#    selector.connect('changed', self._historyRowSelected)
+#    picker.set_selector(selector)
+#    picker.run()
 
   def _getFittingSelector(self):
     """load fitting modes to the touch selector,
@@ -127,6 +137,16 @@ class Maemo5(BasePlatform):
       touchSelector.set_active(0,lastUsedValueId)
     return touchSelector
 
+  def getVerticalPickerButton(self, title=""):
+    pb = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,hildon.BUTTON_ARRANGEMENT_VERTICAL)
+    pb.set_title(title)
+    return pb
+
+  def getHorizontalPickerButton(self, title=""):
+    pb = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,hildon.BUTTON_ARRANGEMENT_HORIZONTAL)
+    pb.set_title(title)
+    return pb
+
   def _getRotationPickerButton(self, title=None):
     """get a picker button with an asociated touch selector,
     also load the last used value on startup"""
@@ -140,15 +160,44 @@ class Maemo5(BasePlatform):
     pb.connect('value-changed', self._applyRotationCB)
     return pb
 
-
   def _applyRotationCB(self, pickerButton):
     """handle the selector callback and set the appropriate rotation"""
     index = pickerButton.get_selector().get_active(0)
     """the indexes of the modes in the selector are the same as the numbers
     used for switching modes"""
-    print index
     self._setRotationModeNumber(index)
 
+  def _getRIFHPickerButton(self):
+    """get a picker button with an asociated touch selector,
+    connect it with the history selector and connect the remove item callback"""
+    pb = self.getVerticalPickerButton("Erase an item from history")
+    selector = self._getHistorySelector()
+    pb.set_selector(selector)
+    pb.set_active(-1) # active item does not make sense in this case
+    selector.connect('changed', self._deleteItemFromHistoryCB)
+    return pb
+
+  def _deleteItemFromHistoryCB(self, selector, collumn):
+    """show a confirmation dialog when user select an item from history for
+    removal"""
+    if not self.historyLocked:
+      try:
+        id = selector.get_active(0)
+        if id >= 0:
+          state = self.currentHistory[id]['state']
+          path = state['path']
+          print "path selected for removal: %s" % path
+          (folderPath,name) = os.path.split(path)
+          warning = "Erase %s from history ?" % name
+          self.areYouSure(warning, (self._actuallyDeleteItemFromHistoryCB, [path]))
+      except Exception, e:
+        print "error while removing manga from history"
+        print e
+
+  def _actuallyDeleteItemFromHistoryCB(self, path):
+    """actually remove the item from history and update it"""
+    self.mieru.removeMangaFromHistory(path)
+    self._updateHistory()
 
   def _showOptionsCB(self, button):
     self.showOptions()
@@ -181,13 +230,15 @@ class Maemo5(BasePlatform):
     vbox.pack_start(ksLabel, False, False, padding*2)
     vbox.pack_start(ksButton, False, False, 0)
 
-    # clear history
+    # history
     hLabel = gtk.Label("History")
-    clearHistoryButton = self.Button("Clear history")
-    warning = "Are you sure, that you want to completely delete history ?"
-    clearHistoryButton.connect('clicked',self.areYouSureButtonCB, warning, self._clearHistory)
+    removeItemPB = self._getRIFHPickerButton()
+    clearHistoryButton = self.Button("Erase history")
+    warning = "Are you sure that you want to completely erase history ?"
+    clearHistoryButton.connect('clicked',self.areYouSureButtonCB, warning, (self._clearHistory,[]))
 
     vbox.pack_start(hLabel, False, False, padding*2)
+    vbox.pack_start(removeItemPB, False, False, 0)
     vbox.pack_start(clearHistoryButton, False, False, 0)
 
     # debug
@@ -271,19 +322,19 @@ class Maemo5(BasePlatform):
     self._updateHistory()
 
   def _historyRowSelected(self, selector, column):
-      if not self.historyLocked:
-        try:
-          id = selector.get_active(0)
-          if id >= 0:
-            state = self.currentHistory[id]['state']
-            path = state['path']
-            print "path selected: %s" % path
-            activeMangaPath = self.mieru.getActiveMangaPath()
-            if path != activeMangaPath: # infinite loop defence
-              self.mieru.openMangaFromState(state)
-        except Exception, e:
-          print "error while restoring manga from history"
-          print e
+    if not self.historyLocked:
+      try:
+        id = selector.get_active(0)
+        if id >= 0:
+          state = self.currentHistory[id]['state']
+          path = state['path']
+          print "path selected: %s" % path
+          activeMangaPath = self.mieru.getActiveMangaPath()
+          if path != activeMangaPath: # infinite loop defence
+            self.mieru.openMangaFromState(state)
+      except Exception, e:
+        print "error while restoring manga from history"
+        print e
 #      else:
 #        print "history locked"
 
@@ -398,12 +449,14 @@ class Maemo5(BasePlatform):
     if retcode == gtk.RESPONSE_OK:
         print "User pressed 'OK' button'"
         if okCB != None:
-          okCB()
+          (cb1, args1) = okCB
+          cb1(*args1)
         return True
     else:
         print "User pressed 'Cancel' button"
         if cancelCB != None:
-          cancelCB()
+          (cb2, args2) = cancelCB
+          cb2(*args2)
         return False
 
 
