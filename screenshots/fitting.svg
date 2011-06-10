@@ -16,7 +16,7 @@
    inkscape:label="Pozadí"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="Nový dokument 1">
+   sodipodi:docname="fitting.svg">
   <defs
      id="defs3" />
   <sodipodi:namedview
@@ -37,9 +37,9 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:window-width="1280"
-     inkscape:window-height="800"
+     inkscape:window-height="728"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="24"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -73,7 +73,10 @@
        height="708.57141"
        x="-365.71429"
        y="-4.7806745"
-       rx="22" />
+       rx="22"
+       inkscape:export-filename="/home/melf-san/data/coding/gps/wmieru/screenshots/fitting.png"
+       inkscape:export-xdpi="51.96595"
+       inkscape:export-ydpi="51.96595" />
     <rect
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:13.07992458;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect3915"
@@ -81,7 +84,10 @@
        height="1080"
        x="-720"
        y="132.36218"
-       rx="0" />
+       rx="0"
+       inkscape:export-filename="/home/melf-san/data/coding/gps/wmieru/screenshots/fitting.png"
+       inkscape:export-xdpi="51.953457"
+       inkscape:export-ydpi="51.953457" />
     <image
        y="692.36218"
        x="-680"
@@ -2008,7 +2014,10 @@ BoPBYLYYLLAwGAwGg8FgthgssDAYDAaDwWC2GCywMBgMBoPBYLYYLLAwGAwGg8FgthgssDAYDAaD
 wWC2mP8D/kte9Wp1LigAAAAASUVORK5CYII=
 "
        height="480"
-       width="800" />
+       width="800"
+       inkscape:export-filename="/home/melf-san/data/coding/gps/wmieru/screenshots/fitting.png"
+       inkscape:export-xdpi="51.953457"
+       inkscape:export-ydpi="51.953457" />
     <image
        y="172.36218"
        x="-680"
@@ -5582,7 +5591,10 @@ qa56oAVsg1WeV5YeLbFV5p/7GKnWquUnZZzBBz8LWWOZr0xKqaqqxlVj6eul6rPq1LUpP+MZoPGq
 kT6XVlU1vHTY732q/qJerVWlQPD/AduUCsPrdzOLAAAAAElFTkSuQmCC
 "
        height="480"
-       width="800" />
+       width="800"
+       inkscape:export-filename="/home/melf-san/data/coding/gps/wmieru/screenshots/fitting.png"
+       inkscape:export-xdpi="51.953457"
+       inkscape:export-ydpi="51.953457" />
     <image
        y="692.36218"
        x="160"
@@ -7509,7 +7521,10 @@ BoPBYLYYLLAwGAwGg8FgthgssDAYDAaDwWC2GCywMBgMBoPBYLYYLLAwGAwGg8FgthgssDAYDAaD
 wWC2mP8D/kte9Wp1LigAAAAASUVORK5CYII=
 "
        height="480"
-       width="800" />
+       width="800"
+       inkscape:export-filename="/home/melf-san/data/coding/gps/wmieru/screenshots/fitting.png"
+       inkscape:export-xdpi="51.953457"
+       inkscape:export-ydpi="51.953457" />
     <image
        y="172.36218"
        x="160"
@@ -11235,14 +11250,20 @@ PjfZdpZupcVx0bbt5KXk+733hZMCSXmiKMqyLVV7ZQTrO9KX/iXtnHjoWKhwr9DIE78R2w9htG07
 PZEGNRA8EnSuKGVBsbFNjrgeMv0qrcDQjONmvIcYrP8HzNO1aOw/0NwAAAAASUVORK5CYII=
 "
        height="480"
-       width="800" />
+       width="800"
+       inkscape:export-filename="/home/melf-san/data/coding/gps/wmieru/screenshots/fitting.png"
+       inkscape:export-xdpi="51.953457"
+       inkscape:export-ydpi="51.953457" />
     <text
        xml:space="preserve"
        style="font-size:144px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:0.86000001000000004;fill:#ff0000;fill-opacity:1;stroke:#000000;font-family:Bitstream Vera Sans"
        x="-660"
        y="312.36218"
        id="text4193"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/melf-san/data/coding/gps/wmieru/screenshots/fitting.png"
+       inkscape:export-xdpi="51.953457"
+       inkscape:export-ydpi="51.953457"><tspan
          sodipodi:role="line"
          id="tspan4195"
          x="-660"
@@ -11253,7 +11274,10 @@ PZEGNRA8EnSuKGVBsbFNjrgeMv0qrcDQjONmvIcYrP8HzNO1aOw/0NwAAAAASUVORK5CYII=
        x="200"
        y="312.36218"
        id="text4193-1"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/melf-san/data/coding/gps/wmieru/screenshots/fitting.png"
+       inkscape:export-xdpi="51.953457"
+       inkscape:export-ydpi="51.953457"><tspan
          sodipodi:role="line"
          id="tspan4195-6"
          x="200"
@@ -11264,7 +11288,10 @@ PZEGNRA8EnSuKGVBsbFNjrgeMv0qrcDQjONmvIcYrP8HzNO1aOw/0NwAAAAASUVORK5CYII=
        x="200"
        y="832.36218"
        id="text4193-1-7"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/melf-san/data/coding/gps/wmieru/screenshots/fitting.png"
+       inkscape:export-xdpi="51.953457"
+       inkscape:export-ydpi="51.953457"><tspan
          sodipodi:role="line"
          id="tspan4195-6-1"
          x="200"
@@ -11275,7 +11302,10 @@ PZEGNRA8EnSuKGVBsbFNjrgeMv0qrcDQjONmvIcYrP8HzNO1aOw/0NwAAAAASUVORK5CYII=
        x="-640"
        y="832.36218"
        id="text4193-1-1"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/melf-san/data/coding/gps/wmieru/screenshots/fitting.png"
+       inkscape:export-xdpi="51.953457"
+       inkscape:export-ydpi="51.953457"><tspan
          sodipodi:role="line"
          id="tspan4195-6-8"
          x="-640"
