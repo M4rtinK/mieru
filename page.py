@@ -1,4 +1,4 @@
-ki"""page.py - a manga/comix book page"""
+"""page.py - a manga/comix book page"""
 
 import math
 import clutter
