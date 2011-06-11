@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -14,13 +15,13 @@
    id="svg2"
    inkscape:label="Pozadí"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
+   inkscape:version="0.48.1 r9760"
    version="1.0"
    sodipodi:docname="mieru.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="D:\obrazky\!Vlastni.tvorba\mieru\mieru.png"
-   inkscape:export-xdpi="39.456696"
-   inkscape:export-ydpi="39.456696">
+   inkscape:export-filename="/home/user"
+   inkscape:export-xdpi="48.112762"
+   inkscape:export-ydpi="48.112762">
   <defs
      id="defs3318">
     <radialGradient
@@ -178,10 +179,11 @@
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1002"
+     inkscape:window-width="1280"
+     inkscape:window-height="728"
      inkscape:window-x="0"
-     inkscape:window-y="48" />
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata3321">
     <rdf:RDF>
@@ -190,6 +192,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -237,7 +240,7 @@
        sodipodi:cy="583.61218"
        sodipodi:rx="14.285714"
        sodipodi:ry="13.571428"
-       d="M 110.70819,583.21586 A 14.285714,13.571428 0 1 1 82.143355,583.4991"
+       d="m 110.70819,583.21586 c 0.23041,7.49209 -5.97601,13.74308 -13.862431,13.96196 -7.886417,0.21889 -14.466402,-5.67722 -14.696807,-13.16931 -0.0052,-0.16976 -0.0071,-0.33959 -0.0056,-0.50941"
        sodipodi:start="6.2539782"
        sodipodi:end="9.4331108"
        sodipodi:open="true"
