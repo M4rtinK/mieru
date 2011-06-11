@@ -1,4 +1,4 @@
-"""page.py - a manga/comix book page"""
+ki"""page.py - a manga/comix book page"""
 
 import math
 import clutter
@@ -99,7 +99,7 @@ class Page(clutter.Texture):
     if self.clickCount >=2: # is this a doubleclick ?
       self._toggleZoom() # toggle zoom in/out
     else: # continue drag as kinetic scrolling (if enabled) and movement is enabled
-      if self.mieru.get('kineticScrolling', False) and self.movementEnabled != (0,0):
+      if self.mieru.get('kineticScrolling', True) and self.movementEnabled != (0,0):
         """if the user clicked - dont start any kinetic scrolling
            if the user crossed the drag treshold, start kinetic scrolling"""
         if not self.clickCount: # last event was a drag  

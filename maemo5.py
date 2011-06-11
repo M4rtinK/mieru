@@ -224,7 +224,7 @@ class Maemo5(BasePlatform):
     # kinnetic scrolling
     ksLabel = gtk.Label("Scrolling")
     ksButton = self.CheckButton("Kinnetic scrolling")
-    ksButton.set_active(self.mieru.get('kineticScrolling', False))
+    ksButton.set_active(self.mieru.get('kineticScrolling', True))
     ksButton.connect('toggled', self._toggleOptionCB, 'kineticScrolling', False)
     self.mieru.watch('kineticScrolling', self._updateKSCB, ksButton)
     vbox.pack_start(ksLabel, False, False, padding*2)

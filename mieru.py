@@ -150,7 +150,7 @@ class Mieru:
       self.platform.startChooser(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     elif keyName == 'k':
       """toggle kinetic scrolling"""
-      kinetic = self.get('kineticScrolling', False)
+      kinetic = self.get('kineticScrolling', True)
       if kinetic:
         self.set('kineticScrolling', False)
         self.notify('kinetic scrolling <b>disabled</b>')
