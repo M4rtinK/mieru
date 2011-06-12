@@ -353,6 +353,11 @@ class Page(clutter.Texture):
       # position in the middle and lock vertical movement
       alignAnim2 = self.animate(clutter.LINEAR,100, 'y', y+((height-h)/2.0) )
       alignAnim2.connect("completed", self._enableMovementCB, (None,0))
+    elif h > height: # page is higher than viewport:
+      if cy <= height - h: # check if there is empty space under the page
+        # align with viewport bottom
+        alignAnim2 = self.animate(clutter.LINEAR,100, 'y', height - h)
+        alignAnim2.connect("completed", self._enableMovementCB, (None, 1))
 
     self.animate(clutter.LINEAR,100, 'width', w, 'height', h)
 
