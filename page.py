@@ -378,6 +378,7 @@ class Page(clutter.Texture):
 
   def fitToHeight(self):
     (x,y,width,height) = self.mieru.viewport
+    print (x,y,width,height)
     (w,h) = self.get_size()
     factor = float(height) / h
     (newW,newH) = (w*factor,h*factor)
@@ -394,6 +395,9 @@ class Page(clutter.Texture):
       # center page in the middle and lock horizontal scrolling
       centerAnim = self.animate(clutter.LINEAR,100, 'x', (width-newW)/2.0)
       centerAnim.connect("completed", self._enableMovementCB,(0,0))
+    else:
+      centerAnim = self.animate(clutter.LINEAR,100, 'x', 0)
+      centerAnim.connect("completed", self._enableMovementCB,(1,0))
 
     return(newW,newH)
 
@@ -442,6 +446,7 @@ class Page(clutter.Texture):
     # resize and refit the page when viewport size changes
     fitMode = self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
     self.setFitMode(fitMode)
+#    self.movePage(self, 0, 0)
 
   def _toggleZoom(self):
     if self.zoomIn:
