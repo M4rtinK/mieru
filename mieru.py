@@ -114,6 +114,12 @@ class Mieru:
 
     gtk.main()
 
+  def getDict(self):
+    return self.d
+
+  def setDict(self, d):
+    self.d = d
+
   def getViewport(self):
     return self.viewport
 
@@ -293,7 +299,11 @@ class Mieru:
           print "invalid watcher callback :", callback
 
   def get(self, key, default):
-    return self.d.get(key, default)
+    try:
+      return self.d.get(key, default)
+    except Exception, e:
+      print "options: exception while working with persistent dictionary:\n%s" % e
+      return default
 
   def set(self, key, value):
     self.d[key] = value

@@ -30,7 +30,7 @@ class Options:
     print "options: saving options"
     try:
       f = open(self.optionsPath, "w")
-      marshal.dump(self.mieru.d, f)
+      marshal.dump(self.mieru.getDict(), f)
       f.close()
       print "options: successfully saved"
     except IOError:
@@ -41,8 +41,9 @@ class Options:
       f = open(self.optionsPath, "r")
       loadedData = marshal.load(f)
       f.close()
-      self.mieru.d = loadedData
+      self.mieru.setDict(loadedData)
     except Exception, e:
+      self.mieru.setDict({})
       print "options: exception while loading saved options:\n%s" % e
 
 
