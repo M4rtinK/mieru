@@ -11,6 +11,7 @@ class Options:
     self.profileFolderPath = os.path.join(userHomePath, mieruProfileFolderName)
     self.optionsPath = os.path.join(self.profileFolderPath, optionsFilename)
     self.checkProfilePath()
+    print "options: profile path: %s" % self.profileFolderPath
     self.load()
 
   def checkProfilePath(self):
@@ -23,7 +24,7 @@ class Options:
         print "creating profile folder in: %s" % self.profileFolderPath
         return True
       except Exception, e:
-        print "creating profile folder failed: %s" % e
+        print "options:Creating profile folder failed:\n%s" % e
         return False
 
   def save(self):
@@ -33,8 +34,8 @@ class Options:
       marshal.dump(self.mieru.getDict(), f)
       f.close()
       print "options: successfully saved"
-    except IOError:
-      print "Can't save options"
+    except Exception, e:
+      print "options: Exception while saving options:\n%s" % e
 
   def load(self):
     try:
