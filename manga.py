@@ -222,8 +222,17 @@ class Manga:
       # load the image from a pixbuf, created from the file object
       # we can like this easily unpack selected files from archives entirely in memmory
       pl = gtk.gdk.PixbufLoader()
-      pl.write(file.read())
-      pl.close() # this  blocks until the image is completely loaded
+      try:
+        pl.write(file.read())
+        pl.close() # this  blocks until the image is completely loaded
+      except Exception,e:
+        print "manga: Loading page failed with this exception:\n%s\nmanga: loading placeholder image" % e
+        # load a "page unredable image"  (@_@)
+        file = open("icons/page_unreadable.png", 'r')
+        # create a fresh pl
+        pl = gtk.gdk.PixbufLoader()
+        pl.write(file.read())
+        pl.close()
       t3 = time.clock()
       # TODO: do this with callbacks
       pb = pl.get_pixbuf()
