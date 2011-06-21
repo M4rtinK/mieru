@@ -9,8 +9,7 @@ import gobject
 import time
 
 import manga as mangaModule
-#from rounded_rectangle import RoundedRectangle
-import declutter
+#import declutter
 import page as pageModule
 import container as containerModule
 

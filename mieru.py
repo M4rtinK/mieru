@@ -47,7 +47,6 @@ class Mieru:
     self.fullscreen = False
     self.viewport = (0,0,800,480)
     (x,y,w,h) = self.viewport
-#    self.continuousReading = self.get('continuousReading',True)
     self.continuousReading = True
 
     # create a new window
@@ -106,7 +105,6 @@ class Mieru:
 
 
     # This packs the button into the window (a GTK container).
-
     self.embed.show()
 
     # and the window
@@ -326,7 +324,6 @@ class Mieru:
       print "restoring last open manga"
       lastOpenMangaState = openMangasHistory[0]['state']
       self.openMangaFromState(lastOpenMangaState)
-#      self.activeManga = manga.fromState(self, lastOpenMangaState)
     else:
       print "no history found"
 
@@ -342,16 +339,6 @@ class Mieru:
             ("screen", "fit to screen")
             ]
     return modes
-
-
-#  def do_button_press_event(actor, event):
-#    print "button press event"
-#
-#  def on_button_press(actor,event):
-#    print actor,event
-#
-#  def do_button_press_event(self,widget,event):
-#    print widget, event
 
 if __name__ == "__main__":
   mieru = Mieru()
