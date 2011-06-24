@@ -27,9 +27,9 @@ class Maemo5(BasePlatform):
     # add application menu
     menu = hildon.AppMenu()
     openFolderButton = gtk.Button("Open folder")
-    openFolderButton.connect('clicked',self.startChooserCB, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    openFolderButton.connect('clicked',self.startChooserCB, "folder")
     openFileButton = gtk.Button("Open file")
-    openFileButton.connect('clicked',self.startChooserCB, gtk.FILE_CHOOSER_ACTION_OPEN)
+    openFileButton.connect('clicked',self.startChooserCB, "file")
     fullscreenButton = gtk.Button("Fullscreen")
     fullscreenButton.connect('clicked',self._toggleFullscreenCB)
 
