@@ -62,7 +62,7 @@ class PC(BasePlatform):
       openm.add_accelerator("activate", agr, key,
           mod, gtk.ACCEL_VISIBLE)
       filemenu.append(openm)
-      openm.connect("activate", self.startChooserCB, gtk.FILE_CHOOSER_ACTION_OPEN)
+      openm.connect("activate", self.startChooserCB, "file")
 
       sep = gtk.SeparatorMenuItem()
       filemenu.append(sep)
