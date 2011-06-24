@@ -14,6 +14,7 @@ import gtk
 
 import gtk_gui
 import buttons
+import clutter_page
 
 class ClutterGTKGUI(gtk_gui.GTKGUI):
   def __init__(self, mieru, type, size):
@@ -57,7 +58,9 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     (w,h) = self.stage.get_size()
     return (0,0,w,h)
 
-
-
+  def getPage(self, flo, name="", fitOnStart=True):
+    pb = self._flo2pixbuf(flo)
+    flo.close()
+    return clutter_page.ClutterPage(pb, self.mieru, name, fitOnStart)
 
 

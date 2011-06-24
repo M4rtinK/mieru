@@ -15,7 +15,7 @@ import page as pageModule
 import container as containerModule
 
 
-class ClutterManga:
+class Manga:
   def __init__(self, mieru, path=None, startOnPage=0, load=True, loadNotify=True):
     self.mieru = mieru
     self.group = clutter.Group()
@@ -139,7 +139,6 @@ class ClutterManga:
     self.removeFromStage(page)
     self._quicklyDestroyPage(page)
 
-
   def _quicklyDestroyPage(self,page):
     """quickly free resources held by a page"""
     if page:
@@ -156,10 +155,6 @@ class ClutterManga:
       return id + 1
     else: # negative addressing
       return (len(self.pages) + id + 1)
-
-
-
-
 
 #  def loadFolder(self, path):
 #    if of.path.isdir:
@@ -219,38 +214,19 @@ class ClutterManga:
     result = self.container.getImageFileById(id)
     t2 = time.clock()
     if result:
-       # correct id is reutnerned for negative addressing (id=-1, etc.)
+      # correct id is reuturned for negative addressing (id=-1, etc.)
       (file,id) = result 
-      # load the image from a pixbuf, created from the file object
-      # we can like this easily unpack selected files from archives entirely in memmory
-      pl = gtk.gdk.PixbufLoader()
-      try:
-        pl.write(file.read())
-        pl.close() # this  blocks until the image is completely loaded
-      except Exception,e:
-        print "manga: Loading page failed with this exception:\n%s\nmanga: loading placeholder image" % e
-        # load a "page unredable image"  (@_@)
-        file = open("icons/page_unreadable.png", 'r')
-        # create a fresh pl
-        pl = gtk.gdk.PixbufLoader()
-        pl.write(file.read())
-        pl.close()
+      page = self.mieru.gui.getPage(file,self.mieru, fitOnStart=fitOnStart)
+      (w,h) = page.getSize()
       t3 = time.clock()
-      # TODO: do this with callbacks
-      pb = pl.get_pixbuf()
-      (w,h) = (pb.get_width(),pb.get_height())
-      page = pageModule.Page(pb,self.mieru, fitOnStart=fitOnStart)
-      t4 = time.clock()
-      file.close()
-      del pl
-      t5 = time.clock()
+      # TODO: reimplement this
       if self.mieru.get('debugPageLoading', False):
         now = time.clock()
         print("Page completely loaded in %1.2f ms" % (1000 * (now - t1)))
         print("* loading from container: %1.2f ms" % (1000 * (t2 - t1)))
-        print("* loading to pixbuf: %1.2f ms" % (1000 * (t3 - t2)))
-        print("* initializing page object with pixbuf: %1.2f ms" % (1000 * (t4 - t3)))
-        print("* closing file and deleting pixbuf: %1.2f ms" % (1000 * (t5 - t4)))
+        print("* loading to pixbuf & to page & cleanup: %1.2f ms" % (1000 * (t3 - t2)))
+#        print("* initializing page object with pixbuf: %1.2f ms" % (1000 * (t4 - t3)))
+#        print("* closing file and deleting pixbuf: %1.2f ms" % (1000 * (t5 - t4)))
         print("- image resoution: %d x %d" % (w, h))
         print("- image filename: %s" % self.container.getImageFilenameById(id))
 
@@ -573,28 +549,28 @@ class ClutterManga:
 
       self.previewBox.animate(clutter.LINEAR,100,"y", newY, "width",pBoxSide, "height", pBoxSide)
 
-  def _transition(self, direction):
-    """replace the currently open manga with the previewed one"""
-
-    alpha = clutter.LINEAR
-    transition = clutter.Score()
-    minimizeTl = clutter.Timeline(duration=300)
-    maximizeTl = clutter.Timeline(duration=300)
-    bgInTl = clutter.Timeline(duration=300)
-    bgOutTl = clutter.Timeline(duration=300)
-
-    # transform currently visible page to a preview
-    self.activePage.deactivate()
-
-    (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
-
-    (tw,th) = self.activePage.get_size()
-    wf = float(pBoxInSide)/tw
-    hf = float(pBoxInSide)/th
-    if tw >= th:
-      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*wf, "height", th*wf)
-    else:
-      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*hf, "height", th*hf)
+#  def _transition(self, direction):
+#    """replace the currently open manga with the previewed one"""
+#
+#    alpha = clutter.LINEAR
+#    transition = clutter.Score()
+#    minimizeTl = clutter.Timeline(duration=300)
+#    maximizeTl = clutter.Timeline(duration=300)
+#    bgInTl = clutter.Timeline(duration=300)
+#    bgOutTl = clutter.Timeline(duration=300)
+#
+#    # transform currently visible page to a preview
+#    self.activePage.deactivate()
+#
+#    (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
+#
+#    (tw,th) = self.activePage.get_size()
+#    wf = float(pBoxInSide)/tw
+#    hf = float(pBoxInSide)/th
+#    if tw >= th:
+#      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*wf, "height", th*wf)
+#    else:
+#      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*hf, "height", th*hf)
 
 #    self.activePage.animate_with_timeline(minimizeTl, alpha, "x", ,"y", )
 
@@ -621,6 +597,6 @@ class ClutterManga:
 def fromState(mieru, state):
   """create a Manga from the given state"""
   if mieru.gui.getAccel():
-    m = ClutterManga(mieru, load=False)
+    m = Manga(mieru, load=False)
     m.setState(state)
     return m

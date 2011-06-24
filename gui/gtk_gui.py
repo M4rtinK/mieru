@@ -55,3 +55,23 @@ class GTKGUI(gui.GUI):
 
   def _destroyCB(self, window):
     self.mieru.destroy()
+
+  def _flo2pixbuf(self, flo):
+    pl = gtk.gdk.PixbufLoader()
+    try:
+      pl.write(flo.read())
+      pl.close() # this  blocks until the image is completely loaded
+    except Exception,e:
+      print "gtkgui: Loading page failed with this exception:\n%s\ngtkgui: loading placeholder image" % e
+      # load a "page unredable image"  (@_@)
+      file = open("icons/page_unreadable.png", 'r')
+      # create a fresh pl
+      pl = gtk.gdk.PixbufLoader()
+      pl.write(file.read())
+      pl.close()
+      file.close()
+    pb = pl.get_pixbuf()
+    # cleanup
+    del pl
+    flo.close()
+    return pb
