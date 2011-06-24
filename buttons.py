@@ -20,17 +20,18 @@ def wasClick(dx,dy):
   distSq = dx * dx + dy * dy
   return distSq <= CLICK_TRESHOLD
 
-class Buttons:
-  def __init__(self, mieru):
+class ClutterButtons:
+  def __init__(self, mieru, gui):
     self.mieru = mieru
+    self.gui = gui
     self.layer = clutter.Group()
-    self.mieru.stage.add(self.layer)
+    self.gui.getStage().add(self.layer)
     self.pressLength = 175 # in ms, higher than this and it will be considered to a drag
     self.fsButton = None
     self.fsButtonActive = False
     self.fsButtonLastPressTimestamp = None
     self._addButtons()
-    self.mieru.stage.connect('allocation-changed', self._handleResize)
+    self.gui.getStage().connect('allocation-changed', self._handleResize)
 
   def getLayer(self):
     """return the current container, for abowe/below purposes"""
@@ -42,7 +43,6 @@ class Buttons:
     fullscreen"""
     (x,y,w,h) = actorBox
     self.fsButton.animate(clutter.LINEAR,200, 'x', w, 'y', h)
-
 
   def _addButtons(self):
     """initialize and add ons creen buttons"""
@@ -57,7 +57,7 @@ class Buttons:
     fsToggleButton.show()
     fsToggleButton.raise_top()
 
-    (x,y,w1,h1) = self.mieru.viewport
+    (w1,h1) = self.gui.getStage().get_size()
 
     fsToggleButton.set_position(w1,h1)
 
@@ -86,7 +86,7 @@ class Buttons:
          so that the button does not interfere with dragging the page content"""
       if (event.time - self.fsButtonLastPressTimestamp) <= self.pressLength:
         if self.fsButtonActive:
-          self.mieru.toggleFullscreen()
+          self.gui.toggleFullscreen()
           self.fsButtonActive = False
         else:
           self.fsButtonActive = True
@@ -94,7 +94,6 @@ class Buttons:
           print "showing"
           timer = gobject.timeout_add(2000,self._hideFSButton, button)
       
-
   def _hideFSButton(self, button):
     self.fsButtonActive = False
     declutter.animate(button,clutter.LINEAR,200,[('opacity',0)])

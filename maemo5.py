@@ -16,9 +16,10 @@ class Maemo5(BasePlatform):
     BasePlatform.__init__(self)
 
     self.mieru = mieru
+    window = self.mieru.gui.getWindow()
 
     # enable zoom/volume keys for usage by mieru
-    self.enableZoomKeys(self.mieru.window)
+    self.enableZoomKeys(window)
 
     # enable rotation
     self.rotationObject = self._startAutorotation()
@@ -30,7 +31,7 @@ class Maemo5(BasePlatform):
     openFileButton = gtk.Button("Open file")
     openFileButton.connect('clicked',self.startChooserCB, gtk.FILE_CHOOSER_ACTION_OPEN)
     fullscreenButton = gtk.Button("Fullscreen")
-    fullscreenButton.connect('clicked',self.mieru.toggleFullscreen)
+    fullscreenButton.connect('clicked',self._toggleFullscreenCB)
 
     # last open mangas list
     self.historyStore = gtk.ListStore(gobject.TYPE_STRING)
@@ -67,8 +68,11 @@ class Maemo5(BasePlatform):
     menu.show_all()
 
     # Add the menu to the window
-    self.mieru.window.set_app_menu(menu)
+    window.set_app_menu(menu)
 
+  def _toggleFullscreenCB(self, button):
+    self.mieru.gui.toggleFullscreen()
+    
   def _getHistorySelector(self):
     selector = hildon.TouchSelector()
     selector.set_column_selection_mode(hildon.TOUCH_SELECTOR_SELECTION_MODE_SINGLE)
@@ -305,7 +309,7 @@ class Maemo5(BasePlatform):
     vbox.show_all()
     return vbox
 
-  def enable_zoom_cb(self, window):
+  def _enableZoomCB(self, window):
     window.window.property_change(gtk.gdk.atom_intern("_HILDON_ZOOM_KEY_ATOM"), gtk.gdk.atom_intern("INTEGER"), 32, gtk.gdk.PROP_MODE_REPLACE, [1]);
 
   def disableZoomKeys(self):
@@ -313,9 +317,9 @@ class Maemo5(BasePlatform):
 
   def enableZoomKeys(self,window):
           if window.flags() & gtk.REALIZED:
-                  enable_zoom_cb(window)
+                  self._enableZoomCB(window)
           else:
-                  window.connect("realize", self.enable_zoom_cb)
+                  window.connect("realize", self._enableZoomCB)
 
   def _updateHistoryCB(self, key=None, value=None, oldValue=None):
     print "update history"
@@ -374,7 +378,12 @@ class Maemo5(BasePlatform):
     self.startChooser(type)
 
   def startChooser(self, type):
-    dialog = hildon.FileChooserDialog(self.mieru.window, type)
+    if type == "folder":
+      t = gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER
+    else: # type == "file"
+      t = gtk.FILE_CHOOSER_ACTION_OPEN
+
+    dialog = hildon.FileChooserDialog(self.mieru.gui.getWindow(), t)
     lastFolder = self.mieru.get('lastChooserFolder', None)
     currentFolder = None
     selectedPath = None
@@ -393,8 +402,7 @@ class Maemo5(BasePlatform):
 
   def notify(self, message, icon=None):
     print message
-#    hildon.hildon_banner_show_information_with_markup(self.mieru.window, "", message)
-    hildon.hildon_banner_show_information_with_markup(self.mieru.window, "icon_text", message)
+    hildon.hildon_banner_show_information_with_markup(self.mieru.gui.getWindow(), "icon_text", message)
 
   def pagingDialogBeforeOpen(self):
     """notify the user that the window in tha bakcground does not live-update"""
@@ -412,7 +420,7 @@ class Maemo5(BasePlatform):
     rotationMode = self.mieru.get('rotationMode', self._getDefaultRotationMode()) # get last used mode
     lastModeNumber = self._getRotationModeNumber(rotationMode) # get last used mode number
     applicationName = "mieru"
-    rObject = maemo5_autorotation.FremantleRotation(applicationName, main_window=self.mieru.getWindow(), mode=lastModeNumber)
+    rObject = maemo5_autorotation.FremantleRotation(applicationName, main_window=self.mieru.gui.getWindow(), mode=lastModeNumber)
     return rObject
 
   def _setRotationMode(self, rotationMode):

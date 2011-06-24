@@ -1,6 +1,5 @@
 """page.py - a manga/comix book page"""
 
-import math
 import clutter
 
 import buttons
@@ -56,7 +55,7 @@ class Page(clutter.Texture):
 
     self.connect('button-press-event', self.do_button_press_event)
     self.connect('button-release-event', self.do_button_release_event)
-    self.mieru.stage.connect('allocation-changed', self._handleResize)
+    self.mieru.gui.getStage().connect('allocation-changed', self._handleResize)
 
     self.set_keep_aspect_ratio(True) # we want to preserve the aspect ratio
 
@@ -156,7 +155,7 @@ class Page(clutter.Texture):
   def movePage(self,page,dx,dy):
     """move the page so that the voewport either stays inside it
        or the page stays inside the viewport if it is smaller"""
-    (x,y,w,h) = self.mieru.viewport
+    (x,y,w,h) = self.mieru.gui.getViewport()
     (pageX,pageY,pageW,pageH) = page.get_geometry()
     (newX,newY) = (pageX+dx,pageY+dy)
     wCollision = False
@@ -332,7 +331,7 @@ class Page(clutter.Texture):
   def setOriginalSize(self):
     """resize back to original size"""
     (w, h) = self.originalSize
-    (x,y,width,height) = self.mieru.viewport
+    (x,y,width,height) = self.mieru.gui.getViewport()
     (cx,cy) = self.get_position()
     if w<=width and h<=height:
       # center and lock images smaller than viewport
@@ -363,7 +362,7 @@ class Page(clutter.Texture):
 
   def fitToWidth(self):
     print "to width"
-    (x,y,width,height) = self.mieru.viewport
+    (x,y,width,height) = self.mieru.gui.getViewport()
     (cx,cy,cw,ch) = self.get_geometry()
     (w,h) = self.get_size()
     factor = float(width) / w
@@ -382,8 +381,7 @@ class Page(clutter.Texture):
     return(newW,newH)
 
   def fitToHeight(self):
-    (x,y,width,height) = self.mieru.viewport
-    print (x,y,width,height)
+    (x,y,width,height) = self.mieru.gui.getViewport()
     (w,h) = self.get_size()
     factor = float(height) / h
     (newW,newH) = (w*factor,h*factor)
@@ -407,7 +405,7 @@ class Page(clutter.Texture):
     return(newW,newH)
 
   def fitToScreen(self):
-    (x,y,screenW,screenH) = self.mieru.viewport
+    (x,y,screenW,screenH) = self.mieru.gui.getViewport()
     (w,h) = self.get_size()
     # resize to fit to screen
     if screenW > screenH:
@@ -455,7 +453,7 @@ class Page(clutter.Texture):
 
   def _toggleZoom(self):
     if self.zoomIn:
-      (x,y,screenW,screenH) = self.mieru.viewport
+      (x,y,screenW,screenH) = self.mieru.gui.getViewport()
       # resize to fit to longest side of the screen
       if screenW > screenH:
         self.setFitMode("width")
@@ -466,7 +464,7 @@ class Page(clutter.Texture):
       self.setFitMode(self.mieru.get('fitMode', 'original'))
       self.zoomIn = True
 #  def fitToWidth(self):
-#    (x,y,w,h) = self.mieru.viewport
+#    (x,y,w,h) = self.mieru.gui.getViewport()
 #    self.set_width(w)
 
 

@@ -15,8 +15,13 @@ class PC(BasePlatform):
     return True
 
   def startChooser(self, type):
+    if type == "folder":
+      t = gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER
+    else: # type == "file"
+      t = gtk.FILE_CHOOSER_ACTION_OPEN
+
     buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK)
-    dialog = gtk.FileChooserDialog("Open file",self.mieru.window, type, buttons=buttons)
+    dialog = gtk.FileChooserDialog("Open file",self.mieru.window, t, buttons=buttons)
     lastFolder = self.mieru.get('lastChooserFolder', None)
     currentFolder = None
     selectedPath = None
@@ -39,45 +44,51 @@ class PC(BasePlatform):
 
   def _addMenu(self):
     """add main menu"""
-    mvbox = self.mieru.getVbox()
-    window = self.mieru.getWindow()
-    mb = gtk.MenuBar()
-    filemenu = gtk.Menu()
-    filem = gtk.MenuItem("_File")
-    filem.set_submenu(filemenu)
 
-    agr = gtk.AccelGroup()
-    window.add_accel_group(agr)
+    if self.mieru.gui.getToolkit() == "GTK":
+      print "ADASDADASDASDASD"
+      mvbox = self.mieru.gui.getVbox()
+      window = self.mieru.gui.getWindow()
+      mb = gtk.MenuBar()
+      filemenu = gtk.Menu()
+      filem = gtk.MenuItem("_File")
+      filem.set_submenu(filemenu)
 
-    openm = gtk.ImageMenuItem(gtk.STOCK_OPEN, agr)
-    key, mod = gtk.accelerator_parse("<Control>O")
-    openm.add_accelerator("activate", agr, key,
-        mod, gtk.ACCEL_VISIBLE)
-    filemenu.append(openm)
-    openm.connect("activate", self.startChooserCB, gtk.FILE_CHOOSER_ACTION_OPEN)
+      agr = gtk.AccelGroup()
+      window.add_accel_group(agr)
 
-    sep = gtk.SeparatorMenuItem()
-    filemenu.append(sep)
+      openm = gtk.ImageMenuItem(gtk.STOCK_OPEN, agr)
+      key, mod = gtk.accelerator_parse("<Control>O")
+      openm.add_accelerator("activate", agr, key,
+          mod, gtk.ACCEL_VISIBLE)
+      filemenu.append(openm)
+      openm.connect("activate", self.startChooserCB, gtk.FILE_CHOOSER_ACTION_OPEN)
 
-    exit = gtk.ImageMenuItem(gtk.STOCK_QUIT, agr)
-    key, mod = gtk.accelerator_parse("<Control>Q")
-    exit.add_accelerator("activate", agr, key,
-        mod, gtk.ACCEL_VISIBLE)
+      sep = gtk.SeparatorMenuItem()
+      filemenu.append(sep)
 
-    exit.connect("activate", gtk.main_quit)
+      exit = gtk.ImageMenuItem(gtk.STOCK_QUIT, agr)
+      key, mod = gtk.accelerator_parse("<Control>Q")
+      exit.add_accelerator("activate", agr, key,
+          mod, gtk.ACCEL_VISIBLE)
 
-    filemenu.append(exit)
+      exit.connect("activate", gtk.main_quit)
 
-    mb.append(filem)
+      filemenu.append(exit)
 
-    mvbox.pack_start(mb, False, False, 0)
+      mb.append(filem)
 
-    # hide the menu bar when in fullscreen
+      mvbox.pack_start(mb, False, False, 0)
 
-    # connect window state CB
-    window.connect('window-state-event', self._fullscreenCB)
+      # hide the menu bar when in fullscreen
 
-    return mb
+      # connect window state CB
+      window.connect('window-state-event', self._fullscreenCB)
+
+      mvbox.show_all()
+
+      return mb
+
 
   def _fullscreenCB(self, window, event):
     """hide the menu bar when in fullscreen"""

@@ -17,7 +17,7 @@ class BasePlatform:
     """start a file/folder chooser dialog"""
     pass
 
-  def handleKeyPress(self, widget, event):
+  def handleKeyPress(self, keyName):
     """handle a key press event and return True if the key was "consumed" or
     "False" if it wasn't"""
     return False

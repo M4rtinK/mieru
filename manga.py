@@ -3,8 +3,9 @@
    or a whole volume if all page images are in  a single file or folder
 """
 import os
-import gtk
+import cluttergtk
 import clutter
+import gtk
 import gobject
 import time
 
@@ -14,13 +15,15 @@ import page as pageModule
 import container as containerModule
 
 
-class Manga:
+class ClutterManga:
   def __init__(self, mieru, path=None, startOnPage=0, load=True, loadNotify=True):
     self.mieru = mieru
     self.group = clutter.Group()
-    mieru.stage.add(self.group)
-    mieru.stage.lower_child(self.group,self.mieru.buttons.getLayer())
-    self.mieru.stage.connect('allocation-changed', self._handleResize)
+    stage = self.mieru.gui.getStage()
+    stage.add(self.group)
+    # buttons FIXME
+    stage.lower_child(self.group,self.mieru.gui.buttons.getLayer())
+    stage.connect('allocation-changed', self._handleResize)
     self.fitMode = self.mieru.get('fitMode', 'original')
     self.mieru.watch('fitMode', self.onFitModeChanged)
     self.path = path
@@ -444,7 +447,7 @@ class Manga:
   def _updateTitleTextCB(self, timeline=None):
     """update the title text on the mieru window (and possibly elswhere)"""
     title = self._getTitleText()
-    self.mieru.setWindowTitle(title)
+    self.mieru.gui.setWindowTitle(title)
 
   def _getPBoxCoords(self, type):
     """compute coordinates for the preview box"""
@@ -615,8 +618,9 @@ class Manga:
     # replace this manga instance by the new one
 
 
-def fromState(parent, state):
+def fromState(mieru, state):
   """create a Manga from the given state"""
-  m = Manga(parent, load=False)
-  m.setState(state)
-  return m
+  if mieru.gui.getAccel():
+    m = ClutterManga(mieru, load=False)
+    m.setState(state)
+    return m

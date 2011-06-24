@@ -1,28 +1,24 @@
 #!/usr/bin/env python
 
-import pygtk
-pygtk.require('2.0')
-import gtk
 import time
-import cluttergtk
 
 # Mieru modules import
-import buttons
 import manga
 import options
 import startup
 import stats
+import gui
 
 class Mieru:
 
-  def destroy(self, widget, data=None):
+  def destroy(self):
     # log elapsed time
     sessionTime = time.time() - self.startupTimeStamp
     self.stats.updateUsageTime(sessionTime)
 
     self.saveState()
     print "mieru quiting"
-    gtk.main_quit()
+    self.gui.stopMainLoop()
 
   def __init__(self):
     # log start
@@ -43,32 +39,19 @@ class Mieru:
     # enable stats
     self.stats = stats.Stats(self)
 
-    # class varibales
-    self.fullscreen = False
-    self.viewport = (0,0,800,480)
-    (x,y,w,h) = self.viewport
     self.continuousReading = True
 
-    # create a new window
+    initialSize = (800,480)
+
+    # create the GUI
     if args.u == "hildon":
-      # hildon should be imported by now by the Maemo5 platform module
-      import hildon
-      self.window = hildon.StackableWindow()
+      self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
     else:
-      self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+      self.gui = gui.getGui(self, 'GTK', accel=True, size=initialSize)
 
-    self.window.resize(w,h)
-    # resize the viewport when window size changes
-    self.window.connect('size-allocate', self._resizeViewport)
+#    # resize the viewport when window size changes
+#    self.gui.resizeNotify(self._resizeViewport)
 
-    # suhtdown when the main window is destroyed
-    self.window.connect("destroy", self.destroy)
-
-    # get the Clutter embed and add it to the window
-    self.embed = cluttergtk.Embed()
-    self.vbox = gtk.VBox(False, 2)
-    self.window.add(self.vbox)
-    
     # get the platform module
     if args.u == "hildon":
       import maemo5
@@ -77,40 +60,13 @@ class Mieru:
       import pc
       self.platform = pc.PC(self)
 
-    self.vbox.pack_start(self.embed)
-    self.vbox.show_all()
-
-
-    # we need to realize the widget before we get the stage
-    self.embed.realize()
-    self.embed.show()
-    self.embed.connect('key-press-event', self.on_key_press_event)
-
-    # get the stage
-    self.stage = self.embed.get_stage()
-    self.stage.realize()
-    self.stage.set_color("White")
-
-    # activate clutter based buttons
-    self.buttons = buttons.Buttons(self)
-
-    
     self.activeManga = None
 
     # restore previously saved state (if available)
     self._restoreState()
-    
-    self.lastPageMotionXY = (0,0)
 
-
-
-    # This packs the button into the window (a GTK container).
-    self.embed.show()
-
-    # and the window
-    self.window.show()
-
-    gtk.main()
+    # start the main loop
+    self.gui.startMainLoop()
 
   def getDict(self):
     return self.d
@@ -130,10 +86,9 @@ class Mieru:
   def getActiveManga(self):
     return self.activeManga
 
-  def on_key_press_event(self, embed, event):
-    keyName = gtk.gdk.keyval_name(event.keyval)
+  def keyPressed(self, keyName):
     if keyName == 'f':
-      self.toggleFullscreen()
+      self.gui.toggleFullscreen()
     elif keyName == 'o':
       self.notify('fit to <b>original size</b>')
       self.set('fitMode',"original")
@@ -148,10 +103,10 @@ class Mieru:
       self.set('fitMode', "screen")
     elif keyName == 'n':
       """launch file chooser"""
-      self.platform.startChooser(gtk.FILE_CHOOSER_ACTION_OPEN)
+      self.platform.startChooser("file")
     elif keyName == 'b':
       """launch folder chooser"""
-      self.platform.startChooser(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+      self.platform.startChooser("folder")
     elif keyName == 'k':
       """toggle kinetic scrolling"""
       kinetic = self.get('kineticScrolling', True)
@@ -181,19 +136,11 @@ class Mieru:
     elif keyName == 'F7' or keyName == 'Page_Down':
       if self.activeManga:
         self.activeManga.next()
-    elif not self.platform.handleKeyPress(embed, event):
+    elif not self.platform.handleKeyPress(keyName):
       print "key: %s" % keyName
 
   def on_button_press_event(actor, event):
     print "button press event"
-
-  def toggleFullscreen(self, widget=None):
-    if self.fullscreen:
-      self.window.unfullscreen()
-      self.fullscreen = False
-    else:
-      self.window.fullscreen()
-      self.fullscreen = True
 
   def notify(self, message, icon=""):
     print "notification: %s" % message
@@ -315,9 +262,6 @@ class Mieru:
       state = self.activeManga.getState()
       self.addToHistory(state)
 
-  def setWindowTitle(self, title):
-    self.window.set_title(title)
-
   def _restoreState(self):
     openMangasHistory = self.getSortedHistory()
     if openMangasHistory:
@@ -327,7 +271,7 @@ class Mieru:
     else:
       print "no history found"
 
-  def _resizeViewport(self,widget,allocation):
+  def _resizeViewport(self,allocation):
     self.viewport = allocation
 
   def getFittingModes(self):
