@@ -18,11 +18,8 @@ import container as containerModule
 class Manga:
   def __init__(self, mieru, path=None, startOnPage=0, load=True, loadNotify=True):
     self.mieru = mieru
-    self.group = clutter.Group()
     stage = self.mieru.gui.getStage()
-    stage.add(self.group)
     # buttons FIXME
-    stage.lower_child(self.group,self.mieru.gui.buttons.getLayer())
     stage.connect('allocation-changed', self._handleResize)
     self.fitMode = self.mieru.get('fitMode', 'original')
     self.mieru.watch('fitMode', self.onFitModeChanged)
@@ -39,21 +36,6 @@ class Manga:
     self.previewBox = None
     self.previewBoxStartingPoint = (0,0)
 
-    # animation
-    self.pageTurnTl = clutter.Timeline(200)
-    # update the window header once a new page finishes animating in
-    self.pageTurnTl.connect('completed', self._updateTitleTextCB)
-#    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.LINEAR)
-#    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.EASE_OUT_CUBIC)
-#    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.EASE_IN_CUBIC)
-    self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.EASE_IN_CIRC)
-#    self.fadeIn = clutter.BehaviourOpacity(0,255,self.pageTurnAlpha)
-#    self.fadeOut = clutter.BehaviourOpacity(255,0,self.pageTurnAlpha)
-#    self.fadeIn = clutter.BehaviourDepth(255,0,self.pageTurnAlpha)
-#    self.fadeOut = clutter.BehaviourDepth(0,-255,self.pageTurnAlpha)
-    self.fadeIn = self.fadeInOpac
-    self.fadeOut = self.fadeOutOpac
-
     if path and load:
       self.name = self._nameFromPath(path)
       if self.load(path,startOnPage):
@@ -64,17 +46,6 @@ class Manga:
         if loadNotify:
           self.mieru.notify('<b>%s</b> loading failed' % self.name)
         print '<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage))
-
-  def fadeInOpac(self, page):
-    self.a1 = clutter.BehaviourOpacity(0,255,self.pageTurnAlpha)
-    self.a2 = clutter.BehaviourDepth(-255,0,self.pageTurnAlpha)
-    self.a1.apply(page)
-    self.a2.apply(page)
-  def fadeOutOpac(self, page):
-    self.b1 = clutter.BehaviourOpacity(255,0,self.pageTurnAlpha)
-    self.b2 = clutter.BehaviourDepth(0,255,self.pageTurnAlpha)
-    self.b1.apply(page)
-    self.b2.apply(page)
 
   def getName(self):
     return self.name
@@ -135,18 +106,6 @@ class Manga:
     if self.container:
       pass
 
-  def _removeAndDestroy(self, timeline, page):
-    self.removeFromStage(page)
-    self._quicklyDestroyPage(page)
-
-  def _quicklyDestroyPage(self,page):
-    """quickly free resources held by a page"""
-    if page:
-      # kill it with fire
-      page.unrealize()
-      page.destroy()
-      del page
-
   def ID2PageNumber(self, id):
     """guess page number from id"""
     if id == None:
@@ -155,50 +114,6 @@ class Manga:
       return id + 1
     else: # negative addressing
       return (len(self.pages) + id + 1)
-
-#  def loadFolder(self, path):
-#    if of.path.isdir:
-#      sortedDirContent = sorted(os.listdir(path))
-#      pages = self.loadPages(path, sortedDirContent)
-#      if pages:
-#        self.pages = pages
-#
-#        self.gotoPageId(pageNumber)
-#      else:
-#        print "manga: no usable pages found"
-#    else:
-#      print "error, path is not a directory"
-
-#  def loadPages(self, folderPath, files):
-#    loadedPages = []
-#    if files:
-#      for file in files:
-#        path = os.path.join(folderPath,file)
-#        if os.path.exists(path) and os.path.isfile(path):
-#          mime = self.getFileMime(path)
-#          mimeSplit = mime.split('/')
-#          type = mimeSplit[0]
-#          if type == 'image':
-#            newPage = pageModule.Page(path,self.mieru)
-#            if newPage:
-#              loadedPages.append(newPage)
-#              print "%s loaded" % file
-#          else:
-#            print "not an image - not loading"
-#            print "mime: %s" % mime
-#            print "path: %s" % file
-#    print "manga: loaded %d pages" % len(loadedPages)
-#    return(loadedPages)
-
-  def addToStage(self, page):
-    if self.group:
-      self.group.add(page)
-    else:
-      "manga: error, no stage"
-
-  def removeFromStage(self, page):
-    if self.group and page:
-      self.group.remove(page)
 
   def idExistst(self, id):
     if self.pages:
@@ -254,44 +169,59 @@ class Manga:
     else:
       return self.ID2PageNumber(maxId)
 
-      
   def gotoPageId(self, id):
     # get page for the given id
-    oldPage = self.activePage
     newPageQuery = self.getPageById(id)
     if newPageQuery:
       (newPage,newPageId) = newPageQuery
       print "switching to page: ", id
-      self.addToStage(newPage)
-      # hide the old page
-      if oldPage:
-        oldPage.deactivate()
-#        self.fadeOut.apply(oldPage)
-        self.fadeOut(oldPage)
-        self.pageTurnTl.connect('completed', self._removeAndDestroy, oldPage)
-#        declutter.animate(oldPage, clutter.LINEAR, 300, [('opacity', 0)])
-#        oldPage.hide()
-      # show the new page
       newPage.activate()
-#      newPage.set_opacity(0)
       newPage.show()
-#      self.fadeIn.apply(newPage)
-      self.fadeIn(newPage)
-      # remove the old page from stage
-#      self.removeFromStage(oldPage)
-
-#      if oldPage:
-#        self._quicklyDestroyPage(oldPage)
+      self.mieru.gui.showPage(newPage)
 
       # update the id
       self.activePageId = newPageId
-      self.activePage = newPage
-      self.pageTurnTl.start()
       
       # increment page count
       self.mieru.stats.incrementPageCount()
 
       return True
+#    # get page for the given id
+#    oldPage = self.activePage
+#    newPageQuery = self.getPageById(id)
+#    if newPageQuery:
+#      (newPage,newPageId) = newPageQuery
+#      print "switching to page: ", id
+#      self.addToStage(newPage)
+#      # hide the old page
+#      if oldPage:
+#        oldPage.deactivate()
+##        self.fadeOut.apply(oldPage)
+#        self.fadeOut(oldPage)
+#        self.pageTurnTl.connect('completed', self._removeAndDestroy, oldPage)
+##        declutter.animate(oldPage, clutter.LINEAR, 300, [('opacity', 0)])
+##        oldPage.hide()
+#      # show the new page
+#      newPage.activate()
+##      newPage.set_opacity(0)
+#      newPage.show()
+##      self.fadeIn.apply(newPage)
+#      self.fadeIn(newPage)
+#      # remove the old page from stage
+##      self.removeFromStage(oldPage)
+#
+##      if oldPage:
+##        self._quicklyDestroyPage(oldPage)
+#
+#      # update the id
+#      self.activePageId = newPageId
+#      self.activePage = newPage
+#      self.pageTurnTl.start()
+#
+#      # increment page count
+#      self.mieru.stats.incrementPageCount()
+#
+#      return True
     else:
       print "switching to page failed, id: ", id
       # enable to skip invalid pages that have valid id
