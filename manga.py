@@ -36,6 +36,9 @@ class Manga:
     self.previewBox = None
     self.previewBoxStartingPoint = (0,0)
 
+    # connect the page turn complete callback
+    self.mieru.gui.pageShownNotify(self._updateTitleTextCB)
+
     if path and load:
       self.name = self._nameFromPath(path)
       if self.load(path,startOnPage):
@@ -350,7 +353,7 @@ class Manga:
     maxPages = self.getMaxId()+1
     return "%d/%d %s" % (pageNumber, maxPages, name)
 
-  def _updateTitleTextCB(self, timeline=None):
+  def _updateTitleTextCB(self):
     """update the title text on the mieru window (and possibly elswhere)"""
     title = self._getTitleText()
     self.mieru.gui.setWindowTitle(title)

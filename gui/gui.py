@@ -55,6 +55,11 @@ class GUI:
     """show a page on the stage"""
     pass
 
+  def pageShownNotify(self, cb):
+    """call the callback once a page is shown
+    -> some large jpeg pages can take while to load"""
+    pass
+
   def clearStage(self):
     pass
 

@@ -61,6 +61,11 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     self.pageTurnAlpha = clutter.Alpha(self.pageTurnTl, clutter.EASE_IN_CIRC)
     self.fadeIn = self._fadeInOpac
     self.fadeOut = self._fadeOutOpac
+    # page turn complete notifications
+    self.pageShownCB = None
+    self.pageTurnTl.connect('completed', self._pageShownNotifyCB)
+    self.pageTurnTl.connect('completed', self._removeAndDestroyOldPageCB)
+    self.oldPage = None
 
   def _fadeInOpac(self, page):
     self.a1 = clutter.BehaviourOpacity(0,255,self.pageTurnAlpha)
@@ -105,11 +110,24 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     """show a page on the stage"""
 
     # check if there is already a page loaded
-    if self.activePage:
-      self._removeAndDestroy("timeline", self.activePage)
     self._addToMangaLayer(page)
+
+    # fade out & destroy the old page (if it exists)
+    if self.activePage:
+      self.oldPage = self.activePage
+      self.fadeOut(self.oldPage)
+    # fade in the new page
+    self.fadeIn(page)
+    self.pageTurnTl.start()
+
     self.activePage = page
 
+  def pageShownNotify(self, cb):
+    self.pageShownCB = cb
+
+  def _pageShownNotifyCB(self, timeline):
+    if self.pageShownCB:
+      self.pageShownCB()
 
   def clearStage(self):
     if self.activePage:
@@ -122,20 +140,17 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     else:
       "manga: error, no manga layer"
 
-  def _removeFromMangaLayer(self, page):
-    if self.mangaLayer and page:
+  def _removeAndDestroyOldPageCB(self, timeline):
+    """remove a page from the stage and destroy it"""
+
+    # remove the page from the manga layer
+    if self.mangaLayer and self.oldPage:
       print "removing from stage"
-      self.mangaLayer.remove(page)
+      self.mangaLayer.remove(self.oldPage)
 
-  def _removeAndDestroy(self, timeline, page):
-    """remove a pge from the stage and destroy it"""
-    self._removeFromMangaLayer(page)
-    self._quicklyDestroyPage(page)
-
-  def _quicklyDestroyPage(self,page):
-    """quickly free resources held by a page"""
-    if page:
+    # quickly free resources held by the old page
+    if self.oldPage:
       # kill it with fire
-      page.unrealize()
-      page.destroy()
-      del page
+      self.oldPage.unrealize()
+      self.oldPage.destroy()
+      self.oldPage = None
