@@ -185,43 +185,8 @@ class Manga:
       # increment page count
       self.mieru.stats.incrementPageCount()
 
+      # success
       return True
-#    # get page for the given id
-#    oldPage = self.activePage
-#    newPageQuery = self.getPageById(id)
-#    if newPageQuery:
-#      (newPage,newPageId) = newPageQuery
-#      print "switching to page: ", id
-#      self.addToStage(newPage)
-#      # hide the old page
-#      if oldPage:
-#        oldPage.deactivate()
-##        self.fadeOut.apply(oldPage)
-#        self.fadeOut(oldPage)
-#        self.pageTurnTl.connect('completed', self._removeAndDestroy, oldPage)
-##        declutter.animate(oldPage, clutter.LINEAR, 300, [('opacity', 0)])
-##        oldPage.hide()
-#      # show the new page
-#      newPage.activate()
-##      newPage.set_opacity(0)
-#      newPage.show()
-##      self.fadeIn.apply(newPage)
-#      self.fadeIn(newPage)
-#      # remove the old page from stage
-##      self.removeFromStage(oldPage)
-#
-##      if oldPage:
-##        self._quicklyDestroyPage(oldPage)
-#
-#      # update the id
-#      self.activePageId = newPageId
-#      self.activePage = newPage
-#      self.pageTurnTl.start()
-#
-#      # increment page count
-#      self.mieru.stats.incrementPageCount()
-#
-#      return True
     else:
       print "switching to page failed, id: ", id
       # enable to skip invalid pages that have valid id
