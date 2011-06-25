@@ -27,10 +27,7 @@ class Manga:
     self.name = ""
     self.pages = []
     self.container = None
-    self.pageCache = {}
-    self.cacheSize = 5
     self.activePageId = None
-    self.activePage = None
     self.nextArmed = False
     self.previousArmed = False
     self.previewBox = None
