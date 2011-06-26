@@ -68,6 +68,13 @@ class GUI:
   def clearStage(self):
     pass
 
+  def idleAdd(self, calllback, *args):
+    pass
+
+  def statusReport(self):
+    """report current status of the gui"""
+    return "It works!"
+
   def _destroyed(self):
     self.mieru.destroy()
 
