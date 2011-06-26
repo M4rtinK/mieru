@@ -4,6 +4,8 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
+
 import gui
 
 class GTKGUI(gui.GUI):
@@ -52,6 +54,9 @@ class GTKGUI(gui.GUI):
   def stopMainLoop(self):
     """stop the main loop or its equivalent"""
     gtk.main_quit()
+
+  def idleAdd(self, callback, *args):
+    gobject.idle_add(callback, *args)
 
   def _destroyCB(self, window):
     self.mieru.destroy()
