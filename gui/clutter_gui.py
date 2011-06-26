@@ -178,30 +178,6 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
       self.hidePreview()
 
     print "showing preview"
-#      manga = mangaModule.Manga(self.mieru, path, load=True, loadNotify=False, startOnPage=None)
-#      if manga: # only continue if the next manga was successfully loaded
-#        previewId = 0
-#        (x,y,w,h) = self.mieru.viewport
-#        pBoxSide = h/2.0
-#        border = pBoxSide/20.0
-#        pBoxInSide = pBoxSide-2*border
-#
-#        pBoxY = x/2.0+pBoxSide/2.0
-#        pBoxX = w
-#        pBoxShownX = w - pBoxSide
-#        """ previous - box on the left, next - box on the right
-#        (corresponding to the volume buttons)"""
-#        action = self.next
-#        if type == "previous":
-#          action = self.previous
-#          previewId = -1
-##          pBoxX = 0 - pBoxSide
-##          pBoxShownX = 0
-#
-#        (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
-#        # get and scale to fit the next(prev page
-#        thumbnail = manga.getPageById(previewId, fitOnStart=False)[0]
-#        if thumbnail: # no need to do a preview if there is none
 
     (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
     # 50% transparent yellow TODO: take this from current OS theme ?
