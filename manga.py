@@ -3,24 +3,15 @@
    or a whole volume if all page images are in  a single file or folder
 """
 import os
-import cluttergtk
-import clutter
-import gtk
-import gobject
 import time
 
 import manga as mangaModule
-#import declutter
-import page as pageModule
 import container as containerModule
 
 
 class Manga:
   def __init__(self, mieru, path=None, startOnPage=0, load=True, loadNotify=True):
     self.mieru = mieru
-    stage = self.mieru.gui.getStage()
-    # buttons FIXME
-    stage.connect('allocation-changed', self._handleResize)
     self.fitMode = self.mieru.get('fitMode', 'original')
     self.mieru.watch('fitMode', self.onFitModeChanged)
     self.path = path
@@ -98,13 +89,6 @@ class Manga:
   def close(self):
     # save current state to history
     self.mieru.addMangaToHistory(self)
-    # cleanup
-    if self.activePage:
-      page = self.activePage
-      self.activePage = None
-      self._quicklyDestroyPage(page)
-    if self.container:
-      pass
 
   def ID2PageNumber(self, id):
     """guess page number from id"""
@@ -199,6 +183,7 @@ class Manga:
     self._disarm("previous")
     if self.nextArmed: # should we load next manga in folder after this press ?
       (isTrue, path) = self.nextArmed # get the path
+      self._hidePreview()
       self.mieru.openManga(path, 0) # open it on first page
       return # done
 
@@ -228,6 +213,7 @@ class Manga:
     self._disarm("next")
     if self.previousArmed: # should we load next manga in folder after this press ?
       (isTrue, path) = self.previousArmed # get the path
+      self._hidePreview()
       self.mieru.openManga(path, -1) # open it on last page
       return # done
     currentId = self.activePageId
@@ -256,8 +242,9 @@ class Manga:
 
   def onFitModeChanged(self, key, value, oldValue):
     # notifiy all pages that the fit mode has changed
-    if self.activePage:
-      self.activePage.setFitMode(value)
+    page = self.mieru.gui.getCurrentPage()
+    if page:
+      page.setFitMode(value)
 
   def getNeighborPaths(self):
     prevPath = None
@@ -320,129 +307,41 @@ class Manga:
     title = self._getTitleText()
     self.mieru.gui.setWindowTitle(title)
 
-  def _getPBoxCoords(self, type):
-    """compute coordinates for the preview box"""
-    (x,y,w,h) = self.mieru.viewport
-    pBoxSide = h/2.0
-    border = pBoxSide/20.0
-    pBoxInSide = pBoxSide-2*border
-
-    pBoxY = x/2.0+pBoxSide/2.0
-    pBoxX = w
-    pBoxShownX = w - pBoxSide
-    """ previous - box on the left, next - box on the right
-    (corresponding to the volume buttons)"""
-    if type == "previous":
-      pBoxX = 0 - pBoxSide
-      pBoxShownX = 0
-    return (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border)
-
   def _showPreview(self, path, type):
-    if not self.previewBox: # we show only one preview
-      print "manga: showing preview"
-      manga = mangaModule.Manga(self.mieru, path, load=True, loadNotify=False, startOnPage=None)
-      if manga: # only continue if the next manga was successfully loaded
-        previewId = 0
-        (x,y,w,h) = self.mieru.viewport
-#        pBoxSide = h/2.0
-#        border = pBoxSide/20.0
-#        pBoxInSide = pBoxSide-2*border
-#
-#        pBoxY = x/2.0+pBoxSide/2.0
-#        pBoxX = w
-#        pBoxShownX = w - pBoxSide
-        """ previous - box on the left, next - box on the right
-        (corresponding to the volume buttons)"""
-        action = self.next
-        if type == "previous":
-          action = self.previous
-          previewId = -1
-#          pBoxX = 0 - pBoxSide
-#          pBoxShownX = 0
+    # decide page number and direction
+    if type == "previous":
+      pageId = -1
+      direction = type
+      onPressAction = self.previous
+    else: # type == "next"
+      pageId = 0
+      direction = type
+      onPressAction = self.next
 
-        (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
-        # get and scale to fit the next(prev page
-        thumbnail = manga.getPageById(previewId, fitOnStart=False)[0]
-        if thumbnail: # no need to do a preview if there is none
-          # 50% transparent yellow TODO: take this from current OS theme ?
-          backgroundColor = clutter.color_from_string("yellow")
-          backgroundColor.alpha=128
-          background = clutter.Rectangle(color=backgroundColor)
-          background.set_size(pBoxSide,pBoxSide)
-          background.set_reactive(True)
-          background.connect('button-release-event',self._previewPressedCB, action)
+    # get the page
+    manga = mangaModule.Manga(self.mieru, path, load=True, loadNotify=False, startOnPage=None)
+    if manga: # only continue if the next manga was successfully loaded
+      query = manga.getPageById(pageId, fitOnStart=False)
+      if query:
+        (page, id) = query
+        self.mieru.gui.showPreview(page, direction, onPressAction)
 
-          # resize and fit in the thumbnail
-          thumbnail.set_keep_aspect_ratio(True)
-          (tw,th) = thumbnail.get_size()
-          wf = float(pBoxInSide)/tw
-          hf = float(pBoxInSide)/th
-          if tw >= th:
-            thumbnail.set_size(tw*wf, th*wf)
-          else:
-            thumbnail.set_size(tw*hf, th*hf)
-          (tw,th) = thumbnail.get_size()
-          print (tw,th)
-          thumbnail.move_by(border+(pBoxInSide-tw)/2.0,border+(pBoxInSide-th)/2.0)
-
-          # create a container for the thumbnail and background
-          box = clutter.Group()
-          box.add(background)
-          box.add(thumbnail)
-          self.mieru.buttons.getLayer().add(box)
-          box.show()
-          box.set_position(pBoxX,pBoxY)
-          self.previewBoxStartingPoint = (pBoxX,pBoxY)
-          box.animate(clutter.LINEAR,300,"x", pBoxShownX)
-          self.previewBox = box
-
-  def _previewPressedCB(self, actor, event, action):
-    """the preview box has been pressed,
-    load next/previous manga - the action is a binding to the
-    next/previous method
-
-    we use the gobject idle_add mathod so that it does not block
-    right after clicking the preview
-    """
-    gobject.idle_add(action)
-    
   def _hidePreview(self):
-    """hide a displayed preview"""
-    if self.previewBox:
-      (x,y) = self.previewBoxStartingPoint
-      print "manga: hiding preview"
-      animation = self.previewBox.animate(clutter.LINEAR,300,"x", x)
-      animation.get_timeline().connect('completed', self._killPreviewCB, self.previewBox)
-      
+    self.mieru.gui.hidePreview()
 
-  def _killPreviewCB(self, timeline, actor):
-    """hide and unrealize a given actor"""
-    actor.hide()
-    actor.unrealize()
-    self.mieru.buttons.getLayer().remove(actor)
-    self.previewBox = None
+    # show it in a preview
 
-  
   def _disarm(self,type):
     """a next/previous button is armed when it loads next/previous manga after pressing
        calling this method disarms the button"""
-    if self.previewBox:
-      self._hidePreview()
+       
+    # hide any previews
+    self._hidePreview()
+
     if type == "previous":
       self.previousArmed = False
     elif type == "next":
       self.nextArmed = False
-
-
-
-  def _handleResize(self,widget,event,foo):
-    """handle resizing of the stage"""
-    if self.previewBox:
-      (x,y,w,h) = self.mieru.viewport
-      pBoxSide = h/2.0
-      newY = x/2.0+pBoxSide/2.0
-
-      self.previewBox.animate(clutter.LINEAR,100,"y", newY, "width",pBoxSide, "height", pBoxSide)
 
 #  def _transition(self, direction):
 #    """replace the currently open manga with the previewed one"""

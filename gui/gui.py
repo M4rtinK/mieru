@@ -39,7 +39,7 @@ class GUI:
     """stop the main loop or its equivalent"""
     pass
 
-  def showPreview(self, type, page):
+  def showPreview(self, page, type):
     """show a preview for a page"""
     pass
 
@@ -53,6 +53,11 @@ class GUI:
 
   def showPage(self, page):
     """show a page on the stage"""
+    pass
+
+  def getCurrentPage(self):
+    """return the page that is currently shown
+    if there is no page, return None"""
     pass
 
   def pageShownNotify(self, cb):

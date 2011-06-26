@@ -12,6 +12,7 @@ import clutter
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 
 import gtk_gui
 import buttons
@@ -33,6 +34,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     
     # get the stage
     self.stage = self.embed.get_stage()
+    self.stage.connect('allocation-changed', self._handleResize)
     self.stage.realize()
     self.stage.set_color("White")
 
@@ -51,6 +53,10 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     # setup page turning
     self._setupPageTurning()
     self.activePage = None
+
+    # page preview
+    self.previewBox = None
+    self.previewBoxStartingPoint = (0,0)
 
     # and show the window
     self.window.show_all()
@@ -98,18 +104,12 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     flo.close()
     return clutter_page.ClutterPage(pb, self.mieru, name, fitOnStart)
 
-  def showPreview(self, type, page):
-    """show a preview for a page"""
-    pass
-
-  def hidePreview(self):
-    """hide any visible previews"""
-    pass
+  def getCurrentPage(self):
+    return self.activePage
 
   def showPage(self, page):
     """show a page on the stage"""
 
-    # check if there is already a page loaded
     self._addToMangaLayer(page)
 
     # fade out & destroy the old page (if it exists)
@@ -118,9 +118,8 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
       self.fadeOut(self.oldPage)
     # fade in the new page
     self.fadeIn(page)
-    self.pageTurnTl.start()
-
     self.activePage = page
+    self.pageTurnTl.start()
 
   def pageShownNotify(self, cb):
     self.pageShownCB = cb
@@ -154,3 +153,122 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
       self.oldPage.unrealize()
       self.oldPage.destroy()
       self.oldPage = None
+
+  # page preview
+  def _getPBoxCoords(self, type):
+    """compute coordinates for the preview box"""
+    (x,y,w,h) = self.getViewport()
+    pBoxSide = h/2.0
+    border = pBoxSide/20.0
+    pBoxInSide = pBoxSide-2*border
+
+    pBoxY = x/2.0+pBoxSide/2.0
+    pBoxX = w
+    pBoxShownX = w - pBoxSide
+    """ previous - box on the left, next - box on the right
+    (corresponding to the volume buttons)"""
+    if type == "previous":
+      pBoxX = 0 - pBoxSide
+      pBoxShownX = 0
+    return (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border)
+
+
+  def showPreview(self, thumbnail, type, pressedAction=None):
+    if self.previewBox: # replace previous preview
+      self.hidePreview()
+
+    print "showing preview"
+#      manga = mangaModule.Manga(self.mieru, path, load=True, loadNotify=False, startOnPage=None)
+#      if manga: # only continue if the next manga was successfully loaded
+#        previewId = 0
+#        (x,y,w,h) = self.mieru.viewport
+#        pBoxSide = h/2.0
+#        border = pBoxSide/20.0
+#        pBoxInSide = pBoxSide-2*border
+#
+#        pBoxY = x/2.0+pBoxSide/2.0
+#        pBoxX = w
+#        pBoxShownX = w - pBoxSide
+#        """ previous - box on the left, next - box on the right
+#        (corresponding to the volume buttons)"""
+#        action = self.next
+#        if type == "previous":
+#          action = self.previous
+#          previewId = -1
+##          pBoxX = 0 - pBoxSide
+##          pBoxShownX = 0
+#
+#        (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
+#        # get and scale to fit the next(prev page
+#        thumbnail = manga.getPageById(previewId, fitOnStart=False)[0]
+#        if thumbnail: # no need to do a preview if there is none
+
+    (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
+    # 50% transparent yellow TODO: take this from current OS theme ?
+    backgroundColor = clutter.color_from_string("yellow")
+    backgroundColor.alpha=128
+    background = clutter.Rectangle(color=backgroundColor)
+    background.set_size(pBoxSide,pBoxSide)
+    background.set_reactive(True)
+    background.connect('button-release-event',self._previewPressedCB, pressedAction)
+
+    # resize and fit in the thumbnail
+    thumbnail.set_keep_aspect_ratio(True)
+    (tw,th) = thumbnail.get_size()
+    wf = float(pBoxInSide)/tw
+    hf = float(pBoxInSide)/th
+    if tw >= th:
+      thumbnail.set_size(tw*wf, th*wf)
+    else:
+      thumbnail.set_size(tw*hf, th*hf)
+    (tw,th) = thumbnail.get_size()
+    print (tw,th)
+    thumbnail.move_by(border+(pBoxInSide-tw)/2.0,border+(pBoxInSide-th)/2.0)
+
+    # create a container for the thumbnail and background
+    box = clutter.Group()
+    box.add(background)
+    box.add(thumbnail)
+    # TODO: preview layer above the buttons layer ?
+    self.buttons.getLayer().add(box)
+    box.show()
+    box.set_position(pBoxX,pBoxY)
+    self.previewBoxStartingPoint = (pBoxX,pBoxY)
+    box.animate(clutter.LINEAR,300,"x", pBoxShownX)
+    self.previewBox = box
+
+
+  def _previewPressedCB(self, actor, event, action):
+    """the preview box has been pressed,
+    load next/previous manga - the action is a binding to the
+    next/previous method
+
+    we use the gobject idle_add mathod so that it does not block
+    right after clicking the preview
+    """
+    if action:
+      gobject.idle_add(action)
+
+  def hidePreview(self):
+    """hide a displayed preview"""
+    if self.previewBox:
+      (x,y) = self.previewBoxStartingPoint
+      print "manga: hiding preview"
+      animation = self.previewBox.animate(clutter.LINEAR,300,"x", x)
+      animation.get_timeline().connect('completed', self._killPreviewCB, self.previewBox)
+
+
+  def _killPreviewCB(self, timeline, actor):
+    """hide and unrealize a given actor"""
+    actor.hide()
+    actor.unrealize()
+    self.buttons.getLayer().remove(actor)
+    self.previewBox = None
+
+  def _handleResize(self,widget,event,foo):
+    """handle resizing of the stage"""
+    if self.previewBox:
+      (x,y,w,h) = self.mieru.viewport
+      pBoxSide = h/2.0
+      newY = x/2.0+pBoxSide/2.0
+      self.previewBox.animate(clutter.LINEAR,100,"y", newY, "width",pBoxSide, "height", pBoxSide)
