@@ -244,7 +244,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
   def _handleResize(self,widget,event,foo):
     """handle resizing of the stage"""
     if self.previewBox:
-      (x,y,w,h) = self.mieru.viewport
+      (x,y,w,h) = self.getViewport()
       pBoxSide = h/2.0
       newY = x/2.0+pBoxSide/2.0
       self.previewBox.animate(clutter.LINEAR,100,"y", newY, "width",pBoxSide, "height", pBoxSide)
