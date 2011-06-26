@@ -28,12 +28,12 @@ class Options:
         return False
 
   def save(self):
-    print "options: saving options"
+#    print "options: saving options"
     try:
       f = open(self.optionsPath, "w")
       marshal.dump(self.mieru.getDict(), f)
       f.close()
-      print "options: successfully saved"
+#      print "options: successfully saved"
     except Exception, e:
       print "options: Exception while saving options:\n%s" % e
 
