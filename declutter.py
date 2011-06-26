@@ -31,7 +31,7 @@ def _add(object):
 def _remove(timeline,bo):
   if bo in cache:
     cache.remove(bo)
-    print "current cache status", cache
+    print "declutter: cache status", cache
 
 def animate(actor, function, duration, pairs):
   for pair in pairs:
