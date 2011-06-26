@@ -12,7 +12,6 @@ import clutter
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
 
 import gtk_gui
 import buttons
@@ -69,8 +68,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     self.fadeOut = self._fadeOutOpac
     # page turn complete notifications
     self.pageShownCB = None
-    self.pageTurnTl.connect('completed', self._pageShownNotifyCB)
-    self.pageTurnTl.connect('completed', self._removeAndDestroyOldPageCB)
+    self.pageTurnTl.connect('completed', self._pageTurnDoneCB)
     self.oldPage = None
 
   def _fadeInOpac(self, page):
@@ -124,10 +122,6 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
   def pageShownNotify(self, cb):
     self.pageShownCB = cb
 
-  def _pageShownNotifyCB(self, timeline):
-    if self.pageShownCB:
-      self.pageShownCB()
-
   def clearStage(self):
     if self.activePage:
       self._removeAndDestroy("timeline", self.activePage)
@@ -139,20 +133,31 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     else:
       "manga: error, no manga layer"
 
-  def _removeAndDestroyOldPageCB(self, timeline):
+  def _pageTurnDoneCB(self, timeline):
+    self._removeAndDestroyOldPage()
+    self._pageShownNotify()
+
+  def _removeAndDestroyOldPage(self):
     """remove a page from the stage and destroy it"""
 
-    # remove the page from the manga layer
-    if self.mangaLayer and self.oldPage:
-      print "removing from stage"
-      self.mangaLayer.remove(self.oldPage)
-
-    # quickly free resources held by the old page
+    # does it exist ?
     if self.oldPage:
-      # kill it with fire
-      self.oldPage.unrealize()
-      self.oldPage.destroy()
-      self.oldPage = None
+      # hide it
+      self.oldPage.hide()
+
+      # remove the page from the manga layer
+      if self.mangaLayer and self.oldPage:
+        self.mangaLayer.remove(self.oldPage)
+
+      # deactivate it
+      self.oldPage.deactivate()
+
+      # no need to remove page manually
+      # -> it will be clread by page cache management
+
+  def _pageShownNotify(self):
+    if self.pageShownCB:
+      self.pageShownCB()
 
   # page preview
   def _getPBoxCoords(self, type):
@@ -176,8 +181,6 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
   def showPreview(self, thumbnail, type, pressedAction=None):
     if self.previewBox: # replace previous preview
       self.hidePreview()
-
-    print "showing preview"
 
     (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
     # 50% transparent yellow TODO: take this from current OS theme ?
@@ -223,7 +226,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     right after clicking the preview
     """
     if action:
-      gobject.idle_add(action)
+      self.idleAdd(action)
 
   def hidePreview(self):
     """hide a displayed preview"""
@@ -248,3 +251,9 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
       pBoxSide = h/2.0
       newY = x/2.0+pBoxSide/2.0
       self.previewBox.animate(clutter.LINEAR,100,"y", newY, "width",pBoxSide, "height", pBoxSide)
+
+  def statusReport(self):
+    print("main stage:", self.stage.get_children())
+    print("manga layer:", self.mangaLayer.get_children())
+    print("buttons:", self.buttons.getLayer().get_children())
+

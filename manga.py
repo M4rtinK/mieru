@@ -7,10 +7,11 @@ import time
 
 import manga as mangaModule
 import container as containerModule
+import page_cache
 
 
 class Manga:
-  def __init__(self, mieru, path=None, startOnPage=0, load=True, loadNotify=True):
+  def __init__(self, mieru, path=None, startOnPage=0, load=True, loadNotify=True, pageShownNotify=True):
     self.mieru = mieru
     self.fitMode = self.mieru.get('fitMode', 'original')
     self.mieru.watch('fitMode', self.onFitModeChanged)
@@ -24,8 +25,15 @@ class Manga:
     self.previewBox = None
     self.previewBoxStartingPoint = (0,0)
 
-    # connect the page turn complete callback
-    self.mieru.gui.pageShownNotify(self._updateTitleTextCB)
+    """in case we get a manga instance just to grag some pages,
+    we don't want it to connect the page shown notify callback"""
+    if pageShownNotify:
+      # connect the page turn complete callback
+      self.mieru.gui.pageShownNotify(self._pageShownCB)
+
+    # get page cache object
+    self.cache = page_cache.PageCache(3)
+    self.cacheUpdate = None
 
     if path and load:
       self.name = self._nameFromPath(path)
@@ -89,6 +97,13 @@ class Manga:
   def close(self):
     # save current state to history
     self.mieru.addMangaToHistory(self)
+    
+    # flush cache
+    self.cache.flush()
+
+    # remove any possible pending previews
+    self.mieru.gui.hidePreview()
+
 
   def ID2PageNumber(self, id):
     """guess page number from id"""
@@ -138,7 +153,8 @@ class Manga:
     return self.activePageId
 
   def getActivePageNumber(self):
-    return self.ID2PageNumber(self.activePageId)
+    print self.getActivePageId()
+    return self.ID2PageNumber(self.getActivePageId())
 
   def getMaxId(self):
     if self.pages:
@@ -153,18 +169,52 @@ class Manga:
     else:
       return self.ID2PageNumber(maxId)
 
-  def gotoPageId(self, id):
+  def gotoPageId(self, id, direction=1):
+
+    print "###################"
+    print "switching to page: ", id
+    print "###################"
+
+
+
+    if id < 0: # -1 = last page, etc.
+      currentId = (self.getMaxId() - id + 1)
+    else:
+      currentId = id
+
+    print "CURRENT ID"
+    print currentId
+    print self.activePageId
+
+    self.activePageId = currentId
+
     # get page for the given id
-    newPageQuery = self.getPageById(id)
-    if newPageQuery:
-      (newPage,newPageId) = newPageQuery
-      print "switching to page: ", id
+    newPage = None
+    cacheThisPage = False
+    # check if the page is already cached
+    page = self.cache.get(id, None) # try to load from cache
+    if page: # page was in cache
+      newPage = page
+      print "# page from cache"
+    else: # not in cache, load from storage
+      newPageQuery = self.getPageById(id)
+      print "# page from storage"
+      if newPageQuery:
+        (newPage,newPageId) = newPageQuery
+        cacheThisPage = True
+      
+    if newPage:
+
+      # cache next/previous pages + this page (if needed)
+      if cacheThisPage:
+        self.cacheUpdate = (id, newPage, direction)
+      else:
+        self.cacheUpdate = (id, None, direction)
+
+      # show the page
       newPage.activate()
       newPage.show()
       self.mieru.gui.showPage(newPage)
-
-      # update the id
-      self.activePageId = newPageId
       
       # increment page count
       self.mieru.stats.incrementPageCount()
@@ -174,8 +224,6 @@ class Manga:
     else:
       print "switching to page failed, id: ", id
       # enable to skip invalid pages that have valid id
-      if id <= self.getMaxId() and id >= 0:
-        self.activePageId = id
       return False
 
   def next(self):
@@ -193,7 +241,7 @@ class Manga:
     nextId = currentId + 1
     # sanity check the id
     if nextId < len(self.pages):
-      self.gotoPageId(nextId)
+      self.gotoPageId(nextId, +1)
     else:
       print "manga: end reached"
       if self.mieru.continuousReading:
@@ -222,7 +270,7 @@ class Manga:
     prevId = currentId - 1
     # sanity check the id
     if prevId >= 0:
-      self.gotoPageId(prevId)
+      self.gotoPageId(prevId, -1)
     else:
       print "manga: start reached" # TODO: display a notification & go to next archive/folder (?)
       if self.mieru.continuousReading:
@@ -298,11 +346,21 @@ class Manga:
   def _getTitleText(self):
     """return a string suitable for window header"""
     name = self.getName()
-    pageNumber = self.getActivePageId()+1
-    maxPages = self.getMaxId()+1
+    pageNumber = self.getActivePageNumber()
+    maxPages = self.getMaxPageNumber()
     return "%d/%d %s" % (pageNumber, maxPages, name)
 
-  def _updateTitleTextCB(self):
+  def _pageShownCB(self):
+    self._updateTitleText()
+    if self.cacheUpdate:
+      (id, page, direction) = self.cacheUpdate
+      self.mieru.gui.idleAdd(self._cacheAround, id, page, direction)
+
+      self.cacheUpdate = None
+
+#    self.mieru.gui.statusReport()
+
+  def _updateTitleText(self):
     """update the title text on the mieru window (and possibly elswhere)"""
     title = self._getTitleText()
     self.mieru.gui.setWindowTitle(title)
@@ -319,7 +377,7 @@ class Manga:
       onPressAction = self.next
 
     # get the page
-    manga = mangaModule.Manga(self.mieru, path, load=True, loadNotify=False, startOnPage=None)
+    manga = mangaModule.Manga(self.mieru, path, load=True, loadNotify=False, startOnPage=None, pageShownNotify=False)
     if manga: # only continue if the next manga was successfully loaded
       query = manga.getPageById(pageId, fitOnStart=False)
       if query:
@@ -328,8 +386,6 @@ class Manga:
 
   def _hidePreview(self):
     self.mieru.gui.hidePreview()
-
-    # show it in a preview
 
   def _disarm(self,type):
     """a next/previous button is armed when it loads next/previous manga after pressing
@@ -342,6 +398,43 @@ class Manga:
       self.previousArmed = False
     elif type == "next":
       self.nextArmed = False
+
+  def _cacheAround(self, id, page, direction):
+    """cache pages around the current one"""
+    if id < 0: # -1 = last page, etc.
+      id = (self.getMaxId() - id + 1)
+
+    # get possible previous and nex page ids
+    pId = id - 1
+    nId = id + 1
+
+    # cache previous (if available)
+    if pId >= 0:
+      self._cachePageById(pId, direction)
+      
+    # cache current (if needed)
+    if page:
+      self._cachePage(page, id, direction)
+
+    # cache next (if available)
+    if nId <= self.getMaxId():
+      self._cachePageById(nId, direction)
+
+    self.cache.statusReport()
+
+  def _cachePageById(self, id, direction):
+    """check if the page already contains page with similar id,
+    if it doesnt add the page to cache"""
+    if not self.cache.has(id):
+      query = self.getPageById(id, fitOnStart=False)
+      if query:
+        (page, id) = query
+        self._cachePage(page, id, direction)
+
+  def _cachePage(self, page, id, direction):
+    """add a page to cache under an id"""
+    self.cache.add(page, id, direction)
+
 
 #  def _transition(self, direction):
 #    """replace the currently open manga with the previewed one"""
