@@ -1,5 +1,4 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
+"""a GTK GUI module for Mieru"""
 
 import pygtk
 pygtk.require('2.0')
