@@ -1,4 +1,4 @@
-""" a clutter based stage for mangas and buttons """
+""" a clutter based GUI for Mieru """
 
 """
 NOTE: PyClutter 1.0 import order:

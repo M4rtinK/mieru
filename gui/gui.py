@@ -51,7 +51,7 @@ class GUI:
     """create a page from a file like object"""
     pass
 
-  def showPage(self, page):
+  def showPage(self, page, mangaInstance=None, id=None):
     """show a page on the stage"""
     pass
 
@@ -84,10 +84,13 @@ class GUI:
 
 def getGui(mieru, type="gtk",accel=True, size=(800,480)):
   """return a GUI object"""
-  if accel:
+  if type=="gtk" and accel:
     import cluttergtk
     import clutter_gui
     return clutter_gui.ClutterGTKGUI(mieru, type, size)
+  elif type=="QML" and accel:
+    import qml_gui
+    return qml_gui.QMLGUI(mieru, type, size)
 
 
 

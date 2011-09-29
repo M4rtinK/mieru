@@ -104,6 +104,8 @@ class Manga:
     # remove any possible pending previews
     self.mieru.gui.hidePreview()
 
+  def getContainer(self):
+    return self.container
 
   def ID2PageNumber(self, id):
     """guess page number from id"""
@@ -131,10 +133,10 @@ class Manga:
       # correct id is reuturned for negative addressing (id=-1, etc.)
       (file,id) = result 
       page = self.mieru.gui.getPage(file,self.mieru, fitOnStart=fitOnStart)
-      (w,h) = page.getSize()
       t3 = time.clock()
       # TODO: reimplement this
       if self.mieru.get('debugPageLoading', False):
+        (w,h) = page.getSize()
         now = time.clock()
         print("Page completely loaded in %1.2f ms" % (1000 * (now - t1)))
         print("* loading from container: %1.2f ms" % (1000 * (t2 - t1)))
@@ -184,7 +186,7 @@ class Manga:
 
     print "CURRENT ID"
     print currentId
-    print self.activePageId
+#    print self.activePageId
 
     self.activePageId = currentId
 
@@ -204,7 +206,6 @@ class Manga:
         cacheThisPage = True
       
     if newPage:
-
       # cache next/previous pages + this page (if needed)
       if cacheThisPage:
         self.cacheUpdate = (id, newPage, direction)
@@ -214,7 +215,7 @@ class Manga:
       # show the page
       newPage.activate()
       newPage.show()
-      self.mieru.gui.showPage(newPage)
+      self.mieru.gui.showPage(newPage, self, id)
       
       # increment page count
       self.mieru.stats.incrementPageCount()
@@ -233,17 +234,18 @@ class Manga:
       (isTrue, path) = self.nextArmed # get the path
       self._hidePreview()
       self.mieru.openManga(path, 0) # open it on first page
-      return # done
+      return(False, "loadingNext") # done
 
     currentId = self.activePageId
     if currentId == None:
-      return
+      return(False,"Error")
     nextId = currentId + 1
     # sanity check the id
     if nextId < len(self.pages):
       self.gotoPageId(nextId, +1)
+      return(True, nextId)
     else:
-      print "manga: end reached"
+      print("manga: end reached")
       if self.mieru.continuousReading:
         nextMangaPath = self.getNextMangaPath()
         if nextMangaPath:
@@ -251,10 +253,13 @@ class Manga:
           self.mieru.notify('this is the <b>last</b> page,\n<u>press again</u> to load:\n<b>%s</b>' % tail)
           self.nextArmed = (True, nextMangaPath)
           self._showPreview(nextMangaPath, "next")
+          return(False, "press4Next")
         else:
           self.mieru.notify('this is the <b>last</b> page,\n there is no <i>previous</i> to load')
+          return(False, "noNext")
       else:
         self.mieru.notify('this is the <b>last</b> page')
+        return(False, "thisIsLastPage")
 
   def previous(self):
     """go one page back"""
@@ -263,16 +268,17 @@ class Manga:
       (isTrue, path) = self.previousArmed # get the path
       self._hidePreview()
       self.mieru.openManga(path, -1) # open it on last page
-      return # done
+      return(False, "loadingPrev") # done
     currentId = self.activePageId
     if currentId == None:
-      return
+      return(False,"Error")
     prevId = currentId - 1
     # sanity check the id
     if prevId >= 0:
       self.gotoPageId(prevId, -1)
+      return(True,prevId)
     else:
-      print "manga: start reached" # TODO: display a notification & go to next archive/folder (?)
+      print("manga: start reached") # TODO: display a notification & go to next archive/folder (?)
       if self.mieru.continuousReading:
         previousMangaPath = self.getPrevMangaPath()
         if previousMangaPath:
@@ -282,11 +288,13 @@ class Manga:
           self.previousArmed = (True, previousMangaPath)
 
           self._showPreview(previousMangaPath, "previous")
+          return(False, "press4Prev")
         else:
-          self.mieru.notify('this is the <b>first</b> page,\n there is no <i>next</i> to load')
+          self.mieru.notify('this is the <b>first</b> page,\n there is no <i>previous</i> to load')
+          return(False, "noPrev")
       else:
         self.mieru.notify('this is the <b>first</b> page')
-
+        return(False, "thisIsFirstPage")
 
   def onFitModeChanged(self, key, value, oldValue):
     # notifiy all pages that the fit mode has changed
@@ -483,7 +491,6 @@ class Manga:
 
 def fromState(mieru, state):
   """create a Manga from the given state"""
-  if mieru.gui.getAccel():
-    m = Manga(mieru, load=False)
-    m.setState(state)
-    return m
+  m = Manga(mieru, load=False)
+  m.setState(state)
+  return m

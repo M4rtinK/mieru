@@ -8,6 +8,9 @@ import options
 import startup
 import stats
 import gui
+# append the platform modules folder to path
+import sys
+sys.path.append('platforms')
 
 class Mieru:
 
@@ -46,6 +49,8 @@ class Mieru:
     # create the GUI
     if args.u == "hildon":
       self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
+    if args.u == "harmattan" or args.u=='QML':
+      self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)
     else:
       self.gui = gui.getGui(self, 'GTK', accel=True, size=initialSize)
 
@@ -56,6 +61,10 @@ class Mieru:
     if args.u == "hildon":
       import maemo5
       self.platform = maemo5.Maemo5(self)
+    elif args.u == "harmattan":
+      import harmattan
+      self.platform = harmattan.Harmattan(self)
+
     else:
       import pc
       self.platform = pc.PC(self)
@@ -146,19 +155,24 @@ class Mieru:
     print "notification: %s" % message
     self.platform.notify(message,icon)
 
-  def openManga(self, path, startOnPage=0):
-    if self.activeManga:
-      print "closing previously open manga"
-      self.activeManga.close()
+  def openManga(self, path, startOnPage=0, replaceCurrent=True):
+    if replaceCurrent:
+      if self.activeManga:
+        print "closing previously open manga"
+        self.activeManga.close()
 
-    print "opening %s on page %d" % (path,startOnPage)
-    self.activeManga = manga.Manga(self, path, startOnPage)
-    mangaState = self.activeManga.getState()
-    # increment count
-    self.stats.incrementUnitCount()
+      print "opening %s on page %d" % (path,startOnPage)
+      self.activeManga = manga.Manga(self, path, startOnPage)
+      mangaState = self.activeManga.getState()
+      # increment count
+      self.stats.incrementUnitCount()
 
-    self.addToHistory(mangaState)
-    self.saveState()
+      self.addToHistory(mangaState)
+      self.saveState()
+      return self.activeManga
+    else:
+      return manga.Manga(self, path, startOnPage)
+
 
   def openMangaFromState(self, state):
     if self.activeManga:
