@@ -2,8 +2,8 @@
    NOTE: this is not just API, some multiplatform implementations are there too
 """
 
-import gtk
-import paging_dialog
+#import gtk
+#import paging_dialog
 
 class BasePlatform:
   def __init__(self):

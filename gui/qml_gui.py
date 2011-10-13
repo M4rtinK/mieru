@@ -32,13 +32,14 @@ class QMLGUI(gui.GUI):
     self.window.resize(*size)
     self.window.setCentralWidget(self.view)
     self.view.setResizeMode(QDeclarativeView.SizeRootObjectToView)
+#    self.view.setResizeMode(QDeclarativeView.SizeViewToRootObject)
     #print self.view.connect("close")
 
     #self.view.resize(300,300)
 
     # add image providers
     self.pageProvider = MangaPageImageProvider(self)
-    self.iconProvider = MangaPageImageProvider(self)
+    self.iconProvider = IconImageProvider()
     self.view.engine().addImageProvider("page",self.pageProvider)
     self.view.engine().addImageProvider("icons",self.iconProvider)
     # make the reading state accesible from QML
@@ -222,9 +223,10 @@ class IconImageProvider(QDeclarativeImageProvider):
     try:
       f = open('icons/%s' % iconFilename,'r')
       img=QImage()
-      img.loadFromData(imageFileObject.read())
+      img.loadFromData(f.read())
       f.close()
-      return img.scaled(requestedSize)
+      return img
+      #return img.scaled(requestedSize)
     except Exception, e:
       print("loading icon failed", e)
 
@@ -267,6 +269,12 @@ class ReadingState(QObject):
     @QtCore.Slot(result=str)
     def getPreviousMangaPath(self):
         print ""
+
+    @QtCore.Slot(result=str)
+    def toggleFullscreen(self):
+      self.gui.toggleFullscreen()
+
+
 
 
 

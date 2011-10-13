@@ -1,14 +1,17 @@
-//import Qt 4.7
-import QtQuick 1.0
+import Qt 4.7
+//import QtQuick 1.1
+import com.nokia.meego 1.0
 //import com.meego 1.0
 //import com.nokia.meego 1.0
 //import QtDesktop 0.1
 
 Rectangle {
+//Window {
     id : mainView
+    //color : "blue"
     //width : parent.width
     //height : parent.height
-    //anchors.fill : parent
+    anchors.fill : parent
     //width: 854
     //height: 480
 
@@ -18,6 +21,8 @@ Rectangle {
         }
 
     MouseArea {
+        //width : mainView.width
+        //height : mainView.height
         anchors.fill : parent
         id: prevButton
         objectName: "prevButton"
@@ -37,15 +42,32 @@ Rectangle {
         Flickable {
             id: pageFlickable
             objectName: "pageFlickable"
-            anchors.left : parent.left
-            width: mainView.width
-            height: mainView.height
+            anchors.fill : parent
+            //width: mainView.width
+            //height: mainView.height
             contentWidth: mangaPage.width
             contentHeight: mangaPage.height
 
             Image {
-              id: mangaPage
+                id: mangaPage
+                //PinchArea {
+                //    pinch.target : pageFlickable
+                //    }
+                }
             }
        }
+
+    Image {
+        id : fullscreenButton
+        source : "image://icons/view-fullscreen.png"
+        anchors.right : parent.right
+        anchors.bottom : parent.bottom
+        width : Math.min(parent.width,parent.height)/8.0
+        height : Math.min(parent.width,parent.height)/8.0
+        MouseArea {
+            anchors.fill : parent
+            drag.filterChildren: true
+            onClicked: readingState.toggleFullscreen()
+            }
+        }
     }
-}

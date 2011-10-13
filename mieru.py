@@ -71,8 +71,11 @@ class Mieru:
 
     self.activeManga = None
 
+    #self.openManga("/home/user/MyDocs/manga/ubunchu/ubunchu.zip")
     # restore previously saved state (if available)
     self._restoreState()
+
+#    self.gui.toggleFullscreen()
 
     # start the main loop
     self.gui.startMainLoop()
