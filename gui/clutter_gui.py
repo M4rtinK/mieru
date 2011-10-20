@@ -37,7 +37,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     self.stage.realize()
     self.stage.set_color("White")
 
-    # activate clutter based buttons
+fu    # activate clutter based buttons
     self.buttons = buttons.ClutterButtons(self.mieru, self)
 
     # create the manga layer

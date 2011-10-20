@@ -71,9 +71,20 @@ class Mieru:
 
     self.activeManga = None
 
+    # check if a path was specified in the startup arguments
+    if args.o != None:
+      try:
+        self.activeManga = self.openManga(args.o)
+      except Exception, e:
+        print("loading manga from path: %s failed" % args.o)
+        print(e)
+
+
     #self.openManga("/home/user/MyDocs/manga/ubunchu/ubunchu.zip")
-    # restore previously saved state (if available)
-    self._restoreState()
+    """ restore previously saved state (if available and no manga was 
+    susscessfully loaded from a path provided by startup arguments"""
+    if self.activeManga == None:
+      self._restoreState()
 
 #    self.gui.toggleFullscreen()
 

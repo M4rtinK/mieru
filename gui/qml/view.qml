@@ -1,12 +1,12 @@
-import Qt 4.7
-//import QtQuick 1.1
+//import Qt 4.7
+import QtQuick 1.0
 import com.nokia.meego 1.0
-//import com.meego 1.0
+import com.meego 1.0
 //import com.nokia.meego 1.0
 //import QtDesktop 0.1
 
-Rectangle {
-//Window {
+//Rectangle {
+Window {
     id : mainView
     //color : "blue"
     //width : parent.width
