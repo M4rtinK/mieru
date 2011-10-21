@@ -61,7 +61,7 @@ class QMLGUI(gui.GUI):
 #    self.nextButton.clicked.connect(self._nextCB)
 #    self.pageFlickable.clicked.connect(self._prevCB)
 #    self.prevButton.clicked.connect(self._prevCB)
-#    self.toggleFullscreen()
+    self.toggleFullscreen()
 
 #    gui.GUI.__init__(self, mieru)
 #    if type == "hildon":
