@@ -50,6 +50,7 @@ class QMLGUI(gui.GUI):
     url = QUrl('gui/qml/view.qml')
     # Set the QML file and show
     self.view.setSource(url)
+    self.window.closeEvent = self._qtWindowClosed
     self.window.show()
 
     self.rootObject = self.view.rootObject()
@@ -98,10 +99,13 @@ class QMLGUI(gui.GUI):
   def startMainLoop(self):
     """start the main loop or its equivalent"""
     self.app.exec_()
-    
+
+  def _qtWindowClosed(self, event):
+    print('qt window closing down')
+    self.mieru.destroy()
+
   def stopMainLoop(self):
     """stop the main loop or its equivalent"""
-    self.mieru.options.save()
     self.app.exit()
 
   def getPage(self, fileObject, mieru, fitOnStart=False):
@@ -189,10 +193,10 @@ class MangaPageImageProvider(QDeclarativeImageProvider):
       self.gui = gui
 
   def requestImage(self, pathId, size, requestedSize):
-    print "!!!!!! image requested"
+    #print "!!!!!! image requested"
     (path,id) = pathId.split('#')
     id = int(id) # string -> integer
-    print(path, id)
+    #print(path, id)
     (page, id) = self.gui._getPageByPathId(path, id)
     imageFileObject = page.popImage()
     img=QImage()
@@ -219,7 +223,7 @@ class IconImageProvider(QDeclarativeImageProvider):
       QDeclarativeImageProvider.__init__(self, QDeclarativeImageProvider.ImageType.Image)
 
   def requestImage(self, iconFilename, size, requestedSize):
-    print "!!!!!! icon image requested"
+    #print "!!!!!! icon image requested"
     try:
       f = open('icons/%s' % iconFilename,'r')
       img=QImage()

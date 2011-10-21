@@ -1,7 +1,7 @@
 //import Qt 4.7
-import QtQuick 1.0
+import QtQuick 1.1
 import com.nokia.meego 1.0
-import com.meego 1.0
+//import com.meego 1.0
 //import com.nokia.meego 1.0
 //import QtDesktop 0.1
 
@@ -61,7 +61,8 @@ Window {
         id : fullscreenButton
         source : "image://icons/view-fullscreen.png"
         anchors.right : parent.right
-        anchors.bottom : parent.bottom
+        anchors.top : parent.top
+        opacity : 0
         width : Math.min(parent.width,parent.height)/8.0
         height : Math.min(parent.width,parent.height)/8.0
         MouseArea {

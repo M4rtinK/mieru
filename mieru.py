@@ -20,6 +20,7 @@ class Mieru:
     self.stats.updateUsageTime(sessionTime)
 
     self.saveState()
+    self.options.save()
     print "mieru quiting"
     self.gui.stopMainLoop()
 
@@ -74,7 +75,9 @@ class Mieru:
     # check if a path was specified in the startup arguments
     if args.o != None:
       try:
+        print("loading manga from: %s" % args.o)
         self.activeManga = self.openManga(args.o)
+        print('manga loaded')
       except Exception, e:
         print("loading manga from path: %s failed" % args.o)
         print(e)
@@ -194,6 +197,7 @@ class Mieru:
       self.activeManga.close()
 
     print "opening manga from state"
+    print state
     self.activeManga = manga.fromState(self, state)
     mangaState = self.activeManga.getState()
     self.addToHistory(mangaState)
