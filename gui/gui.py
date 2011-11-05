@@ -39,7 +39,7 @@ class GUI:
     """stop the main loop or its equivalent"""
     pass
 
-  def showPreview(self, page, type):
+  def showPreview(self, page, direction, onPressAction):
     """show a preview for a page"""
     pass
 
