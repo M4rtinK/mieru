@@ -1,6 +1,7 @@
 """a QML GUI module for Mieru"""
 
 import sys
+import re
 from PySide import QtCore
 from PySide.QtCore import *
 from PySide.QtGui import *
@@ -47,7 +48,7 @@ class QMLGUI(gui.GUI):
     self.view.rootContext().setContextProperty("readingState", readingState)
 
     # Create an URL to the QML file
-    url = QUrl('gui/qml/view.qml')
+    url = QUrl('gui/qml/main.qml')
     # Set the QML file and show
     self.view.setSource(url)
     self.window.closeEvent = self._qtWindowClosed
@@ -141,7 +142,7 @@ class QMLGUI(gui.GUI):
 
     NOTE: some images might get cached twice
     example: lets have a 10 page manga, in /tmp/manga.zip
-    URLs "/tmp/manga.zip#9" and "/tmp/manga.zip#-1" are the same image
+    URLs "/tmp/manga.zip|9" and "/tmp/manga.zip|-1" are the same image
     but the URLs are the same and QML would probably cache the image twice
     """
     if self.mieru.activeManga and self.mieru.activeManga.getPath() == mangaPath:
@@ -154,6 +155,15 @@ class QMLGUI(gui.GUI):
       manga = self.mieru.openManga(mangaPath, replaceCurrent=False)
       self.lastTimeRequestedOtherManga = manga
       return manga.getPageById(id)
+
+
+  def _notify(self, text, icon=""):
+    """trigger a notification using the Qt Quick Components
+    InfoBanner notification"""
+
+    # QML uses <br> instead of \n for linebreak
+    text = re.sub('\n', '<br>', text)
+    self.rootObject.notify(text)
 
     #self.lastTimeRequestedOtherManga
 
@@ -193,8 +203,8 @@ class MangaPageImageProvider(QDeclarativeImageProvider):
       self.gui = gui
 
   def requestImage(self, pathId, size, requestedSize):
-    #print "!!!!!! image requested"
-    (path,id) = pathId.split('#')
+    (path,id) = pathId.split('|',1)
+    print path, id
     id = int(id) # string -> integer
     #print(path, id)
     (page, id) = self.gui._getPageByPathId(path, id)
@@ -246,7 +256,7 @@ class ReadingState(QObject):
         path = activeManga.getPath()
         idValid, id = activeManga.next()
         if idValid:
-          return "image://page/%s#%d" % (path, id)
+          return "image://page/%s|%d" % (path, id)
         else:
           return "ERROR do something else"
       else:
@@ -260,7 +270,7 @@ class ReadingState(QObject):
         path = activeManga.getPath()
         idValid, id = activeManga.previous()
         if idValid:
-          return "image://page/%s#%d" % (path, id)
+          return "image://page/%s|%d" % (path, id)
         else:
           return "ERROR do something else"
       else:
