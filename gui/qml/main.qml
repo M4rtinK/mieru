@@ -76,5 +76,6 @@ PageStackWindow {
     InfoBanner {
         id: notification
         timerShowTime : 5000
+        height : mainView.height/5.0
         }
     }
