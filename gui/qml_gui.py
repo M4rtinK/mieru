@@ -55,7 +55,6 @@ class QMLGUI(gui.GUI):
     self.window.show()
 
     self.rootObject = self.view.rootObject()
-    #self.rootObject.removeToolbars()
 #    self.nextButton = self.rootObject.findChild(QObject, "nextButton")
 #    self.prevButton = self.rootObject.findChild(QObject, "prevButton")
 #    self.pageFlickable = self.rootObject.findChild(QObject, "pageFlickable")

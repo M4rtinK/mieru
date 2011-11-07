@@ -18,13 +18,6 @@ PageStackWindow {
         mainView.showPage(path, pageId)
         }
 
-    function removeToolbars() {
-      console.log("RRRRRRR remove toolbars");
-      commonTools.visible = false;
-      rootWindow.showStatusBar = false;
-      rootWindow.showToolBar = false;
-      }
-
     // ** trigger notifications
     function notify(text) {
         notification.text = text;
