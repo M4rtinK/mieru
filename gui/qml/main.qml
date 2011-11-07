@@ -31,11 +31,12 @@ PageStackWindow {
         notification.show();
         }
 
-/*    FileSelector { id: fileSelector;
+    FileSelector {
+      id: fileSelector;
       anchors.fill : rootWindow
       onAccepted: console.log("Acepted: "+ selectedFile);
       }
-*/
+
     InfoBanner {
         id: notification
         timerShowTime : 5000

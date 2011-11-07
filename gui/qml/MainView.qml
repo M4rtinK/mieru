@@ -8,11 +8,23 @@ Page {
     tools : mainViewToolBar
 
     ToolBarLayout {
-        id: mainViewToolBar
+        id : mainViewToolBar
         visible: false
-        ToolIcon { iconId: "toolbar-view-menu"; onClicked: {pageStack.pop(); } }
+        ToolIcon { iconId: "toolbar-view-menu"; onClicked: mainViewMenu.open() }
         ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
         }
+
+    Menu {
+        id : mainViewMenu
+        MenuLayout {
+            MenuItem {
+              text : "Open file"
+              onClicked : { fileSelector.down('/home/user/MyDocs');
+                  fileSelector.open();
+                  }
+              }
+            }
+    }
 
     function showPage(path, pageId) {
         mangaPage.source = "image://page/" + path + "|" + pageId;
