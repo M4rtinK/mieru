@@ -288,6 +288,13 @@ class ReadingState(QObject):
     def toggleFullscreen(self):
       self.gui.toggleFullscreen()
 
+    @QtCore.Slot(str)
+    def openManga(self, path):
+      print "Open manga"
+      # remove the "file:// part of the path"
+      path = re.sub('file://', '', path, 1)
+      print path
+      self.gui.mieru.openManga(path)
 
 
 

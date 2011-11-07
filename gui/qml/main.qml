@@ -27,7 +27,7 @@ PageStackWindow {
     FileSelector {
       id: fileSelector;
       anchors.fill : rootWindow
-      onAccepted: console.log("Acepted: "+ selectedFile);
+      onAccepted: readingState.openManga(selectedFile);
       }
 
     InfoBanner {

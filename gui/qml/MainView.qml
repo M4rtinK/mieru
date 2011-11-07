@@ -87,6 +87,7 @@ Page {
         anchors.right : mainView.right
         anchors.bottom : mainView.bottom
         visible : false
+        opacity : 0.1
         width : Math.min(parent.width,parent.height)/8.0
         height : Math.min(parent.width,parent.height)/8.0
         MouseArea {
