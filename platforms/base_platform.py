@@ -62,3 +62,7 @@ class BasePlatform:
     """return classic GTK check button"""
     return gtk.CheckButton(label)
 
+  def getDefaultFileSelectorPath(self):
+    """a failsafe path for the file/folder selector on its first opening"""
+    return '/'
+

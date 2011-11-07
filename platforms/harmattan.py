@@ -11,3 +11,8 @@ class Harmattan(BasePlatform):
 
   def notify(self, message, icon=""):
     self.mieru.gui._notify(message, icon)
+
+  def getDefaultFileSelectorPath(self):
+    """we default to the MyDocs folder as this is where most
+    users will store their mangas and comic books"""
+    return "/home/user/MyDocs/"

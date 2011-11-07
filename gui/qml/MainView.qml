@@ -19,7 +19,8 @@ Page {
         MenuLayout {
             MenuItem {
               text : "Open file"
-              onClicked : { fileSelector.down('/home/user/MyDocs');
+              onClicked : {                   
+                  fileSelector.down(readingState.getSavedFileSelectorPath());
                   fileSelector.open();
                   }
               }

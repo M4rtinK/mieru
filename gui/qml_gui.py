@@ -2,6 +2,7 @@
 
 import sys
 import re
+import os
 from PySide import QtCore
 from PySide.QtCore import *
 from PySide.QtGui import *
@@ -193,6 +194,7 @@ class ReadingState(QObject):
     def __init__(self, gui):
       QObject.__init__(self)
       self.gui = gui
+      self.mieru = gui.mieru
 
     @QtCore.Slot(result=str)
     def next(self):
@@ -238,12 +240,15 @@ class ReadingState(QObject):
       print "Open manga"
       # remove the "file:// part of the path"
       path = re.sub('file://', '', path, 1)
-      print path
-      self.gui.mieru.openManga(path)
+      folder = os.path.dirname(path)
+      self.mieru.set('lastChooserFolder', folder)
+      self.mieru.openManga(path)
 
-
-
-
+    @QtCore.Slot(result=str)
+    def getSavedFileSelectorPath(self):
+      defaultPath = self.mieru.platform.getDefaultFileSelectorPath()
+      lastFolder = self.mieru.get('lastChooserFolder', defaultPath)
+      return lastFolder
 
 #        width = 100
 #        height = 50
