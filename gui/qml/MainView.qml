@@ -11,6 +11,13 @@ Page {
         id : mainViewToolBar
         visible: false
         ToolIcon { iconId: "toolbar-view-menu"; onClicked: mainViewMenu.open() }
+        //ToolIcon { iconId: "toolbar-previous" }
+        ToolButton { id : pageNumbers
+                     text : "1/12"
+                     height : parent.height
+                     flat : true
+                   }
+        //ToolIcon { iconId: "toolbar-next" }
         ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
         }
 
@@ -27,8 +34,9 @@ Page {
             }
     }
 
-    function showPage(path, pageId) {
+    function showPage(path, pageId, pageNumbersString) {
         mangaPage.source = "image://page/" + path + "|" + pageId;
+        pageNumbers.text = pageNumbersString;
         }
 
     // ** trigger notifications

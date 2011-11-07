@@ -105,10 +105,12 @@ class QMLGUI(gui.GUI):
     the page image to a local variable so it can be loaded to a
     QML Image using QDeclarativeImageProvider"""
 
-    print "SHOW PAGE"
     path = mangaInstance.getPath()
     
-    self.rootObject.showPage(path, id)
+    pageNumbersString = "%d/%d" % ( mangaInstance.getActivePageNumber(),
+                                    mangaInstance.getMaxPageNumber() )
+                                    
+    self.rootObject.showPage(path, id, pageNumbersString)
 
   def _nextCB(self):
     print "turning page forward"

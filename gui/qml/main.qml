@@ -13,8 +13,8 @@ PageStackWindow {
                       id : mainView
                       }
 
-    function showPage(path, pageId) {
-        mainView.showPage(path, pageId)
+    function showPage(path, pageId, pageNumbersString) {
+        mainView.showPage(path, pageId, pageNumbersString)
         }
 
     // ** trigger notifications
