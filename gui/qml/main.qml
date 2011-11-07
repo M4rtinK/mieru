@@ -7,7 +7,6 @@ import com.nokia.extras 1.0
 //Rectangle {
 PageStackWindow {
     showStatusBar : false
-    //showToolBar : true
     id : rootWindow
     anchors.fill : parent
     initialPage : MainView {

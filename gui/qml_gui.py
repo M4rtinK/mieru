@@ -34,7 +34,6 @@ class QMLGUI(gui.GUI):
     self.window.setCentralWidget(self.view)
     self.view.setResizeMode(QDeclarativeView.SizeRootObjectToView)
 #    self.view.setResizeMode(QDeclarativeView.SizeViewToRootObject)
-    #print self.view.connect("close")
 
     #self.view.resize(300,300)
 
@@ -111,7 +110,6 @@ class QMLGUI(gui.GUI):
 
   def getPage(self, fileObject, mieru, fitOnStart=False):
     return qml_page.QMLPage(fileObject, self)
-#    return fileObject
 
   def showPage(self, page, mangaInstance, id):
     """show a page on the stage"""
@@ -123,7 +121,6 @@ class QMLGUI(gui.GUI):
     print "SHOW PAGE"
     path = mangaInstance.getPath()
     
-#    self.activePage = page
     self.rootObject.showPage(path, id)
 
   def _nextCB(self):
@@ -165,36 +162,11 @@ class QMLGUI(gui.GUI):
     text = re.sub('\n', '<br>', text)
     self.rootObject.notify(text)
 
-    #self.lastTimeRequestedOtherManga
-
-
-#  def _addToCache(self, page, id):
-#
 #  def idleAdd(self, callback, *args):
 #    gobject.idle_add(callback, *args)
 #
 #  def _destroyCB(self, window):
 #    self.mieru.destroy()
-#
-#  def _flo2pixbuf(self, flo):
-#    pl = gtk.gdk.PixbufLoader()
-#    try:
-#      pl.write(flo.read())
-#      pl.close() # this  blocks until the image is completely loaded
-#    except Exception,e:
-#      print "gtkgui: Loading page failed with this exception:\n%s\ngtkgui: loading placeholder image" % e
-#      # load a "page unredable image"  (@_@)
-#      file = open("icons/page_unreadable.png", 'r')
-#      # create a fresh pl
-#      pl = gtk.gdk.PixbufLoader()
-#      pl.write(file.read())
-#      pl.close()
-#      file.close()
-#    pb = pl.get_pixbuf()
-#    # cleanup
-#    del pl
-#    flo.close()
-#    return pb
 
 class MangaPageImageProvider(QDeclarativeImageProvider):
   """the MangaPageImageProvider class provides manga pages to the QML layer"""
@@ -212,19 +184,6 @@ class MangaPageImageProvider(QDeclarativeImageProvider):
     img=QImage()
     img.loadFromData(imageFileObject.read())
     return img
-
-#    if self.gui.activePage:
-#        print self.gui.activePage
-#        imageFileObject = self.gui.activePage.popImage()
-#        img=QImage()
-#        img.loadFromData(imageFileObject.read())
-#        return img
-#    else:
-#      if self.gui.activePage:
-#        print("imProvider: unknown id: ", id)
-#      else:
-#        print("imProvider: no active page")
-#      return None
 
 class IconImageProvider(QDeclarativeImageProvider):
   """the IconImageProvider class provides icon images to the QML layer as

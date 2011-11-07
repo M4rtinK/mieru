@@ -28,7 +28,6 @@ Page {
 
     function showPage(path, pageId) {
         mangaPage.source = "image://page/" + path + "|" + pageId;
-        //mangaPage.source = "../icons/mieru.png";
         }
 
     // ** trigger notifications
@@ -67,8 +66,6 @@ Page {
             id: pageFlickable
             objectName: "pageFlickable"
             anchors.fill : parent
-            //width: mainView.width
-            //height: mainView.height
             contentWidth: mangaPage.width
             contentHeight: mangaPage.height
 
@@ -94,8 +91,6 @@ Page {
             anchors.fill : parent
             drag.filterChildren: true
             onClicked: mainView.toggleFullscreen();
-            //onClicked: fileSelector.open();
-            //onClicked: readingState.toggleFullscreen()
             }
         }
     }
