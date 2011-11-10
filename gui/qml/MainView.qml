@@ -16,6 +16,7 @@ Page {
                      text : "1/12"
                      height : parent.height
                      flat : true
+                     onClicked : { pagingMenu.open() }
                    }
         //ToolIcon { iconId: "toolbar-next" }
         ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
@@ -23,6 +24,7 @@ Page {
 
     Menu {
         id : mainViewMenu
+
         MenuLayout {
             MenuItem {
               text : "Open file"
@@ -31,8 +33,75 @@ Page {
                   fileSelector.open();
                   }
               }
+
+            MenuItem {
+                text : "History"
+                onClicked : {
+                    console.log("implement history");
+                    }
+                }
+
+            MenuItem {
+                text : "Options"
+                onClicked : {
+                    console.log("implement options");
+                    }
+                }
+
+            MenuItem {
+                text : "About"
+                onClicked : {
+                    console.log("implement about");
+                    }
+                }
             }
-    }
+        }
+
+    Menu {
+        id : pagingMenu
+        MenuLayout {
+            MenuItem {
+                text : "First Page"
+                onClicked : {
+                    console.log("implement paging first page");
+                    }
+                }
+
+            MenuItem {
+                text : "Last Page"
+                onClicked : {
+                    console.log("implement paging last page");
+                    }
+                }
+
+            Slider {
+                width : parent.width*0.8
+                //anchors.topMargin : height*0.5
+                id : pagingSlider
+                maximumValue: 150
+                minimumValue: 0
+                value: 75
+                stepSize: 1
+                valueIndicatorVisible: true
+                }
+
+            TextField {
+                anchors.left : pagingSlider.right
+                anchors.top : pagingSlider.top
+                width: parent.width*0.2
+                text: pagingSlider.value
+                validator: IntValidator{bottom: pagingSlider.minimumValue; top: pagingSlider.maximumValue}
+                }
+
+            MenuItem {
+                text : "Done"
+                onClicked : {
+                    console.log("implement paging done");
+                    }
+                }
+
+            }
+        }
 
     function showPage(path, pageId, pageNumbersString) {
         mangaPage.source = "image://page/" + path + "|" + pageId;
