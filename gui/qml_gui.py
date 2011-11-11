@@ -107,10 +107,24 @@ class QMLGUI(gui.GUI):
 
     path = mangaInstance.getPath()
     
-    pageNumbersString = "%d/%d" % ( mangaInstance.getActivePageNumber(),
-                                    mangaInstance.getMaxPageNumber() )
+    #pageNumbersString = "%d/%d" % ( mangaInstance.getActivePageNumber(),
+    #                                mangaInstance.getMaxPageNumber() )
                                     
-    self.rootObject.showPage(path, id, pageNumbersString)
+    self.rootObject.showPage(path, id)
+
+  def newMangaLoaded(self, manga):
+    """update max page number in the QML GUI"""
+    maxPageNumber = manga.getMaxPageNumber()
+    pageNumber = manga.getActivePageNumber()
+    # assure sane slider behaviour
+    if maxPageNumber == None:
+      maxPageNumber = 2
+    if pageNumber == -1:
+      pageNumber = 1
+
+    self.rootObject.setPageNumber(pageNumber)
+    self.rootObject.setMaxPageNumber(maxPageNumber)
+
 
   def _nextCB(self):
     print "turning page forward"
@@ -211,7 +225,6 @@ class ReadingState(QObject):
       else:
         return "ERROR no active manga"
 
-
     @QtCore.Slot(result=str)
     def previous(self):
       activeManga = self.gui.mieru.getActiveManga()
@@ -224,6 +237,14 @@ class ReadingState(QObject):
           return "ERROR do something else"
       else:
         return "ERROR no active manga"
+
+    #QtCore.Slot(int)
+    def goToPage(self, pageNumber):
+      activeManga = self.gui.mieru.getActiveManga()
+      if activeManga:
+        id = activeManga.PageNumber2ID(pageNumber)
+        activeManga.gotoPageId(id)
+
 
     @QtCore.Slot(result=str)
     def getNextMangaPath(self):
