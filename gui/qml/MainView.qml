@@ -16,6 +16,9 @@ Page {
     onPageNumberChanged: {
         var pageIndex = pageNumber-1
         mangaPage.source = "image://page/" + mangaPath + "|" + pageIndex;
+        // reset the page position
+        pageFlickable.contentX = 0
+        pageFlickable.contentY = 0
         //make sure the page number is updated
         //pageNumbers.text = mainView.pageNumber + "/" + mainView.maxPageNumber
         }
