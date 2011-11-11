@@ -13,8 +13,17 @@ PageStackWindow {
                       id : mainView
                       }
 
-    function showPage(path, pageId, pageNumbersString) {
-        mainView.showPage(path, pageId, pageNumbersString)
+    function showPage(path, pageId) {
+        mainView.showPage(path, pageId)
+        }
+
+
+    function setPageNumber(pageNumber) {
+        mainView.pageNumber = pageNumber;
+        }
+
+    function setMaxPageNumber(maxPageNumber) {
+        mainView.maxPageNumber = maxPageNumber;
         }
 
     // ** trigger notifications

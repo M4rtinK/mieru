@@ -1,11 +1,24 @@
+//MainView.qml
 //import Qt 4.7
 import QtQuick 1.1
 import com.nokia.meego 1.0
+import com.nokia.extras 1.0
 
 Page {
     id : mainView
     anchors.fill : parent
     tools : mainViewToolBar
+
+    property int maxPageNumber : 2
+    property int pageNumber : 2
+    property string mangaPath : ""
+
+    onPageNumberChanged: {
+        var pageIndex = pageNumber-1
+        mangaPage.source = "image://page/" + mangaPath + "|" + pageIndex;
+        //make sure the page number is updated
+        //pageNumbers.text = mainView.pageNumber + "/" + mainView.maxPageNumber
+        }
 
     ToolBarLayout {
         id : mainViewToolBar
@@ -13,10 +26,10 @@ Page {
         ToolIcon { iconId: "toolbar-view-menu"; onClicked: mainViewMenu.open() }
         //ToolIcon { iconId: "toolbar-previous" }
         ToolButton { id : pageNumbers
-                     text : "1/12"
+                     text : mainView.pageNumber + "/" + mainView.maxPageNumber
                      height : parent.height
                      flat : true
-                     onClicked : { pagingMenu.open() }
+                     onClicked : { pagingDialog.open() }
                    }
         //ToolIcon { iconId: "toolbar-next" }
         ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
@@ -57,55 +70,9 @@ Page {
             }
         }
 
-    Menu {
-        id : pagingMenu
-        MenuLayout {
-            MenuItem {
-                text : "First Page"
-                onClicked : {
-                    console.log("implement paging first page");
-                    }
-                }
-
-            MenuItem {
-                text : "Last Page"
-                onClicked : {
-                    console.log("implement paging last page");
-                    }
-                }
-
-            Slider {
-                width : parent.width*0.8
-                //anchors.topMargin : height*0.5
-                id : pagingSlider
-                maximumValue: 150
-                minimumValue: 0
-                value: 75
-                stepSize: 1
-                valueIndicatorVisible: true
-                }
-
-            TextField {
-                anchors.left : pagingSlider.right
-                anchors.top : pagingSlider.top
-                width: parent.width*0.2
-                text: pagingSlider.value
-                validator: IntValidator{bottom: pagingSlider.minimumValue; top: pagingSlider.maximumValue}
-                }
-
-            MenuItem {
-                text : "Done"
-                onClicked : {
-                    console.log("implement paging done");
-                    }
-                }
-
-            }
-        }
-
-    function showPage(path, pageId, pageNumbersString) {
-        mangaPage.source = "image://page/" + path + "|" + pageId;
-        pageNumbers.text = pageNumbersString;
+    function showPage(path, pageId) {
+        mainView.mangaPath = path
+        mainView.pageNumber = pageId+1
         }
 
     // ** trigger notifications
@@ -169,6 +136,33 @@ Page {
             anchors.fill : parent
             drag.filterChildren: true
             onClicked: mainView.toggleFullscreen();
+            }
+        }
+
+    Menu {
+        id : pagingDialog
+        Row {
+            Slider {
+                //width : pagingColumn.width*0.8
+                //anchors.topMargin : height*0.5
+                id : pagingSlider
+                maximumValue: mainView.maxPageNumber
+                minimumValue: 1
+                value: mainView.pageNumber
+                stepSize: 1
+                valueIndicatorVisible: false
+                //orientation : Qt.Vertical
+                onPressedChanged : {
+                    //only load the page once the user stopped dragging to save resources
+                    mainView.pageNumber = value
+                    }
+
+                }
+
+            CountBubble {
+                value : pagingSlider.value
+                largeSized : true
+                }
             }
         }
     }

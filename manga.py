@@ -45,6 +45,8 @@ class Manga:
         if loadNotify:
           self.mieru.notify('<b>%s</b> loading failed' % self.name)
         print '<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage))
+      # notify the GUI
+      self.mieru.gui.newMangaLoaded(self)
 
   def getName(self):
     return self.name
@@ -76,6 +78,8 @@ class Manga:
         self.mieru.notify('<b>%s</b> restored to page <b>%d</b>' % (self.name, self.ID2PageNumber(self.activePageId)))
       else:
         self.mieru.notify('<b>%s</b> restore failed' % self.name)
+      # notify the GUI
+      self.mieru.gui.newMangaLoaded(self)
 
   def load(self, path, pageNumber=0):
     """try to load manga from the given path"""
@@ -115,6 +119,13 @@ class Manga:
       return id + 1
     else: # negative addressing
       return (len(self.pages) + id + 1)
+
+  def PageNumber2ID(self, pageNumber):
+    """convert page number to id"""
+    if pageNumber <= 0 or pageNumber > self.getMaxPageNumber():
+      return None
+    else:
+      return pageNumber-1
 
   def idExistst(self, id):
     if self.pages:
