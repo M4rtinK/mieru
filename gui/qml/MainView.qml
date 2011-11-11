@@ -98,12 +98,12 @@ Page {
         onClicked: {
             if (mouseX < width/2.0){
                 console.log("previous");
-                console.log(readingState.previous());
+                readingState.previous();
                 }
 
             else{
                 console.log("next");
-                console.log(readingState.next());
+                readingState.next();
                 }
         }
 
