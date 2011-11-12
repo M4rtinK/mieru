@@ -16,3 +16,18 @@ Hildon integration
 
 Maintenance
 * packaging
+
+Harmattan QML GUI
+* history
+* options
+* info menu
+ * current manga info
+  * path
+  * current page number/page number
+  * size
+  * delete ?
+  * rename ?
+ * reading statistics
+ * about
+
+* page centering for pages that are smaler than the viewport
