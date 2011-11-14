@@ -165,6 +165,12 @@ class Manga:
   def getActivePageId(self):
     return self.activePageId
 
+  def setActivePageId(self, id):
+    """set active page id to a given value"""
+    #TODO: support negative indexing
+    if id >= 0 and id <= self.getMaxId():
+      self.activePageId = id
+
   def getActivePageNumber(self):
     print self.getActivePageId()
     return self.ID2PageNumber(self.getActivePageId())

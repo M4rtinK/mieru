@@ -238,13 +238,18 @@ class ReadingState(QObject):
       else:
         return "ERROR no active manga"
 
-    #QtCore.Slot(int)
+    @QtCore.Slot(int)
     def goToPage(self, pageNumber):
       activeManga = self.gui.mieru.getActiveManga()
       if activeManga:
         id = activeManga.PageNumber2ID(pageNumber)
         activeManga.gotoPageId(id)
 
+    @QtCore.Slot(int)
+    def setPageID(self, pageID):
+      activeManga = self.gui.mieru.getActiveManga()
+      if activeManga:
+        activeManga.setActivePageId(pageID)
 
     @QtCore.Slot(result=str)
     def getNextMangaPath(self):

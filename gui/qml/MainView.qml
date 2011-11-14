@@ -19,7 +19,11 @@ Page {
         // reset the page position
         pageFlickable.contentX = 0
         pageFlickable.contentY = 0
-        //make sure the page number is updated
+        //update page number in the current manga instance
+        //NOTE: this is especialy important due to the slider
+        readingState.setPageID(pageIndex)
+
+
         //pageNumbers.text = mainView.pageNumber + "/" + mainView.maxPageNumber
         }
 
