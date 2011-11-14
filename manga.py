@@ -4,6 +4,7 @@
 """
 import os
 import time
+import re
 
 import manga as mangaModule
 import container as containerModule
@@ -39,12 +40,12 @@ class Manga:
       self.name = self._nameFromPath(path)
       if self.load(path,startOnPage):
         if loadNotify:
-          self.mieru.notify('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
-        print '<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage))
+          self.mieru.notify('<b>%s</b> loaded on page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(startOnPage)))
+        #print '<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage))
       else:
         if loadNotify:
-          self.mieru.notify('<b>%s</b> loading failed' % self.name)
-        print '<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage))
+          self.mieru.notify('<b>%s</b> loading failed' % self.getPrettyName())
+        #print '<b>%s</b> loaded on page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(startOnPage))
       # notify the GUI
       self.mieru.gui.newMangaLoaded(self)
 
@@ -75,9 +76,9 @@ class Manga:
     if path:
       self.name = self._nameFromPath(path)
       if self.load(path, pageNumber):
-        self.mieru.notify('<b>%s</b> restored to page <b>%d</b>' % (self.name, self.ID2PageNumber(self.activePageId)))
+        self.mieru.notify('<b>%s</b> restored to page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(self.activePageId)))
       else:
-        self.mieru.notify('<b>%s</b> restore failed' % self.name)
+        self.mieru.notify('<b>%s</b> restore failed' % self.getPrettyName())
       # notify the GUI
       self.mieru.gui.newMangaLoaded(self)
 
@@ -267,7 +268,8 @@ class Manga:
         nextMangaPath = self.getNextMangaPath()
         if nextMangaPath:
           (folder, tail) = os.path.split(nextMangaPath)
-          self.mieru.notify('this is the <b>last</b> page,\n<u>press again</u> to load:\n<b>%s</b>' % tail)
+          name = self.name2PrettyName(tail)
+          self.mieru.notify('this is the <b>last</b> page,\n<u>press again</u> to load:\n<b>%s</b>' % name)
           self.nextArmed = (True, nextMangaPath)
           self._showPreview(nextMangaPath, "next")
           return(False, "press4Next")
@@ -301,7 +303,8 @@ class Manga:
         if previousMangaPath:
           # get a preview
           (folder, tail) = os.path.split(previousMangaPath)
-          self.mieru.notify('this is the <b>first</b> page,\n <u>press again</u> to load:\n<b>%s</b>' % tail)
+          name = self.name2PrettyName(tail)
+          self.mieru.notify('this is the <b>first</b> page,\n <u>press again</u> to load:\n<b>%s</b>' % name)
           self.previousArmed = (True, previousMangaPath)
 
           self._showPreview(previousMangaPath, "previous")
@@ -312,6 +315,21 @@ class Manga:
       else:
         self.mieru.notify('this is the <b>first</b> page')
         return(False, "thisIsFirstPage")
+
+  def name2PrettyName(self, name, path=None):
+    """convert a manga name, eq. taken from its filename
+    to a nicer looking string
+    * replace _ with whitespace
+    * remove file extensions"""
+    # TODO: if path is provided check it the target is file or folder
+    # and use this information accordingly
+    name, extension = os.path.splitext(name)
+    name = re.sub('_', ' ', name)
+    return name
+
+  def getPrettyName(self):
+    """get a pretty name of this manga instance"""
+    return self.name2PrettyName(self.name)
 
   def onFitModeChanged(self, key, value, oldValue):
     # notifiy all pages that the fit mode has changed
