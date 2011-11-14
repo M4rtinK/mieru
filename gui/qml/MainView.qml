@@ -35,7 +35,10 @@ Page {
                      onClicked : { pagingDialog.open() }
                    }
         //ToolIcon { iconId: "toolbar-next" }
-        ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
+        ToolIcon { iconId: "toolbar-next"
+                   rotation : 90
+                   onClicked: mainView.toggleFullscreen() }
+        //ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
         }
 
     Menu {
