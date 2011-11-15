@@ -12,22 +12,26 @@ Page {
     property int maxPageNumber : 2
     property int pageNumber : 1
     property string mangaPath : ""
+    property string lastUrl
 
-    onPageNumberChanged: {
-        //console.log("** page number changed **")
-        //console.log(mangaPath + " " + pageNumber)
+    onMangaPathChanged : { reloadPage() }
+    onPageNumberChanged : { reloadPage() }
+
+    function reloadPage() {
+        //console.log("** reloading page **")
         var pageIndex = pageNumber-1
-        mangaPage.source = "image://page/" + mangaPath + "|" + pageIndex;
-        // reset the page position
-        pageFlickable.contentX = 0;
-        pageFlickable.contentY = 0;
-        //update page number in the current manga instance
-        //NOTE: this is especialy important due to the slider
-        readingState.setPageID(pageIndex);
-        //pageNumbers.text = mainView.pageNumber + "/" + mainView.maxPageNumber;
-
-
-        //pageNumbers.text = mainView.pageNumber + "/" + mainView.maxPageNumber
+        var url = "image://page/" + mangaPath + "|" + pageIndex;
+        // check for false alarms
+        if (url != lastUrl) {
+          //console.log(mangaPath + " " + pageNumber)
+          mangaPage.source = url
+          // reset the page position
+          pageFlickable.contentX = 0;
+          pageFlickable.contentY = 0;
+          //update page number in the current manga instance
+          //NOTE: this is especialy important due to the slider
+          readingState.setPageID(pageIndex);
+          }
         }
 
     ToolBarLayout {

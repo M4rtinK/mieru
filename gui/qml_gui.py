@@ -129,6 +129,7 @@ class QMLGUI(gui.GUI):
     self.mieru.activeManga.previous()
 
   def _getPageByPathId(self, mangaPath, id):
+#    print "PAGE BY ID", mangaPath, id
     """as QML automatically caches images by URL,
     using a url consisting from a filesystem path to the container and page id,
     we basically create a hash with very unlikely colisions (eq. same hash resulting in different images
@@ -141,15 +142,14 @@ class QMLGUI(gui.GUI):
     """
     if self.mieru.activeManga and self.mieru.activeManga.getPath() == mangaPath:
       return self.mieru.activeManga.getPageById(id)
-
     elif self.lastTimeRequestedOtherManga and self.lastTimeRequestedOtherManga.getPath() == mangaPath:
       return self.lastTimeRequestedOtherManga.getPageById(id)
-
     else:
-      manga = self.mieru.openManga(mangaPath, replaceCurrent=False)
+      manga = self.mieru.openManga(mangaPath, None, replaceCurrent=False, loadNotify=False)
+      """for the cached manga instance, we don't wan't any pages to be set as active,
+         we don't want loafing notifications and we don't want it to replace the current manga"""
       self.lastTimeRequestedOtherManga = manga
       return manga.getPageById(id)
-
 
   def _notify(self, text, icon=""):
     """trigger a notification using the Qt Quick Components

@@ -172,22 +172,20 @@ class Mieru:
     print "notification: %s" % message
     self.platform.notify(message,icon)
 
-  def openManga(self, path, startOnPage=0, replaceCurrent=True):
+  def openManga(self, path, startOnPage=0, replaceCurrent=True, loadNotify=True):
     if replaceCurrent:
       if self.activeManga:
         print "closing previously open manga"
         self.activeManga.close()
 
       print "opening %s on page %d" % (path,startOnPage)
-      self.activeManga = manga.Manga(self, path, startOnPage)
+      self.activeManga = manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
       mangaState = self.activeManga.getState()
       # increment count
       self.stats.incrementUnitCount()
 
       self.addToHistory(mangaState)
       self.saveState()
-      # notify the GUI
-      self.gui.newMangaLoaded(self.activeManga)
       return self.activeManga
     else:
       return manga.Manga(self, path, startOnPage)
@@ -206,8 +204,6 @@ class Mieru:
     mangaState = self.activeManga.getState()
     self.addToHistory(mangaState)
     self.saveState()
-    # notify the GUI
-    self.gui.newMangaLoaded(self.activeManga)
 
   def getActiveMangaPath(self):
     if self.activeManga:

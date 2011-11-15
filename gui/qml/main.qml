@@ -34,7 +34,7 @@ PageStackWindow {
 
     FileSelector {
       id: fileSelector;
-      anchors.fill : rootWindow
+      //anchors.fill : rootWindow
       onAccepted: readingState.openManga(selectedFile);
       }
 

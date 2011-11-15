@@ -25,9 +25,7 @@ class Manga:
     self.previousArmed = False
     self.previewBox = None
     self.previewBoxStartingPoint = (0,0)
-    self.loadNotify = load
-
-    print "* manga instance initializing"
+    self.loadNotify = loadNotify
 
     """in case we get a manga instance just to grag some pages,
     we don't want it to connect the page shown notify callback"""
@@ -52,6 +50,7 @@ class Manga:
         #print '<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage))
       else:
         if loadNotify:
+          self.mieru.gui.newMangaLoaded(self) # notify the GUI
           self.mieru.notify('<b>%s</b> loading failed' % self.getPrettyName())
 
   def getName(self):
@@ -96,7 +95,10 @@ class Manga:
       if pageNumber == None: # None means we dont show a page yet
         return True # nothing to go wrong here :)
       else:
-        return self.gotoPageId(pageNumber) # return if the first-selected page loaded successfull      
+        status = self.gotoPageId(pageNumber) # return if the first-selected page loaded successfull
+        if self.loadNotify:
+          self.mieru.gui.newMangaLoaded(self) # notify the GUI
+        return status
     else:
       print "manga: container initialization failed"
       return False
