@@ -36,8 +36,6 @@ class QMLGUI(gui.GUI):
     self.view.setResizeMode(QDeclarativeView.SizeRootObjectToView)
 #    self.view.setResizeMode(QDeclarativeView.SizeViewToRootObject)
 
-    #self.view.resize(300,300)
-
     # add image providers
     self.pageProvider = MangaPageImageProvider(self)
     self.iconProvider = IconImageProvider()
@@ -105,22 +103,18 @@ class QMLGUI(gui.GUI):
     the page image to a local variable so it can be loaded to a
     QML Image using QDeclarativeImageProvider"""
 
-    path = mangaInstance.getPath()
-    
-    #pageNumbersString = "%d/%d" % ( mangaInstance.getActivePageNumber(),
-    #                                mangaInstance.getMaxPageNumber() )
-                                    
+    path = mangaInstance.getPath()                              
     self.rootObject.showPage(path, id)
 
   def newMangaLoaded(self, manga):
     """update max page number in the QML GUI"""
+#    print "* new manga loaded *"
     maxPageNumber = manga.getMaxPageNumber()
     pageNumber = manga.getActivePageNumber()
     # assure sane slider behaviour
+
     if maxPageNumber == None:
       maxPageNumber = 2
-    if pageNumber == -1:
-      pageNumber = 1
 
     self.rootObject.setPageNumber(pageNumber)
     self.rootObject.setMaxPageNumber(maxPageNumber)
@@ -179,9 +173,8 @@ class MangaPageImageProvider(QDeclarativeImageProvider):
 
   def requestImage(self, pathId, size, requestedSize):
     (path,id) = pathId.split('|',1)
-    print path, id
     id = int(id) # string -> integer
-    #print(path, id)
+#    print  "** IR:", path, id
     (page, id) = self.gui._getPageByPathId(path, id)
     imageFileObject = page.popImage()
     img=QImage()
@@ -195,7 +188,6 @@ class IconImageProvider(QDeclarativeImageProvider):
       QDeclarativeImageProvider.__init__(self, QDeclarativeImageProvider.ImageType.Image)
 
   def requestImage(self, iconFilename, size, requestedSize):
-    #print "!!!!!! icon image requested"
     try:
       f = open('icons/%s' % iconFilename,'r')
       img=QImage()

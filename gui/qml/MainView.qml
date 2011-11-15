@@ -10,18 +10,21 @@ Page {
     tools : mainViewToolBar
 
     property int maxPageNumber : 2
-    property int pageNumber : 2
+    property int pageNumber : 1
     property string mangaPath : ""
 
     onPageNumberChanged: {
+        //console.log("** page number changed **")
+        //console.log(mangaPath + " " + pageNumber)
         var pageIndex = pageNumber-1
         mangaPage.source = "image://page/" + mangaPath + "|" + pageIndex;
         // reset the page position
-        pageFlickable.contentX = 0
-        pageFlickable.contentY = 0
+        pageFlickable.contentX = 0;
+        pageFlickable.contentY = 0;
         //update page number in the current manga instance
         //NOTE: this is especialy important due to the slider
-        readingState.setPageID(pageIndex)
+        readingState.setPageID(pageIndex);
+        //pageNumbers.text = mainView.pageNumber + "/" + mainView.maxPageNumber;
 
 
         //pageNumbers.text = mainView.pageNumber + "/" + mainView.maxPageNumber
@@ -33,6 +36,7 @@ Page {
         ToolIcon { iconId: "toolbar-view-menu"; onClicked: mainViewMenu.open() }
         //ToolIcon { iconId: "toolbar-previous" }
         ToolButton { id : pageNumbers
+                     //text : 0/1
                      text : mainView.pageNumber + "/" + mainView.maxPageNumber
                      height : parent.height
                      flat : true
@@ -82,7 +86,8 @@ Page {
 
     function showPage(path, pageId) {
         mainView.mangaPath = path
-        mainView.pageNumber = pageId+1
+        var pageNr = pageId+1
+        mainView.pageNumber = pageNr
         }
 
     // ** trigger notifications

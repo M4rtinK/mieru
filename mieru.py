@@ -186,6 +186,8 @@ class Mieru:
 
       self.addToHistory(mangaState)
       self.saveState()
+      # notify the GUI
+      self.gui.newMangaLoaded(self.activeManga)
       return self.activeManga
     else:
       return manga.Manga(self, path, startOnPage)
@@ -197,11 +199,15 @@ class Mieru:
       self.activeManga.close()
 
     print "opening manga from state"
-    print state
-    self.activeManga = manga.fromState(self, state)
+    #print state
+    self.activeManga = manga.Manga(self,load=False)
+    self.activeManga.setState(state)
+
     mangaState = self.activeManga.getState()
     self.addToHistory(mangaState)
     self.saveState()
+    # notify the GUI
+    self.gui.newMangaLoaded(self.activeManga)
 
   def getActiveMangaPath(self):
     if self.activeManga:
