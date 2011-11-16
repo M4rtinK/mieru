@@ -47,8 +47,7 @@ Page {
                      onClicked : { pagingDialog.open() }
                    }
         //ToolIcon { iconId: "toolbar-next" }
-        ToolIcon { iconId: "toolbar-next"
-                   rotation : 90
+        ToolIcon { iconId: "toolbar-down"
                    onClicked: mainView.toggleFullscreen() }
         //ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
         }
@@ -145,12 +144,11 @@ Page {
     ToolIcon {
         id : fullscreenButton
         //source : "image://icons/view-fullscreen.png"
-        iconId: "toolbar-next"
-        rotation : 270
+        iconId: "toolbar-up"
         anchors.right : mainView.right
         anchors.bottom : mainView.bottom
         visible : false
-        opacity : 0.5
+        opacity : 0.1
         width : Math.min(parent.width,parent.height)/8.0
         height : Math.min(parent.width,parent.height)/8.0
         MouseArea {
