@@ -142,13 +142,15 @@ Page {
             }
        }
 
-    Image {
+    ToolIcon {
         id : fullscreenButton
-        source : "image://icons/view-fullscreen.png"
+        //source : "image://icons/view-fullscreen.png"
+        iconId: "toolbar-next"
+        rotation : 270
         anchors.right : mainView.right
         anchors.bottom : mainView.bottom
         visible : false
-        opacity : 0.1
+        opacity : 0.5
         width : Math.min(parent.width,parent.height)/8.0
         height : Math.min(parent.width,parent.height)/8.0
         MouseArea {
