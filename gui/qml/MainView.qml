@@ -116,12 +116,12 @@ Page {
         drag.filterChildren: true
         onClicked: {
             if (mouseX < width/2.0){
-                console.log("previous");
+                console.log("previous page");
                 readingState.previous();
                 }
 
             else{
-                console.log("next");
+                console.log("next page");
                 readingState.next();
                 }
         }
