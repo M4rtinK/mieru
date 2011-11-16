@@ -7,6 +7,8 @@ from PySide import QtCore
 from PySide.QtCore import *
 from PySide.QtGui import *
 from PySide.QtDeclarative import *
+#from PySide import QtOpenGL
+
 
 import gui
 import qml_page
@@ -30,6 +32,9 @@ class QMLGUI(gui.GUI):
 
     self.app = QApplication(sys.argv)
     self.view = ModifiedQDeclarativeView(self)
+#    # try OpenGl acceleration
+#    glw = QtOpenGL.QGLWidget()
+#    self.view.setViewport(glw)
     self.window = QMainWindow()
     self.window.resize(*size)
     self.window.setCentralWidget(self.view)
