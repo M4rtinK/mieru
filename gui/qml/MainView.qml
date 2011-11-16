@@ -102,7 +102,7 @@ Page {
 
     // ** fullscreen handling
     function toggleFullscreen() {
-        console.log("toggle fullscreen");
+        console.log("toggle toolbar");
         /* handle fullscreen button hiding
         it should be only visible with no toolbar */
         fullscreenButton.visible = !fullscreenButton.visible
