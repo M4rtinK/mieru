@@ -96,18 +96,12 @@ class Manga:
         return True # nothing to go wrong here :)
       else:
         status = self.gotoPageId(pageNumber) # return if the first-selected page loaded successfull
-        if self.loadNotify:
-          self.mieru.gui.newMangaLoaded(self) # notify the GUI
         return status
     else:
       print "manga: container initialization failed"
       return False
 
-
   def close(self):
-    # save current state to history
-    self.mieru.addMangaToHistory(self)
-    
     # flush cache
     self.cache.flush()
 

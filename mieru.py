@@ -19,7 +19,7 @@ class Mieru:
     sessionTime = time.time() - self.startupTimeStamp
     self.stats.updateUsageTime(sessionTime)
 
-    self.saveState()
+    self.saveActiveMangaState()
     self.options.save()
     print "mieru quiting"
     self.gui.stopMainLoop()
@@ -76,7 +76,7 @@ class Mieru:
     if args.o != None:
       try:
         print("loading manga from: %s" % args.o)
-        self.activeManga = self.openManga(args.o)
+        self.setActiveManga(self.openManga(args.o))
         print('manga loaded')
       except Exception, e:
         print("loading manga from path: %s failed" % args.o)
@@ -108,9 +108,6 @@ class Mieru:
 
   def getVbox(self):
     return self.vbox
-
-  def getActiveManga(self):
-    return self.activeManga
 
   def keyPressed(self, keyName):
     if keyName == 'f':
@@ -174,40 +171,51 @@ class Mieru:
 
   def openManga(self, path, startOnPage=0, replaceCurrent=True, loadNotify=True):
     if replaceCurrent:
-      if self.activeManga:
-        print "closing previously open manga"
-        self.activeManga.close()
-
       print "opening %s on page %d" % (path,startOnPage)
-      self.activeManga = manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
-      mangaState = self.activeManga.getState()
-      # increment count
+      mangaInstance = manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
+      # close and replace any current active manga
+      self.setActiveManga(mangaInstance)
+
+      # increment manga count
       self.stats.incrementUnitCount()
 
-      self.addToHistory(mangaState)
-      self.saveState()
-      return self.activeManga
+      # return the newly created manga instance
+      return mangaInstance
     else:
-      return manga.Manga(self, path, startOnPage)
-
+      return manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
 
   def openMangaFromState(self, state):
-    if self.activeManga:
-      print "closing previously open manga"
-      self.activeManga.close()
-
     print "opening manga from state"
     #print state
-    self.activeManga = manga.Manga(self,load=False)
-    self.activeManga.setState(state)
+    mangaInstance = manga.Manga(self,load=False)
+    mangaInstance.setState(state)
+    # close and replace any current active manga
+    self.setActiveManga(mangaInstance)
 
-    mangaState = self.activeManga.getState()
-    self.addToHistory(mangaState)
-    self.saveState()
+  def setActiveManga(self, mangaInstance):
+    """set the given instance as the active manga
+    eq. it has focus, receives page turn events, etc."""
+
+    # is there an already active manga
+    if self.activeManga:
+      # add it to history
+      self.addMangaToHistory(self.activeManga)
+      # close it
+      self.activeManga.close()
+    # replace it with the new one
+    self.activeManga = mangaInstance
+    # notifiy the GUI there is a new active manga instance
+    self.gui.newActiveManga(self.activeManga)
+
+  def getActiveManga(self):
+    return self.activeManga
 
   def getActiveMangaPath(self):
     if self.activeManga:
       return self.activeManga.getPath()
+    else:
+      print("mieru: can't return manga path - there is no active manga")
+      return None
 
   def addToHistory(self,mangaState):
     """add a saved manga state to the history"""
@@ -217,7 +225,7 @@ class Mieru:
 
     if mangaState['path'] != None:
       path = mangaState['path']
-      print "adding to history: %s" % path
+      print("adding to history: %s, on page %d" % (path, mangaState.get('pageNumber',0)))
       openMangasHistory[path] = {"state":mangaState,"timestamp":time.time()}
       """the states are saved under their path to store only unique mangas,
          when the same manga is opened again, its state is replaced by the new one
@@ -226,6 +234,7 @@ class Mieru:
     # save the history back to the persistant store
     # TODO: limit the size of the history + clearing of history
     self.set('openMangasHistory', openMangasHistory)
+    self.options.save()
 
   def addMangaToHistory(self, manga):
     """add a manga instance to history"""
@@ -290,8 +299,8 @@ class Mieru:
     if key in self.watches.keys():
       self._notifyWatcher(key, value)
 
-  def saveState(self):
-    print "saving state"
+  def saveActiveMangaState(self):
+    print "saving active manga state state"
     if self.activeManga: # is some manga actually loaded ?
       state = self.activeManga.getState()
       self.addToHistory(state)

@@ -75,7 +75,7 @@ class GUI:
     """report current status of the gui"""
     return "It works!"
 
-  def newMangaLoaded(self, manga):
+  def newActiveManga(self, manga):
     """this is a new manga instance reporting that it has been loaded
     NOTE: this can be the first manga loaded at satartup or a new manga instance
     replacing a previous one"""

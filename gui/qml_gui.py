@@ -106,7 +106,7 @@ class QMLGUI(gui.GUI):
     path = mangaInstance.getPath()                              
     self.rootObject.showPage(path, id)
 
-  def newMangaLoaded(self, manga):
+  def newActiveManga(self, manga):
     """update max page number in the QML GUI"""
 #    print "* new manga loaded *"
     maxPageNumber = manga.getMaxPageNumber()
