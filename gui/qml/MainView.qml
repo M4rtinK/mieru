@@ -158,7 +158,7 @@ Page {
             }
         }
 
-    OrientableAbstractMenu {
+    Menu {
         id : pagingDialog
         MenuLayout {
             //width : pagingDialog.width
