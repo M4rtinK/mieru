@@ -158,30 +158,40 @@ Page {
             }
         }
 
-    Menu {
+    OrientableAbstractMenu {
         id : pagingDialog
-        Row {
-            Slider {
-                //width : pagingColumn.width*0.8
-                //anchors.topMargin : height*0.5
-                id : pagingSlider
-                maximumValue: mainView.maxPageNumber
-                minimumValue: 1
-                value: mainView.pageNumber
-                stepSize: 1
-                valueIndicatorVisible: false
-                //orientation : Qt.Vertical
-                onPressedChanged : {
-                    //only load the page once the user stopped dragging to save resources
-                    mainView.pageNumber = value
+        MenuLayout {
+            //width : pagingDialog.width
+            id : mLayout
+            Row {
+                anchors.left : mLayout.left
+                anchors.right : mLayout.right
+                Slider {
+                    id : pagingSlider
+                    width : mLayout.width*0.9
+                    //anchors.topMargin : height*0.5
+                    //anchors.left : mLayout.left
+                    maximumValue: mainView.maxPageNumber
+                    minimumValue: 1
+                    value: mainView.pageNumber
+                    stepSize: 1
+                    valueIndicatorVisible: false
+                    //orientation : Qt.Vertical
+                    onPressedChanged : {
+                        //only load the page once the user stopped dragging to save resources
+                        mainView.pageNumber = value
+                        }
+
                     }
 
-                }
-
-            CountBubble {
-                value : pagingSlider.value
-                largeSized : true
-                }
+                CountBubble {
+                    //width : mLayout.width*0.2
+                    //anchors.left : pagingSlider.righ
+                    //anchors.right : mLayout.right
+                    value : pagingSlider.value
+                    largeSized : true
+                    }
+            }
             }
         }
     }
