@@ -32,6 +32,17 @@ PageStackWindow {
         notification.show();
         }
 
+    // ** Open a page and push it in the stack
+    function openFile(file) {
+        // Create the Qt component based on the file/qml page to load.
+        var component = Qt.createComponent(file)
+        // If the page is ready to be managed it is pushed onto the stack
+        if (component.status == Component.Ready)
+            pageStack.push(component);
+        else
+            console.log("Error loading: " + component.errorString());
+    }
+
     FileSelector {
       id: fileSelector;
       //anchors.fill : rootWindow

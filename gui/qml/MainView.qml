@@ -67,21 +67,21 @@ Page {
             MenuItem {
                 text : "History"
                 onClicked : {
-                    console.log("implement history");
+                    rootWindow.openFile("HistoryDialog.qml")
                     }
                 }
 
             MenuItem {
                 text : "Options"
                 onClicked : {
-                    console.log("implement options");
+                    rootWindow.openFile("OptionsPage.qml")
                     }
                 }
 
             MenuItem {
-                text : "About"
+                text : "Info"
                 onClicked : {
-                    console.log("implement about");
+                    rootWindow.openFile("InfoPage.qml")
                     }
                 }
             }
@@ -191,7 +191,7 @@ Page {
                     value : pagingSlider.value
                     largeSized : true
                     }
-            }
+                }
             }
         }
     }
