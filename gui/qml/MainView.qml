@@ -34,6 +34,28 @@ Page {
           }
         }
 
+
+    function showPage(path, pageId) {
+        mainView.mangaPath = path
+        var pageNr = pageId+1
+        mainView.pageNumber = pageNr
+        }
+
+    // ** trigger notifications
+    function notify(text) {
+        notification.text = text;
+        notification.show();
+        }
+
+    // ** fullscreen handling
+    function toggleFullscreen() {
+        console.log("toggle toolbar");
+        /* handle fullscreen button hiding
+        it should be only visible with no toolbar */
+        fullscreenButton.visible = !fullscreenButton.visible
+        rootWindow.showToolBar = !rootWindow.showToolBar;
+        }
+
     ToolBarLayout {
         id : mainViewToolBar
         visible: false
@@ -58,7 +80,7 @@ Page {
         MenuLayout {
             MenuItem {
               text : "Open file"
-              onClicked : {                   
+              onClicked : {
                   fileSelector.down(readingState.getSavedFileSelectorPath());
                   fileSelector.open();
                   }
@@ -85,27 +107,6 @@ Page {
                     }
                 }
             }
-        }
-
-    function showPage(path, pageId) {
-        mainView.mangaPath = path
-        var pageNr = pageId+1
-        mainView.pageNumber = pageNr
-        }
-
-    // ** trigger notifications
-    function notify(text) {
-        notification.text = text;
-        notification.show();
-        }
-
-    // ** fullscreen handling
-    function toggleFullscreen() {
-        console.log("toggle toolbar");
-        /* handle fullscreen button hiding
-        it should be only visible with no toolbar */
-        fullscreenButton.visible = !fullscreenButton.visible
-        rootWindow.showToolBar = !rootWindow.showToolBar;
         }
 
     MouseArea {
