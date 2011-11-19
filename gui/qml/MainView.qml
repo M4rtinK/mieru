@@ -31,21 +31,21 @@ Page {
           //update page number in the current manga instance
           //NOTE: this is especialy important due to the slider
           readingState.setPageID(pageIndex);
-          }
         }
+     }
 
 
     function showPage(path, pageId) {
         mainView.mangaPath = path
         var pageNr = pageId+1
         mainView.pageNumber = pageNr
-        }
+    }
 
     // ** trigger notifications
     function notify(text) {
         notification.text = text;
         notification.show();
-        }
+    }
 
     // ** fullscreen handling
     function toggleFullscreen() {
@@ -54,7 +54,7 @@ Page {
         it should be only visible with no toolbar */
         fullscreenButton.visible = !fullscreenButton.visible
         rootWindow.showToolBar = !rootWindow.showToolBar;
-        }
+    }
 
     ToolBarLayout {
         id : mainViewToolBar
@@ -67,7 +67,7 @@ Page {
                      height : parent.height
                      flat : true
                      onClicked : { pagingDialog.open() }
-                   }
+        }
         //ToolIcon { iconId: "toolbar-next" }
         ToolIcon { iconId: "toolbar-down"
                    onClicked: mainView.toggleFullscreen() }
@@ -83,31 +83,31 @@ Page {
               onClicked : {
                   fileSelector.down(readingState.getSavedFileSelectorPath());
                   fileSelector.open();
-                  }
-              }
+            }
+        }
 
             MenuItem {
                 text : "History"
                 onClicked : {
                     rootWindow.openFile("HistoryDialog.qml")
                     }
-                }
+            }
 
             MenuItem {
                 text : "Options"
                 onClicked : {
                     rootWindow.openFile("OptionsPage.qml")
                     }
-                }
+            }
 
             MenuItem {
                 text : "Info"
                 onClicked : {
                     rootWindow.openFile("InfoPage.qml")
-                    }
                 }
             }
         }
+    }
 
     MouseArea {
         anchors.fill : parent
@@ -118,12 +118,12 @@ Page {
             if (mouseX < width/2.0){
                 console.log("previous page");
                 readingState.previous();
-                }
+            }
 
             else{
                 console.log("next page");
                 readingState.next();
-                }
+            }
         }
 
         Flickable {
@@ -138,9 +138,9 @@ Page {
                 //PinchArea {
                 //    pinch.target : pageFlickable
                 //    }
-                }
             }
-       }
+        }
+    }
 
     ToolIcon {
         id : fullscreenButton
@@ -156,8 +156,8 @@ Page {
             anchors.fill : parent
             drag.filterChildren: true
             onClicked: mainView.toggleFullscreen();
-            }
         }
+    }
 
     Menu {
         id : pagingDialog
@@ -181,9 +181,9 @@ Page {
                     onPressedChanged : {
                         //only load the page once the user stopped dragging to save resources
                         mainView.pageNumber = value
-                        }
-
                     }
+
+            }
 
                 CountBubble {
                     //width : mLayout.width*0.2
@@ -191,8 +191,8 @@ Page {
                     //anchors.right : mLayout.right
                     value : pagingSlider.value
                     largeSized : true
-                    }
                 }
             }
         }
     }
+}
