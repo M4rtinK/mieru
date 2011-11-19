@@ -288,7 +288,7 @@ class Stats(QtCore.QObject):
       self.mieru.stats.setOn(ON)
 
     @QtCore.Slot()
-    def resetStats(self):
+    def reset(self):
       self.stats.resetStats()
 
     @QtCore.Slot(result=str)

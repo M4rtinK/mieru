@@ -72,9 +72,9 @@ class Stats:
     # TODO: more efficient string concatenation ? (if it makes sense here)
     stats = self._getStats()
     if headline:
-      text = "<b>Usage statistics</b>\n"
+      text = "<b>Usage statistics</b>"
     else:
-      text = "\n"
+      text = ""
     if self.isOn():
       statsFound = False
       if "\nunitCount" in stats:
@@ -88,9 +88,9 @@ class Stats:
         statsFound = True
         text+= "\n<b>time open:</b> %.1f hours" % (stats["usageTime"]/3600.0) #TODO: nicer conversion
       if statsFound == False:
-        text+=" <b>empty</b>"
+        text+=" <b>\nempty</b>"
     else:
-      text+=" <b>disabled</b>"
+      text+=" <b>\ndisabled</b>"
 
     return text
 

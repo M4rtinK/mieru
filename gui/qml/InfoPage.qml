@@ -56,7 +56,7 @@ Page {
             Switch {
                 id : statsSwitch
                 anchors.left : statsHeadline.right
-                anchors.leftMargin : 30
+                anchors.leftMargin : 35
                 checked : stats.enabled
                 onCheckedChanged : {
                     // enable/disable stats and update statsText
@@ -67,14 +67,19 @@ Page {
             Text {
                 id : statsText
                 anchors.top : statsHeadline.bottom
-                anchors.topMargin : 20
+                anchors.topMargin : 10
                 text: stats.statsText
                 font.pointSize: 24
             }
 
-            /*LabeledSwitch {
-              text : checked ? "Stats enabled" : "Stats disabled"
-            }*/
+            Button {
+                anchors.top : statsText.bottom
+                anchors.topMargin : 50
+                text : "Reset"
+                onClicked : {
+                    resetStatsDialog.open()
+                }
+            }
         }
 
         Page {
@@ -86,6 +91,17 @@ Page {
                     text: "About"
                }
            }
+        }
+    }
+    QueryDialog {
+        id : resetStatsDialog
+        titleText : "Reset all usage statistics ?"
+        //message : "Reset all usage statistics ?"
+        acceptButtonText : "reset"
+        rejectButtonText : "cancel"
+        onAccepted : { 
+            stats.reset()
+            statsText.text = stats.statsText
         }
     }
 }
