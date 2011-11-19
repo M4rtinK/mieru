@@ -64,6 +64,14 @@ def getStatsContent(mieru):
   vbox.show_all()
   return vbox
 
+def getAboutText(self):
+  text= "<i><b>Mieru project</b> contact info:</i>"
+  text+= "\n<u>main developer:</u> <b>Martin Kolman</b>"
+  text+= "\n<u>email</u>: <b>mieru.info@gmail.com</b>"
+  text+= "\n<u>www</u>: <b>http://m4rtink.github.com/mieru/</b>"
+  text+= "\n<u>discusion</u>: check <b>http://talk.maemo.org</b>"
+  return text
+
 def getAboutContent(versionString="unknown"):
   vbox = gtk.VBox(False,0)
   textVersion = "<b>Mieru</b>, version: <b>%s</b>" % versionString
@@ -73,14 +81,8 @@ def getAboutContent(versionString="unknown"):
   mieruIcon = gtk.image_new_from_file('icons/mieru_150x150.png')
 #  mieruIcon.set_pixel_size(200)
 
-  text= "<i><b>Mieru project</b> contact info:</i>"
-  text+= "\n<u>main developer:</u> <b>Martin Kolman</b>"
-  text+= "\n<u>email</u>: <b>mieru.info@gmail.com</b>"
-  text+= "\n<u>www</u>: <b>http://m4rtink.github.com/mieru/</b>"
-  text+= "\n<u>discusion</u>: check <b>http://talk.maemo.org</b>"
-
   about1 = gtk.Label()
-  about1.set_markup(text)
+  about1.set_markup(self.getAboutText())
   vbox.pack_start(about0)
   vbox.pack_start(mieruIcon)
   vbox.pack_start(about1)
