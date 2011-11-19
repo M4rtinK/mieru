@@ -49,6 +49,8 @@ class QMLGUI(gui.GUI):
     # make the reading state accesible from QML
     readingState = ReadingState(self)
     self.view.rootContext().setContextProperty("readingState", readingState)
+    stats = Stats(self.mieru.stats)
+    self.view.rootContext().setContextProperty("stats", stats)
 
     # Create an URL to the QML file
     url = QUrl('gui/qml/main.qml')
@@ -274,6 +276,52 @@ class ReadingState(QObject):
       defaultPath = self.mieru.platform.getDefaultFileSelectorPath()
       lastFolder = self.mieru.get('lastChooserFolder', defaultPath)
       return lastFolder
+
+class Stats(QtCore.QObject):
+    """make stats available to QML and integrable as a property"""
+    def __init__(self, stats):
+        QtCore.QObject.__init__(self)
+        self.stats = stats
+
+    @QtCore.Slot(bool)
+    def setOn(self, ON):
+      self.mieru.stats.setOn(ON)
+
+    @QtCore.Slot()
+    def resetStats(self):
+      self.stats.resetStats()
+
+    @QtCore.Slot(result=str)
+    def getStatsText(self):
+        print ""
+
+    def _get_statsText(self):
+      # QML uses <br> instead of \n for linebreak
+      text = re.sub('\n', '<br>', self.stats.getStatsText(headline=False))
+      return text
+
+    def _set_statsText(self, statsText):
+      """if this method is called, it should trigger the
+      usual propety changed notification
+      NOTE: as the Info page is loaded from file each time
+      it is opened, the stats text is updated on startup and
+      thus this method doesn't need to be called"""
+      self.on_statsText.emit()
+
+    def _get_enabled(self):
+      return self.stats.isOn()
+
+    def _set_enabled(self, value):
+      self.stats.setOn(value)
+      self.on_enabled.emit()
+
+    on_statsText = QtCore.Signal()
+    on_enabled = QtCore.Signal()
+
+    statsText = QtCore.Property(str, _get_statsText, _set_statsText,
+            notify=on_statsText)
+    enabled = QtCore.Property(bool, _get_enabled, _set_enabled,
+            notify=on_enabled)
 
 #        width = 100
 #        height = 50

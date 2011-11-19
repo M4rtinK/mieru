@@ -13,6 +13,8 @@ PageStackWindow {
                       id : mainView
                       }
 
+    property string statsText : ""
+
     function showPage(path, pageId) {
         mainView.showPage(path, pageId)
         }

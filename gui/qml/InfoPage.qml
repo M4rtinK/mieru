@@ -25,39 +25,67 @@ Page {
         }
            }
     TabGroup {
-           id: tabGroup
+        id: tabGroup
 
-           currentTab: tab1
+        currentTab: tab1
 
-           Page {
-               id: tab1
-               Column {
-                   spacing: 10
+        Page {
+           id: tab1
+           Column {
+               spacing: 10
 
-                   Text {
-                       text: "Current manga info"
-                   }
+               Text {
+                   text: "Info"
                }
            }
-           Page {
-               id: tab2
-               Column {
-                   spacing: 10
+        }
+        Page {
+            id: tab2
+            anchors.fill : parent
+            //anchors.verticalCenter : parent.verticalCenter
+            anchors.topMargin : 30
+            anchors.bottomMargin : 30
+            anchors.leftMargin : 30
+            anchors.rightMargin : 30
+            Text {
+               anchors.left : parent.left
+               id : statsHeadline
+               text : "<b>Usage Statistics</b>"
+               font.pointSize: 24
+            }
+            Switch {
+                id : statsSwitch
+                anchors.left : statsHeadline.right
+                anchors.leftMargin : 30
+                checked : stats.enabled
+                onCheckedChanged : {
+                    // enable/disable stats and update statsText
+                    stats.enabled = checked
+                    statsText.text = stats.statsText
+                }
+            }
+            Text {
+                id : statsText
+                anchors.top : statsHeadline.bottom
+                anchors.topMargin : 20
+                text: stats.statsText
+                font.pointSize: 24
+            }
 
-                   Text {
-                       text: "Statistics"
-                   }
+            /*LabeledSwitch {
+              text : checked ? "Stats enabled" : "Stats disabled"
+            }*/
+        }
+
+        Page {
+            id: tab3
+            Column {
+                spacing: 10
+
+                Text {
+                    text: "About"
                }
            }
-           Page {
-               id: tab3
-               Column {
-                   spacing: 10
-
-                   Text {
-                       text: "About"
-                   }
-               }
-           }
+        }
     }
 }

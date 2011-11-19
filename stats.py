@@ -67,23 +67,26 @@ class Stats:
       increment = int(increment)
       self._updateStats("usageTime", increment, 0)
 
-  def getStatsText(self):
+  def getStatsText(self, headline=True):
     """get a pretty formated stats info"""
     # TODO: more efficient string concatenation ? (if it makes sense here)
     stats = self._getStats()
-    text = "Usage statistics:"
+    if headline:
+      text = "<b>Usage statistics</b>\n"
+    else:
+      text = "\n"
     if self.isOn():
       statsFound = False
       if "\nunitCount" in stats:
         statsFound = True
-        text+= "\nunits total: %d" % stats["unitCount"]
+        text+= "\n<b>units total:</b> %d" % stats["unitCount"]
       pageCount = self.mieru.get("statsPageCount", None)
       if pageCount:
         statsFound = True
-        text+= "\npages total: %d" % pageCount
+        text+= "\n<b>pages total:</b> %d" % pageCount
       if "usageTime" in stats:
         statsFound = True
-        text+= "\ntime open: %.1f hours" % (stats["usageTime"]/3600.0) #TODO: nicer conversion
+        text+= "\n<b>time open:</b> %.1f hours" % (stats["usageTime"]/3600.0) #TODO: nicer conversion
       if statsFound == False:
         text+=" <b>empty</b>"
     else:
