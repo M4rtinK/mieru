@@ -9,10 +9,13 @@ from PySide.QtGui import *
 from PySide.QtDeclarative import *
 #from PySide import QtOpenGL
 
-
+import info
 import gui
 import qml_page
 
+def newlines2brs(text):
+  """ QML uses <br> instead of \n for linebreak """
+  return re.sub('\n', '<br>', text)
 
 class QMLGUI(gui.GUI):
   def __init__(self, mieru, type, size=(854,480)):
@@ -163,7 +166,8 @@ class QMLGUI(gui.GUI):
     InfoBanner notification"""
 
     # QML uses <br> instead of \n for linebreak
-    text = re.sub('\n', '<br>', text)
+
+    text = newlines2brs(text)
     self.rootObject.notify(text)
 
 #  def idleAdd(self, callback, *args):
@@ -251,12 +255,12 @@ class ReadingState(QObject):
         activeManga.setActivePageId(pageID)
 
     @QtCore.Slot(result=str)
-    def getNextMangaPath(self):
-        print ""
+    def getAboutText(self):
+      return newlines2brs(info.getAboutText())
 
     @QtCore.Slot(result=str)
-    def getPreviousMangaPath(self):
-        print ""
+    def getVersionString(self):
+      return newlines2brs(info.getVersionString())
 
     @QtCore.Slot(result=str)
     def toggleFullscreen(self):
@@ -296,8 +300,7 @@ class Stats(QtCore.QObject):
         print ""
 
     def _get_statsText(self):
-      # QML uses <br> instead of \n for linebreak
-      text = re.sub('\n', '<br>', self.stats.getStatsText(headline=False))
+      text = newlines2brs(re.sub('\n', '<br>', self.stats.getStatsText(headline=False)))
       return text
 
     def _set_statsText(self, statsText):

@@ -1,9 +1,9 @@
 """a Mieru module for displaying info menu content"""
 
-import gtk
 import os
 
 def getShortcutsContent():
+  import gtk
   vbox = gtk.VBox()
   shortcuts = gtk.Label()
   text = "<b><u>Keyboard shortcuts</u></b>\n"
@@ -44,6 +44,7 @@ def _setStatsOnCB(button, stats, label):
 
 def getStatsContent(mieru):
   """get content for the statistics monitoring tab"""
+  import gtk
   vbox = gtk.VBox(False,0)
   statsText = mieru.stats.getStatsText()
   statsLabel = gtk.Label()
@@ -64,15 +65,19 @@ def getStatsContent(mieru):
   vbox.show_all()
   return vbox
 
-def getAboutText(self):
-  text= "<i><b>Mieru project</b> contact info:</i>"
-  text+= "\n<u>main developer:</u> <b>Martin Kolman</b>"
-  text+= "\n<u>email</u>: <b>mieru.info@gmail.com</b>"
-  text+= "\n<u>www</u>: <b>http://m4rtink.github.com/mieru/</b>"
-  text+= "\n<u>discusion</u>: check <b>http://talk.maemo.org</b>"
+def getAboutText(forum="meego"):
+  #text= "<b>Mieru project</b> contact info:"
+  text= "\n<b>main developer:</b> Martin Kolman"
+  text+= '\n<b>email</b>: <a href="mailto:mieru.info@gmail.com">mieru.info@gmail.com</a>'
+  text+= '\n<b>www</b>:  <a href="http://m4rtink.github.com/mieru/">http://m4rtink.github.com/mieru/</a>'
+  if forum == "meego":
+    text+= '\n<b>discusion</b>: check <a href="http://forum.meego.com">http://forum.meego.com</a>'
+  else:
+    text+= '\n<b>discusion</b>: check <a href="http://talk.maemo.org">http://talk.maemo.org</a>'
   return text
 
 def getAboutContent(versionString="unknown"):
+  import gtk
   vbox = gtk.VBox(False,0)
   textVersion = "<b>Mieru</b>, version: <b>%s</b>" % versionString
   about0 = gtk.Label()
@@ -114,18 +119,20 @@ def _getLabel(name, spacing=0):
   vbox.show_all()
   return vbox
 
-class InfoNotebook(gtk.Notebook):
-  def __init__(self, mieru):
-    gtk.Notebook.__init__(self)
-    self.mieru = mieru
-    self.versionString = getVersionString()
-    enlargeTabs = 15
-    versionString = self.getVersionString()
-    self.append_page(getShortcutsContent(),_getLabel("Shortcuts",enlargeTabs))
-    self.append_page(getStatsContent(self.mieru),_getLabel("Stats", enlargeTabs))
-    self.append_page(getAboutContent(versionString),_getLabel("About", enlargeTabs))
-    self.show_all()
-    self.set_current_page(0)
+def getInfNotebook(mieru):
+  class InfoNotebook(gtk.Notebook):
+    def __init__(self, mieru):
+      gtk.Notebook.__init__(self)
+      self.mieru = mieru
+      self.versionString = getVersionString()
+      enlargeTabs = 15
+      versionString = self.getVersionString()
+      self.append_page(getShortcutsContent(),_getLabel("Shortcuts",enlargeTabs))
+      self.append_page(getStatsContent(self.mieru),_getLabel("Stats", enlargeTabs))
+      self.append_page(getAboutContent(versionString),_getLabel("About", enlargeTabs))
+      self.show_all()
+      self.set_current_page(0)
+  return InfoNotebook(mieru)
 
 
 

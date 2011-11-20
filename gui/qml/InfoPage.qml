@@ -30,14 +30,19 @@ Page {
         currentTab: tab1
 
         Page {
-           id: tab1
-           Column {
-               spacing: 10
-
-               Text {
-                   text: "Info"
-               }
-           }
+            id: tab1
+            anchors.fill : parent
+            //anchors.verticalCenter : parent.verticalCenter
+            anchors.topMargin : 30
+            anchors.bottomMargin : 30
+            anchors.leftMargin : 30
+            anchors.rightMargin : 30
+            Column {                         
+                Label {
+                    text: "Info"
+                    //font.pointSize: 24
+                }
+            }
         }
         Page {
             id: tab2
@@ -60,7 +65,7 @@ Page {
                 checked : stats.enabled
                 onCheckedChanged : {
                     // enable/disable stats and update statsText
-                    stats.enabled = checked
+                    stats.enabled = statsSwitch.checked
                     statsText.text = stats.statsText
                 }
             }
@@ -84,15 +89,52 @@ Page {
 
         Page {
             id: tab3
-            Column {
-                spacing: 10
+            anchors.fill : parent
+            //anchors.verticalCenter : parent.verticalCenter
+            anchors.topMargin : 20
+            anchors.bottomMargin : 30
+            anchors.leftMargin : 30
+            anchors.rightMargin : 30
 
-                Text {
-                    text: "About"
-               }
-           }
+            Label {
+                id : aboutTitle
+                anchors.horizontalCenter : parent.horizontalCenter
+                text: "<b>Mieru</b>" + " " + readingState.getVersionString()
+                //font.pointSize: 24
+            }
+            Image {
+                id : aboutMieruIcon
+                anchors.horizontalCenter : parent.horizontalCenter
+                anchors.topMargin : 10
+                anchors.top : aboutTitle.bottom
+                source : "image://icons/mieru.svg"
+            }
+            Label {
+                id : aboutContactInfo
+                anchors.horizontalCenter : parent.horizontalCenter
+                //anchors.topMargin : 10
+                anchors.top : aboutMieruIcon.bottom
+                text: readingState.getAboutText()
+                onLinkActivated : {
+                    console.log('about text link clicked: ' + link)
+                    Qt.openUrlExternally(link)
+                }
+            Button {
+                text : "Donate ?"
+                anchors.horizontalCenter : parent.horizontalCenter
+                anchors.topMargin : 20
+                anchors.top : aboutContactInfo.bottom
+                onClicked : {
+                    console.log('donation button clicked')
+                    Qt.openUrlExternally('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=martin%2ekolman%40gmail%2ecom&lc=GB&item_name=Mieru%20project&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted')
+                }
+            }
+                //font.pointSize: 24
+            }
+
+            }
         }
-    }
+    
     QueryDialog {
         id : resetStatsDialog
         titleText : "Reset all usage statistics ?"
