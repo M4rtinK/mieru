@@ -67,13 +67,13 @@ def getStatsContent(mieru):
 
 def getAboutText(forum="meego"):
   #text= "<b>Mieru project</b> contact info:"
-  text= "\n<b>main developer:</b> Martin Kolman"
-  text+= '\n<b>email</b>: <a href="mailto:mieru.info@gmail.com">mieru.info@gmail.com</a>'
-  text+= '\n<b>www</b>:  <a href="http://m4rtink.github.com/mieru/">http://m4rtink.github.com/mieru/</a>'
+  text= "<p><b>main developer:</b> Martin Kolman</p>"
+  text+= '<p><b>email</b>: <a href="mailto:mieru.info@gmail.com">mieru.info@gmail.com</a></p>'
+  text+= '<p><b>www</b>:  <a href="http://m4rtink.github.com/mieru/">http://m4rtink.github.com/mieru/</a></p>'
   if forum == "meego":
-    text+= '\n<b>discusion</b>: check <a href="http://forum.meego.com">http://forum.meego.com</a>'
+    text+= '<p><b>discusion</b>: check <a href="http://forum.meego.com">http://forum.meego.com</a></p>'
   else:
-    text+= '\n<b>discusion</b>: check <a href="http://talk.maemo.org">http://talk.maemo.org</a>'
+    text+= '<p><b>discusion</b>: check <a href="http://talk.maemo.org">http://talk.maemo.org</a></p>'
   return text
 
 def getAboutContent(versionString="unknown"):

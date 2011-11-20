@@ -114,7 +114,9 @@ Page {
                 anchors.horizontalCenter : parent.horizontalCenter
                 //anchors.topMargin : 10
                 anchors.top : aboutMieruIcon.bottom
-                text: readingState.getAboutText()
+                text: "<style type='text/css'>p { margin-bottom:15px; margin-top:0px; }</style>" + readingState.getAboutText()
+
+
                 onLinkActivated : {
                     console.log('about text link clicked: ' + link)
                     Qt.openUrlExternally(link)
@@ -122,7 +124,7 @@ Page {
             Button {
                 text : "Donate ?"
                 anchors.horizontalCenter : parent.horizontalCenter
-                anchors.topMargin : 20
+                anchors.topMargin : 25
                 anchors.top : aboutContactInfo.bottom
                 onClicked : {
                     console.log('donation button clicked')
