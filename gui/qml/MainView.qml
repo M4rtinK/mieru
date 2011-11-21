@@ -89,7 +89,7 @@ Page {
             MenuItem {
                 text : "History"
                 onClicked : {
-                    rootWindow.openFile("HistoryDialog.qml")
+                    rootWindow.openFile("HistoryPage.qml")
                     }
             }
 
