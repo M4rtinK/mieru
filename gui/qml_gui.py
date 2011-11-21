@@ -12,6 +12,7 @@ from PySide.QtDeclarative import *
 import info
 import gui
 import qml_page
+import manga as manga_module
 
 def newlines2brs(text):
   """ QML uses <br> instead of \n for linebreak """
@@ -49,11 +50,21 @@ class QMLGUI(gui.GUI):
     self.iconProvider = IconImageProvider()
     self.view.engine().addImageProvider("page",self.pageProvider)
     self.view.engine().addImageProvider("icons",self.iconProvider)
+    rc = self.view.rootContext()
     # make the reading state accesible from QML
     readingState = ReadingState(self)
-    self.view.rootContext().setContextProperty("readingState", readingState)
+    rc.setContextProperty("readingState", readingState)
     stats = Stats(self.mieru.stats)
-    self.view.rootContext().setContextProperty("stats", stats)
+    rc.setContextProperty("stats", stats)
+    # ** history list handling **
+    # get the objects and wrap them
+    mangaStateObjects = [MangaState(thing) for thing in self.mieru.getSortedHistory()]
+    things = [ThingWrapper(thing) for thing in mangaStateObjects]
+    controller = Controller(self.mieru)
+    thingList = ThingListModel(things)
+    # make available from QML
+    rc.setContextProperty('controller', controller)
+    rc.setContextProperty('pythonListModel', thingList)
 
     # Create an URL to the QML file
     url = QUrl('gui/qml/main.qml')
@@ -255,6 +266,14 @@ class ReadingState(QObject):
         activeManga.setActivePageId(pageID)
 
     @QtCore.Slot(result=str)
+    def getPrettyName(self):
+      activeManga = self.gui.mieru.getActiveManga()
+      if activeManga:
+        return activeManga.getPrettyName()
+      else:
+        return "Name unknown"
+
+    @QtCore.Slot(result=str)
     def getAboutText(self):
       return newlines2brs(info.getAboutText())
 
@@ -342,3 +361,58 @@ class Stats(QtCore.QObject):
 #        pixmap.fill(QColor(id).rgba())
 #
 #        return pixmap
+
+# ** history list wrappers **
+
+class ThingWrapper(QtCore.QObject):
+    def __init__(self, thing):
+        QtCore.QObject.__init__(self)
+        self._thing = thing
+
+    def _name(self):
+        return str(self._thing)
+
+    changed = QtCore.Signal()
+
+    name = QtCore.Property(unicode, _name, notify=changed)
+
+class ThingListModel(QtCore.QAbstractListModel):
+    COLUMNS = ('thing',)
+
+    def __init__(self, things):
+      QtCore.QAbstractListModel.__init__(self)
+      self._things = things
+      self.setRoleNames(dict(enumerate(ThingListModel.COLUMNS)))
+
+    def rowCount(self, parent=QtCore.QModelIndex()):
+      return len(self._things)
+
+    def data(self, index, role):
+      if index.isValid() and role == ThingListModel.COLUMNS.index('thing'):
+        return self._things[index.row()]
+      return None
+
+class Controller(QtCore.QObject):
+  def __init__(self, mieru):
+    QtCore.QObject.__init__(self)
+    self.mieru = mieru
+        
+  @QtCore.Slot(QtCore.QObject)
+  def thingSelected(self, wrapper):
+    state = wrapper._thing.state
+    self.mieru.openMangaFromState(state)
+
+        #print 'User clicked on:', wrapper._thing.name
+        
+class MangaState(object):
+  def __init__(self, state):
+    # unwrap the history storage wrapper
+    state = state['state']
+    self.path = state['path']
+    self.name = manga_module.path2prettyName(self.path)
+    self.pageNumber = state['pageNumber'] + 1
+    self.pageCount = state['pageCount']
+    self.state = state
+
+  def __str__(self):
+      return '%s %d/%d' % (self.name, self.pageNumber, self.pageCount)

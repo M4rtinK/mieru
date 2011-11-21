@@ -37,10 +37,47 @@ Page {
             anchors.bottomMargin : 30
             anchors.leftMargin : 30
             anchors.rightMargin : 30
-            Column {                         
+            Flickable {
+                anchors.fill : parent
                 Label {
-                    text: "Info"
-                    //font.pointSize: 24
+                    id : infoHeadline
+                    anchors.horizontalCenter : parent.horizontalCenter
+                    text: "<h1>" + readingState.getPrettyName() + "</h1>"
+                    width : tab1.width
+                    wrapMode : Text.WordWrap
+                    horizontalAlignment : Text.AlignHCenter
+                }
+                Image {
+                    id : infoFirstPage
+                    anchors.horizontalCenter : parent.horizontalCenter
+                    anchors.top : infoHeadline.bottom
+                    anchors.topMargin : 10
+                    source : "image://page/" + mainView.mangaPath + "|0"
+                    fillMode : Image.PreserveAspectFit
+                    width : tab1.width/2.0
+                    height : tab1.width/2.0
+                    smooth : true
+                Label {
+                    anchors.verticalCenter : parent.verticalCenter
+                    anchors.leftMargin : 10
+                    anchors.left : infoFirstPage.right
+                    //var remainingPages = mainView.maxPageNumber -1
+                    text: "<h2>+" + (mainView.maxPageNumber-1) + "<br>pages</h2>"
+                }
+
+                }
+                Column {
+                    id : infoCollumn
+                    //anchors.horizontalCenter : parent.horizontalCenter
+                    anchors.top : infoFirstPage.bottom
+                    anchors.topMargin : 20
+                    spacing : 10
+                    Label {
+                        text: "" + mainView.mangaPath
+                        // explicit width is needed for wrapping to work
+                        width : tab1.width
+                        wrapMode : Text.WrapAnywhere
+                    }
                 }
             }
         }
@@ -62,7 +99,12 @@ Page {
                 id : statsSwitch
                 anchors.left : statsHeadline.right
                 anchors.leftMargin : 35
-                checked : stats.enabled
+                // eliminate checked property binding loop
+                function checkedInit() {
+                    return stats.enabled
+                }
+                checked : checkedInit()
+
                 onCheckedChanged : {
                     // enable/disable stats and update statsText
                     stats.enabled = statsSwitch.checked
