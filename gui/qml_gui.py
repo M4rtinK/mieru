@@ -59,12 +59,12 @@ class QMLGUI(gui.GUI):
 
     # ** history list handling **
     # get the objects and wrap them
-    mangaStateObjects = [MangaStateWrapper(state) for state in self.mieru.getSortedHistory()]
     historyListController = HistoryListController(self.mieru)
-    historyList = HistoryListModel(mangaStateObjects)
+    self.historyList = []
+    self.historyListModel = HistoryListModel(self.historyList)
     # make available from QML
     rc.setContextProperty('historyListController', historyListController)
-    rc.setContextProperty('historyListModel', historyList)
+    rc.setContextProperty('historyListModel', self.historyListModel)
 
     # Create an URL to the QML file
     url = QUrl('gui/qml/main.qml')
@@ -300,6 +300,15 @@ class ReadingState(QObject):
       lastFolder = self.mieru.get('lastChooserFolder', defaultPath)
       return lastFolder
 
+    @QtCore.Slot(result=str)
+    def updateHistoryListModel(self):
+      print "UPDATE LIST MODEL"
+      """the history list model needs to be updated only before the list
+      is actually shown, no need to update it dynamically every time a manga is added
+      to history"""
+      mangaStateObjects = [MangaStateWrapper(state) for state in self.gui.mieru.getSortedHistory()]      
+      self.gui.historyListModel.setThings(mangaStateObjects)
+
 class Stats(QtCore.QObject):
     """make stats available to QML and integrable as a property"""
     def __init__(self, stats):
@@ -393,10 +402,18 @@ class HistoryListModel(QtCore.QAbstractListModel):
       self._things = things
       self.setRoleNames(dict(enumerate(HistoryListModel.COLUMNS)))
 
+    def setThings(self, things):
+      #print "SET THINGS"
+      self._things = things
+      
     def rowCount(self, parent=QtCore.QModelIndex()):
+      #print "ROW"
+      #print self._things
       return len(self._things)
 
     def data(self, index, role):
+      #print "DATA"
+      #print self._things
       if index.isValid() and role == HistoryListModel.COLUMNS.index('thing'):
         return self._things[index.row()]
       return None
