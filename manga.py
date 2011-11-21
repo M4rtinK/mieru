@@ -11,6 +11,21 @@ import container as containerModule
 import page_cache
 
 
+def name2PrettyName(name, path=None):
+  """convert a manga name, eq. taken from its filename
+  to a nicer looking string
+  * replace _ with whitespace
+  * remove file extensions"""
+  # TODO: if path is provided check it the target is file or folder
+  # and use this information accordingly
+  name, extension = os.path.splitext(name)
+  name = re.sub('_', ' ', name)
+  return name
+
+def path2prettyName(path):
+  (path,name) = os.path.split(path)
+  return name2PrettyName(name)
+
 class Manga:
   def __init__(self, mieru, path=None, startOnPage=0, load=True, loadNotify=True, pageShownNotify=False):
     self.mieru = mieru
@@ -310,20 +325,9 @@ class Manga:
         self.mieru.notify('this is the <b>first</b> page')
         return(False, "thisIsFirstPage")
 
-  def name2PrettyName(self, name, path=None):
-    """convert a manga name, eq. taken from its filename
-    to a nicer looking string
-    * replace _ with whitespace
-    * remove file extensions"""
-    # TODO: if path is provided check it the target is file or folder
-    # and use this information accordingly
-    name, extension = os.path.splitext(name)
-    name = re.sub('_', ' ', name)
-    return name
-
   def getPrettyName(self):
     """get a pretty name of this manga instance"""
-    return self.name2PrettyName(self.name)
+    return name2PrettyName(self.name)
 
   def onFitModeChanged(self, key, value, oldValue):
     # notifiy all pages that the fit mode has changed
