@@ -35,17 +35,17 @@ Page {
     }
 
     ListView {
-        id: pythonList
+        id: historyList
         anchors.fill : parent
         //width: 400
         //height: 200
 
 
-        model: pythonListModel
+        model: historyListModel
 
         delegate: Component {
             Rectangle {
-                width: pythonList.width
+                width: historyList.width
                 height: 80
                 color: ((index % 2 == 0)?"#222":"#111")
                 Label {
@@ -62,7 +62,7 @@ Page {
                     anchors.fill: parent
                     onClicked: { 
                         pageStack.pop()
-                        controller.thingSelected(model.thing)
+                        historyListController.thingSelected(model.thing)
                     }
                 }
                 ToolIcon {

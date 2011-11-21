@@ -56,15 +56,15 @@ class QMLGUI(gui.GUI):
     rc.setContextProperty("readingState", readingState)
     stats = Stats(self.mieru.stats)
     rc.setContextProperty("stats", stats)
+
     # ** history list handling **
     # get the objects and wrap them
-    mangaStateObjects = [MangaState(thing) for thing in self.mieru.getSortedHistory()]
-    things = [ThingWrapper(thing) for thing in mangaStateObjects]
-    controller = Controller(self.mieru)
-    thingList = ThingListModel(things)
+    mangaStateObjects = [MangaStateWrapper(state) for state in self.mieru.getSortedHistory()]
+    historyListController = HistoryListController(self.mieru)
+    historyList = HistoryListModel(mangaStateObjects)
     # make available from QML
-    rc.setContextProperty('controller', controller)
-    rc.setContextProperty('pythonListModel', thingList)
+    rc.setContextProperty('historyListController', historyListController)
+    rc.setContextProperty('historyListModel', historyList)
 
     # Create an URL to the QML file
     url = QUrl('gui/qml/main.qml')
@@ -364,55 +364,48 @@ class Stats(QtCore.QObject):
 
 # ** history list wrappers **
 
-class ThingWrapper(QtCore.QObject):
-    def __init__(self, thing):
-        QtCore.QObject.__init__(self)
-        self._thing = thing
+class MangaStateWrapper(QtCore.QObject):
+  def __init__(self, state):
+    QtCore.QObject.__init__(self)
+    # unwrap the history storage wrapper
+    state = state['state']
+    self.path = state['path']
+    self.mangaName = manga_module.path2prettyName(self.path)
+    self.pageNumber = state['pageNumber'] + 1
+    self.pageCount = state['pageCount']
+    self.state = state
 
-    def _name(self):
-        return str(self._thing)
+  def __str__(self):
+      return '%s %d/%d' % (self.mangaName, self.pageNumber, self.pageCount)
 
-    changed = QtCore.Signal()
+  def _name(self):
+      return str(self)
+  # setup the Qt property
+  # NOTE: chnaged notification is currently not used + not needed
+  changed = QtCore.Signal()
+  name = QtCore.Property(unicode, _name, notify=changed)
 
-    name = QtCore.Property(unicode, _name, notify=changed)
-
-class ThingListModel(QtCore.QAbstractListModel):
+class HistoryListModel(QtCore.QAbstractListModel):
     COLUMNS = ('thing',)
 
     def __init__(self, things):
       QtCore.QAbstractListModel.__init__(self)
       self._things = things
-      self.setRoleNames(dict(enumerate(ThingListModel.COLUMNS)))
+      self.setRoleNames(dict(enumerate(HistoryListModel.COLUMNS)))
 
     def rowCount(self, parent=QtCore.QModelIndex()):
       return len(self._things)
 
     def data(self, index, role):
-      if index.isValid() and role == ThingListModel.COLUMNS.index('thing'):
+      if index.isValid() and role == HistoryListModel.COLUMNS.index('thing'):
         return self._things[index.row()]
       return None
 
-class Controller(QtCore.QObject):
+class HistoryListController(QtCore.QObject):
   def __init__(self, mieru):
     QtCore.QObject.__init__(self)
     self.mieru = mieru
         
   @QtCore.Slot(QtCore.QObject)
   def thingSelected(self, wrapper):
-    state = wrapper._thing.state
-    self.mieru.openMangaFromState(state)
-
-        #print 'User clicked on:', wrapper._thing.name
-        
-class MangaState(object):
-  def __init__(self, state):
-    # unwrap the history storage wrapper
-    state = state['state']
-    self.path = state['path']
-    self.name = manga_module.path2prettyName(self.path)
-    self.pageNumber = state['pageNumber'] + 1
-    self.pageCount = state['pageCount']
-    self.state = state
-
-  def __str__(self):
-      return '%s %d/%d' % (self.name, self.pageNumber, self.pageCount)
+    self.mieru.openMangaFromState(wrapper.state)
