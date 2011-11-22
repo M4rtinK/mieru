@@ -277,7 +277,7 @@ class Manga:
         nextMangaPath = self.getNextMangaPath()
         if nextMangaPath:
           (folder, tail) = os.path.split(nextMangaPath)
-          name = self.name2PrettyName(tail)
+          name = name2PrettyName(tail)
           self.mieru.notify('this is the <b>last</b> page,\n<u>press again</u> to load:\n<b>%s</b>' % name)
           self.nextArmed = (True, nextMangaPath)
           #self._showPreview(nextMangaPath, "next")
@@ -312,7 +312,7 @@ class Manga:
         if previousMangaPath:
           # get a preview
           (folder, tail) = os.path.split(previousMangaPath)
-          name = self.name2PrettyName(tail)
+          name = name2PrettyName(tail)
           self.mieru.notify('this is the <b>first</b> page,\n <u>press again</u> to load:\n<b>%s</b>' % name)
           self.previousArmed = (True, previousMangaPath)
 
