@@ -78,7 +78,7 @@ class Manga:
     return self.path
   
   def getState(self):
-    """save current satte to a dictionary"""
+    """save current state to a dictionary"""
 
     state = {}
     state['path'] = self.path
