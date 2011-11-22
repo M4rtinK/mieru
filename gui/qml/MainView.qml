@@ -30,7 +30,7 @@ Page {
           pageFlickable.contentY = 0;
           //update page number in the current manga instance
           //NOTE: this is especialy important due to the slider
-          readingState.setPageID(pageIndex);
+          readingState.setPageID(pageIndex, mangaPath);
         }
      }
 

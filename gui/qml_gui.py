@@ -259,11 +259,13 @@ class ReadingState(QObject):
         id = activeManga.PageNumber2ID(pageNumber)
         activeManga.gotoPageId(id)
 
-    @QtCore.Slot(int)
-    def setPageID(self, pageID):
+    @QtCore.Slot(int, str)
+    def setPageID(self, pageID, mangaPath):
       activeManga = self.gui.mieru.getActiveManga()
       if activeManga:
-        activeManga.setActivePageId(pageID)
+        # filter out false alarms
+        if activeManga.getPath() == mangaPath:
+          activeManga.setActivePageId(pageID)
 
     @QtCore.Slot(result=str)
     def getPrettyName(self):

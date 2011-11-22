@@ -62,7 +62,7 @@ Page {
                     anchors.fill: parent
                     onClicked: { 
                         pageStack.pop()
-                        historyListController.thingSelected(model.thing)
+                        historyListController.thingSelected(model.thing)                        
                     }
                 }
                 ToolIcon {
