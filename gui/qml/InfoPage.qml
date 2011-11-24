@@ -37,8 +37,19 @@ Page {
             anchors.bottomMargin : 30
             anchors.leftMargin : 30
             anchors.rightMargin : 30
+
+            ScrollDecorator {
+                 id: scrolldecorator
+                 flickableItem: infoFlickable
+            }
             Flickable {
+                id : infoFlickable
                 anchors.fill : parent
+                contentWidth: mangaPage.width
+                contentHeight: infoHeadline.height + infoFirstPage.height + infoCollumn.height + 30
+
+                flickableDirection: Flickable.VerticalFlick
+
                 Label {
                     id : infoHeadline
                     anchors.horizontalCenter : parent.horizontalCenter
