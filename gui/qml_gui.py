@@ -61,7 +61,7 @@ class QMLGUI(gui.GUI):
     # get the objects and wrap them
     historyListController = HistoryListController(self.mieru)
     self.historyList = []
-    self.historyListModel = HistoryListModel(self.historyList)
+    self.historyListModel = HistoryListModel(self.mieru, self.historyList)
     # make available from QML
     rc.setContextProperty('historyListController', historyListController)
     rc.setContextProperty('historyListModel', self.historyListModel)
@@ -310,6 +310,7 @@ class ReadingState(QObject):
       to history"""
       mangaStateObjects = [MangaStateWrapper(state) for state in self.gui.mieru.getSortedHistory()]      
       self.gui.historyListModel.setThings(mangaStateObjects)
+      self.gui.historyListModel.reset()
 
 class Stats(QtCore.QObject):
     """make stats available to QML and integrable as a property"""
@@ -385,22 +386,34 @@ class MangaStateWrapper(QtCore.QObject):
     self.pageNumber = state['pageNumber'] + 1
     self.pageCount = state['pageCount']
     self.state = state
+    self._checked = False
 
   def __str__(self):
       return '%s %d/%d' % (self.mangaName, self.pageNumber, self.pageCount)
 
   def _name(self):
       return str(self)
-  # setup the Qt property
-  # NOTE: chnaged notification is currently not used + not needed
+
+  def is_checked(self):
+    return self._checked
+
+  def toggle_checked(self):
+    self._checked = not self._checked
+    self.changed.emit()
+
+  # signals
   changed = QtCore.Signal()
+
+  # setup the Qt properties
   name = QtCore.Property(unicode, _name, notify=changed)
+  checked = QtCore.Property(bool, is_checked, notify=changed)
 
 class HistoryListModel(QtCore.QAbstractListModel):
     COLUMNS = ('thing',)
 
-    def __init__(self, things):
+    def __init__(self, mieru, things):
       QtCore.QAbstractListModel.__init__(self)
+      self.mieru = mieru
       self._things = things
       self.setRoleNames(dict(enumerate(HistoryListModel.COLUMNS)))
 
@@ -413,12 +426,28 @@ class HistoryListModel(QtCore.QAbstractListModel):
       #print self._things
       return len(self._things)
 
+    def checked(self):
+      return [x for x in self._things if x.checked]
+
     def data(self, index, role):
       #print "DATA"
       #print self._things
       if index.isValid() and role == HistoryListModel.COLUMNS.index('thing'):
         return self._things[index.row()]
       return None
+
+    @QtCore.Slot()
+    def removeChecked(self):
+      paths = []
+      checked = self.checked()
+      #count = len(self.checked())
+      for state in checked:
+        paths.append(state.path)
+      print paths
+      self.mieru.removeMangasFromHistory(paths)
+      # quick and dirty remove
+      for state in checked:
+        self._things.remove(state)
 
 class HistoryListController(QtCore.QObject):
   def __init__(self, mieru):
@@ -428,3 +457,7 @@ class HistoryListController(QtCore.QObject):
   @QtCore.Slot(QtCore.QObject)
   def thingSelected(self, wrapper):
     self.mieru.openMangaFromState(wrapper.state)
+
+  @QtCore.Slot(QtCore.QObject, QtCore.QObject)
+  def toggled(self, model, wrapper):
+    wrapper.toggle_checked()

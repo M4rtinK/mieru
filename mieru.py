@@ -1,6 +1,8 @@
 #!/usr/bin/env python
+from __future__ import with_statement # for python 2.5
 
 import time
+from threading import RLock
 
 # Mieru modules import
 import manga
@@ -39,6 +41,8 @@ class Mieru:
     # options value watching
     self.maxWatchId = 0
     self.watches = {}
+    # history lock
+    self.historyLock = RLock()
 
     # enable stats
     self.stats = stats.Stats(self)
@@ -242,6 +246,18 @@ class Mieru:
     if state:
       self.addToHistory(state)
 
+  def removeMangasFromHistory(self, paths):
+    """a function for batch removing mangas from history"""
+    print("removing %d mangas from history" % len(paths))
+    openMangasHistory = self.get('openMangasHistory',None)
+    if openMangasHistory:
+      for path in paths:
+        if path in openMangasHistory:
+          print "deleting %s" % path
+          del openMangasHistory[path]
+    self.set('openMangasHistory', openMangasHistory)
+    print("removing done")
+
   def removeMangaFromHistory(self,path):
     """delete manga described by path from history"""
     openMangasHistory = self.get('openMangasHistory',None)
@@ -263,7 +279,6 @@ class Mieru:
   def clearHistory(self):
     """clear the history of opened mangas"""
     self.set('openMangasHistory', {})
-
 
   def watch(self, key, callback, *args):
     """add a callback on an options key"""

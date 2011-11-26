@@ -5,13 +5,40 @@ import com.nokia.meego 1.0
 
 Page {
     id : historyPage
-    property bool showDeleteIcon : false
+    property bool deleteModeEnabled : false
+
+    // update the history list model at startup
+    Component.onCompleted : readingState.updateHistoryListModel()
+
     tools: ToolBarLayout {
-        ToolIcon { iconId: "toolbar-back"
-            onClicked: pageStack.pop()
+        ToolIcon {
+            id : histBack
+            iconId : "toolbar-back"
+            onClicked : pageStack.pop()
         }
-        ToolIcon { iconId: "toolbar-view-menu"
-            onClicked: historyMenu.open()
+        ToolButton {
+            width : 120
+            text : "Delete"
+            visible : deleteModeEnabled
+            anchors.verticalCenter : parent.verticalCenter
+            onClicked: {
+                historyListModel.removeChecked()
+                historyPage.deleteModeEnabled = false
+                readingState.updateHistoryListModel()
+                
+            }
+        }
+        ToolButton {
+            width : 120
+            text: "Cancel"
+            visible : deleteModeEnabled
+            anchors.verticalCenter : parent.verticalCenter
+            onClicked: historyPage.deleteModeEnabled = false
+        }
+        ToolIcon {
+            id : histMenu
+            iconId : "toolbar-view-menu"
+            onClicked : historyMenu.open()
         }
     }
 
@@ -20,9 +47,10 @@ Page {
 
         MenuLayout {
             MenuItem {
-              text : "Show delete icon"
+              text : historyPage.deleteModeEnabled ? "Don't delete items" : "Delete items"
               onClicked : {
-                  historyPage.showDeleteIcon = !historyPage.showDeleteIcon
+                  historyPage.deleteModeEnabled = !historyPage.deleteModeEnabled
+                  rootWindow.notify("Select items to delete")
             }
         }
             MenuItem {
@@ -47,12 +75,14 @@ Page {
             Rectangle {
                 width: historyList.width
                 height: 80
-                color: ((index % 2 == 0)?"#222":"#111")
+                //color: ((index % 2 == 0)?"#222":"#111")
+                color: model.thing.checked?"#00B8F5":(index%2?"#eee":"#ddd")
                 Label {
                     id: title
                     elide: Text.ElideRight
                     text: model.thing.name
-                    color: "white"
+                    //color: "white"
+                    color: (model.thing.checked?"white":"black")
                     font.bold: true
                     anchors.leftMargin: 10
                     anchors.fill: parent
@@ -60,17 +90,15 @@ Page {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: { 
-                        pageStack.pop()
-                        historyListController.thingSelected(model.thing)                        
+                    onClicked: {
+                        if (historyPage.deleteModeEnabled) {
+                            historyListController.toggled(historyListModel, model.thing)
+                        }
+                        else {
+                            pageStack.pop()
+                            historyListController.thingSelected(model.thing)
+                        }
                     }
-                }
-                ToolIcon {
-                    iconId: "toolbar-delete"
-                    height : 80
-                    anchors.right : parent.right
-                    visible : historyPage.showDeleteIcon
-                    onClicked : console.log("delete item")
                 }
             }
         }

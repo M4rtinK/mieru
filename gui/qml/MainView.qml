@@ -89,8 +89,6 @@ Page {
             MenuItem {
                 text : "History"
                 onClicked : {
-                    // update the history list model before the page is opened
-                    readingState.updateHistoryListModel()
                     rootWindow.openFile("HistoryPage.qml")
                     }
             }
