@@ -127,7 +127,7 @@ Page {
             initialWidth = pageFlickable.contentWidth
             initialHeight = pageFlickable.contentHeight
             //pageFlickable.interactive = false
-            console.log("start " + pinch.scale)
+            //console.log("start " + pinch.scale)
         }
 
         onPinchUpdated: {
@@ -140,9 +140,9 @@ Page {
             // remember current scale
             pageFlickable.scale = initialScale * pinch.scale
 
-            console.log("pf " + pageFlickable.contentWidth + " " + pageFlickable.contentHeight)
-            console.log("page " + mangaPage.width + " " + mangaPage.height)
-            console.log("scale " + pageFlickable.scale)
+            //console.log("pf " + pageFlickable.contentWidth + " " + pageFlickable.contentHeight)
+            //console.log("page " + mangaPage.width + " " + mangaPage.height)
+            //console.log("scale " + pageFlickable.scale)
 
         }
 
