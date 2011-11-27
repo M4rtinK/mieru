@@ -302,15 +302,23 @@ class ReadingState(QObject):
       lastFolder = self.mieru.get('lastChooserFolder', defaultPath)
       return lastFolder
 
-    @QtCore.Slot(result=str)
+    @QtCore.Slot()
     def updateHistoryListModel(self):
-      print "UPDATE LIST MODEL"
+      print "updating history list model"
       """the history list model needs to be updated only before the list
       is actually shown, no need to update it dynamically every time a manga is added
       to history"""
       mangaStateObjects = [MangaStateWrapper(state) for state in self.gui.mieru.getSortedHistory()]      
       self.gui.historyListModel.setThings(mangaStateObjects)
       self.gui.historyListModel.reset()
+
+    @QtCore.Slot()
+    def eraseHistory(self):
+      print "erasing history"
+      """the history list model needs to be updated only before the list
+      is actually shown, no need to update it dynamically every time a manga is added
+      to history"""
+      self.gui.mieru.clearHistory()
 
 class Stats(QtCore.QObject):
     """make stats available to QML and integrable as a property"""

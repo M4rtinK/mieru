@@ -274,7 +274,7 @@ class Mieru:
         sortedList.append(openMangasHistory[path])
       return sortedList
     else:
-      return None
+      return []
 
   def clearHistory(self):
     """clear the history of opened mangas"""
