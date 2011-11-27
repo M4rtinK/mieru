@@ -109,6 +109,53 @@ Page {
         }
     }
 
+    PinchArea {
+        anchors.fill : parent
+        //onPinchStarted : console.log("pinch started")
+        //pinch.target : mangaPage
+        //pinch.minimumScale: 0.5
+        //pinch.maximumScale: 2
+        //width: Math.max(pageFlickable.contentWidth, pageFlickable.width)
+        //height: Math.max(pageFlickable.contentHeight, pageFlickable.height)
+        property real initialScale
+
+        onPinchStarted: {
+            initialScale = pageFlickable.scale
+            //pageFlickable.interactive = false
+            console.log("start " + pinch.scale)
+        }
+
+        onPinchUpdated: {
+            // adjust content pos due to drag
+            pageFlickable.contentX += pinch.previousCenter.x - pinch.center.x
+            pageFlickable.contentY += pinch.previousCenter.y - pinch.center.y
+
+            // resize content
+            //pageFlickable.resizeContent(initialWidth * pinch.scale, initialHeight * pinch.scale, pinch.center)
+            //pageFlickable.contentWidth = initialWidth * pinch.scale
+            //pageFlickable.contentHeight = initialHeight * pinch.scale
+            //mangaPage.width = initialWidth * pinch.scale
+            //mangaPage.height = initialHeight * pinch.scale
+            pageFlickable.scale = initialScale * pinch.scale
+
+            console.log("pf " + pageFlickable.contentWidth)
+            console.log("page " + mangaPage.width*pageFlickable.scale)
+            console.log("scale " + pageFlickable.scale)
+
+        }
+
+        onPinchFinished: {
+            //pageFlickable.interactive = true
+            // Move its content within bounds.
+            pageFlickable.returnToBounds()
+        }
+
+
+
+
+
+    }
+
     MouseArea {
         anchors.fill : parent
         id: prevButton
@@ -128,6 +175,7 @@ Page {
 
         Flickable {
             id: pageFlickable
+            property real scale: 1.0
             objectName: "pageFlickable"
             anchors.fill : parent
             contentWidth: mangaPage.width
@@ -135,9 +183,13 @@ Page {
 
             Image {
                 id: mangaPage
-                //PinchArea {
-                //    pinch.target : pageFlickable
-                //    }
+                property real initialWidth
+                property real initialHeight
+                width : sourceSize.width * pageFlickable.scale
+                height : sourceSize.height * pageFlickable.scale
+                onSourceChanged : {
+                    pageFlickable.scale = 1.0
+                }
             }
         }
     }
@@ -165,8 +217,8 @@ Page {
             //width : pagingDialog.width
             id : mLayout
             Row {
-                anchors.left : mLayout.left
-                anchors.right : mLayout.right
+                //anchors.left : mLayout.left
+                //anchors.right : mLayout.right
                 Slider {
                     id : pagingSlider
                     width : mLayout.width*0.9
