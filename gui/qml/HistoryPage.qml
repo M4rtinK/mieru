@@ -65,8 +65,15 @@ Page {
     ListView {
         id: historyList
         anchors.fill : parent
-        //width: 400
-        //height: 200
+        Label {
+            visible : (historyList.count == 0) ? true : false
+            text : "<b>The history list is empty</b>"
+            horizontalAlignment : Text.AlignHCenter
+            anchors.verticalCenter : historyList.verticalCenter
+            width : parent.width
+            height : 80
+            }
+
 
 
         model: historyListModel
@@ -75,7 +82,6 @@ Page {
             Rectangle {
                 width: historyList.width
                 height: 80
-                //color: ((index % 2 == 0)?"#222":"#111")
                 color: model.thing.checked?"#00B8F5":(index%2?"#eee":"#ddd")
                 Label {
                     id: title
