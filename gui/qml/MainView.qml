@@ -13,6 +13,7 @@ Page {
     property int pageNumber : 1
     property string mangaPath : ""
     property string lastUrl
+    property bool rememberScale : False
 
     onMangaPathChanged : { reloadPage() }
     onPageNumberChanged : { reloadPage() }
@@ -110,17 +111,21 @@ Page {
     }
 
     PinchArea {
-        anchors.fill : parent
+        //anchors.fill : parent
         //onPinchStarted : console.log("pinch started")
         //pinch.target : mangaPage
         //pinch.minimumScale: 0.5
         //pinch.maximumScale: 2
-        //width: Math.max(pageFlickable.contentWidth, pageFlickable.width)
-        //height: Math.max(pageFlickable.contentHeight, pageFlickable.height)
+        width: Math.max(pageFlickable.contentWidth, pageFlickable.width)
+        height: Math.max(pageFlickable.contentHeight, pageFlickable.height)
         property real initialScale
+        property real initialWidth
+        property real initialHeight
 
         onPinchStarted: {
             initialScale = pageFlickable.scale
+            initialWidth = pageFlickable.contentWidth
+            initialHeight = pageFlickable.contentHeight
             //pageFlickable.interactive = false
             console.log("start " + pinch.scale)
         }
@@ -131,15 +136,12 @@ Page {
             pageFlickable.contentY += pinch.previousCenter.y - pinch.center.y
 
             // resize content
-            //pageFlickable.resizeContent(initialWidth * pinch.scale, initialHeight * pinch.scale, pinch.center)
-            //pageFlickable.contentWidth = initialWidth * pinch.scale
-            //pageFlickable.contentHeight = initialHeight * pinch.scale
-            //mangaPage.width = initialWidth * pinch.scale
-            //mangaPage.height = initialHeight * pinch.scale
+            pageFlickable.resizeContent(initialWidth * pinch.scale, initialHeight * pinch.scale, pinch.center)
+            // remember current scale
             pageFlickable.scale = initialScale * pinch.scale
 
-            console.log("pf " + pageFlickable.contentWidth)
-            console.log("page " + mangaPage.width*pageFlickable.scale)
+            console.log("pf " + pageFlickable.contentWidth + " " + pageFlickable.contentHeight)
+            console.log("page " + mangaPage.width + " " + mangaPage.height)
             console.log("scale " + pageFlickable.scale)
 
         }
@@ -178,17 +180,23 @@ Page {
             property real scale: 1.0
             objectName: "pageFlickable"
             anchors.fill : parent
-            contentWidth: mangaPage.width
-            contentHeight: mangaPage.height
 
             Image {
                 id: mangaPage
-                property real initialWidth
-                property real initialHeight
-                width : sourceSize.width * pageFlickable.scale
-                height : sourceSize.height * pageFlickable.scale
+                //width : sourceSize.width * pageFlickable.scale
+                //height : sourceSize.height * pageFlickable.scale
+                width : pageFlickable.contentWidth
+                height : pageFlickable.contentHeight
+                // update flickable width once an image is loaded
                 onSourceChanged : {
-                    pageFlickable.scale = 1.0
+                    //console.log("SOURCE")
+
+                    // reset or remeber scale
+                    if (!mainView.rememberScale) {
+                        pageFlickable.scale = 1.0
+                    }
+                    pageFlickable.contentWidth = sourceSize.width * pageFlickable.scale
+                    pageFlickable.contentHeight = sourceSize.height * pageFlickable.scale
                 }
             }
         }
