@@ -45,6 +45,11 @@ PageStackWindow {
             console.log("Error loading: " + component.errorString());
     }
 
+    // handle Mieru shutdown
+    function shutdown() {
+        mainView.shutdown()
+    }
+
     FileSelector {
       id: fileSelector;
       //anchors.fill : rootWindow

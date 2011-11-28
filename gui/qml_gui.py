@@ -54,8 +54,13 @@ class QMLGUI(gui.GUI):
     # make the reading state accesible from QML
     readingState = ReadingState(self)
     rc.setContextProperty("readingState", readingState)
+    # make stats accessible from QML
     stats = Stats(self.mieru.stats)
     rc.setContextProperty("stats", stats)
+    # make options accessible from QML
+    options = Options(self.mieru)
+    rc.setContextProperty("options", options)
+
 
     # ** history list handling **
     # get the objects and wrap them
@@ -112,6 +117,13 @@ class QMLGUI(gui.GUI):
 
   def stopMainLoop(self):
     """stop the main loop or its equivalent"""
+    # notify QML GUI first
+    """NOTE: due to calling Python properties
+    from onDestruction handlers causing
+    segfault, we need this"""
+    self.rootObject.shutdown()
+
+    # quit the application
     self.app.exit()
 
   def getPage(self, fileObject, mieru, fitOnStart=False):
@@ -194,6 +206,11 @@ class MangaPageImageProvider(QDeclarativeImageProvider):
       self.gui = gui
 
   def requestImage(self, pathId, size, requestedSize):
+#    print "IMAGE REQUESTED"
+#    print size
+#    print requestedSize
+
+
     (path,id) = pathId.split('|',1)
     id = int(id) # string -> integer
 #    print  "** IR:", path, id
@@ -201,6 +218,16 @@ class MangaPageImageProvider(QDeclarativeImageProvider):
     imageFileObject = page.popImage()
     img=QImage()
     img.loadFromData(imageFileObject.read())
+#    if size:
+#      print "size"
+#      size.setWidth(img.width())
+#      size.setHeight(img.height())
+#    if requestedSize:
+#      print "requestedSize"
+#      return img.scaled(requestedSize)
+#    else:
+#      return img
+#    print img.size()
     return img
 
 class IconImageProvider(QDeclarativeImageProvider):
@@ -365,22 +392,38 @@ class Stats(QtCore.QObject):
     enabled = QtCore.Property(bool, _get_enabled, _set_enabled,
             notify=on_enabled)
 
-#        width = 100
-#        height = 50
-#
-#        if size:
-#            size.setWidth(width)
-#            size.setHeight(height)
-#
-#        if requestedSize.width() > 0:
-#            width = requestedSize.width()
-#        if requestedSize.height() > 0:
-#            height = requestedSize.height()
-#
-#        pixmap = QPixmap(width, height)
-#        pixmap.fill(QColor(id).rgba())
-#
-#        return pixmap
+class Options(QtCore.QObject):
+    """make options available to QML and integrable as a property"""
+    def __init__(self, mieru):
+        QtCore.QObject.__init__(self)
+        self.mieru = mieru
+
+    """ like this, the function can accept
+    and return different types to and from QML
+    (basically anything that matches some of the decorators)
+    as per PySide developers, there should be no perfromance
+    penalty for doing this and the order of the decorators
+    doesn't mater"""
+    @QtCore.Slot(str, bool, result=bool)
+    @QtCore.Slot(str, int, result=int)
+    @QtCore.Slot(str, str, result=str)
+    @QtCore.Slot(str, float, result=float)
+    def get(self, key, default):
+      """get a value from Mierus persistant options dictionary"""
+      print "GET"
+      print key, default, self.mieru.get(key, default)
+      return self.mieru.get(key, default)
+
+    @QtCore.Slot(str, bool)
+    @QtCore.Slot(str, int)
+    @QtCore.Slot(str, str)
+    @QtCore.Slot(str, float)
+    def set(self, key, value):
+      """set a keys value in Mierus persistant options dictionary"""
+      print "SET"
+      print key, value
+      return self.mieru.set(key, value)
+
 
 # ** history list wrappers **
 

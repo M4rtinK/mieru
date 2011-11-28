@@ -13,10 +13,15 @@ Page {
     property int pageNumber : 1
     property string mangaPath : ""
     property string lastUrl
-    property bool rememberScale : False
+    property bool rememberScale : options.get("QMLRememberScale", false)
 
     onMangaPathChanged : { reloadPage() }
     onPageNumberChanged : { reloadPage() }
+
+    // workaround for calling python properties causing segfaults
+    function shutdown() {
+        //console.log("main view shutting down")
+    }
 
     function reloadPage() {
         //console.log("** reloading page **")
@@ -34,7 +39,6 @@ Page {
           readingState.setPageID(pageIndex, mangaPath);
         }
      }
-
 
     function showPage(path, pageId) {
         mainView.mangaPath = path
@@ -150,6 +154,9 @@ Page {
             //pageFlickable.interactive = true
             // Move its content within bounds.
             pageFlickable.returnToBounds()
+            if (mainView.rememberScale) {
+                options.set("QMLMangaPageScale", pageFlickable.scale)
+            }
         }
     }
 
@@ -172,7 +179,7 @@ Page {
 
         Flickable {
             id: pageFlickable
-            property real scale: 1.0
+            property real scale: mainView.rememberScale ? options.get("QMLMangaPageScale", 1.0) : 1.0
             objectName: "pageFlickable"
             anchors.fill : parent
             contentWidth : mangaPage.width
@@ -188,9 +195,9 @@ Page {
                 //height : pageFlickable.contentHeight
                 // update flickable width once an image is loaded
                 onSourceChanged : {
-                    console.log("SOURCE")
-                    console.log(sourceSize.width + " " + sourceSize.height)
-                    console.log(width + " " + height)
+                    //console.log("SOURCE")
+                    //console.log(sourceSize.width + " " + sourceSize.height)
+                    //console.log(width + " " + height)
 
 
                     // reset or remeber scale
