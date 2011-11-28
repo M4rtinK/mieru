@@ -180,23 +180,27 @@ Page {
             property real scale: 1.0
             objectName: "pageFlickable"
             anchors.fill : parent
+            contentWidth : mangaPage.width
+            contentHeight : mangaPage.height
 
             Image {
                 id: mangaPage
-                //width : sourceSize.width * pageFlickable.scale
-                //height : sourceSize.height * pageFlickable.scale
-                width : pageFlickable.contentWidth
-                height : pageFlickable.contentHeight
+                width : sourceSize.width * pageFlickable.scale
+                height : sourceSize.height * pageFlickable.scale
+                //width : pageFlickable.contentWidth
+                //height : pageFlickable.contentHeight
                 // update flickable width once an image is loaded
                 onSourceChanged : {
-                    //console.log("SOURCE")
+                    console.log("SOURCE")
+                    console.log(sourceSize.width + " " + sourceSize.height)
+
 
                     // reset or remeber scale
                     if (!mainView.rememberScale) {
                         pageFlickable.scale = 1.0
                     }
-                    pageFlickable.contentWidth = sourceSize.width * pageFlickable.scale
-                    pageFlickable.contentHeight = sourceSize.height * pageFlickable.scale
+                    //pageFlickable.contentWidth = sourceSize.width * pageFlickable.scale
+                    //pageFlickable.contentHeight = sourceSize.height * pageFlickable.scale
                 }
             }
         }
