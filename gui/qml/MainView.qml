@@ -151,11 +151,6 @@ Page {
             // Move its content within bounds.
             pageFlickable.returnToBounds()
         }
-
-
-
-
-
     }
 
     MouseArea {
@@ -187,12 +182,15 @@ Page {
                 id: mangaPage
                 width : sourceSize.width * pageFlickable.scale
                 height : sourceSize.height * pageFlickable.scale
+                //smooth : !pageFlickable.moving
+                smooth : true
                 //width : pageFlickable.contentWidth
                 //height : pageFlickable.contentHeight
                 // update flickable width once an image is loaded
                 onSourceChanged : {
                     console.log("SOURCE")
                     console.log(sourceSize.width + " " + sourceSize.height)
+                    console.log(width + " " + height)
 
 
                     // reset or remeber scale
