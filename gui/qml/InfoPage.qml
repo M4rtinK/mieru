@@ -45,7 +45,7 @@ Page {
             Flickable {
                 id : infoFlickable
                 anchors.fill : parent
-                contentWidth: mangaPage.width
+                contentWidth: tab1.width
                 contentHeight: infoHeadline.height + infoFirstPage.height + infoCollumn.height + 30
 
                 flickableDirection: Flickable.VerticalFlick
@@ -82,12 +82,38 @@ Page {
                     //anchors.horizontalCenter : parent.horizontalCenter
                     anchors.top : infoFirstPage.bottom
                     anchors.topMargin : 20
-                    spacing : 10
+                    spacing : 20
+                    Label {
+                        text: "<b>Path</b>"
+                    }
                     Label {
                         text: "" + mainView.mangaPath
                         // explicit width is needed for wrapping to work
                         width : tab1.width
                         wrapMode : Text.WrapAnywhere
+                    }
+                    Label {
+                        text: "<h3>Online search</h3>"
+                    }
+                    Button {
+                        text : "Google"
+                        onClicked : {
+                            Qt.openUrlExternally("http://www.google.com/search?as_q=" + readingState.getPrettyName())
+                        }
+                    }
+                    Button {
+                        //TODO: other language mutations
+                        text : "Wikipedia"
+                        onClicked : {
+                            Qt.openUrlExternally("http://en.wikipedia.org/w/index.php?search=" + readingState.getPrettyName() + "&go=Go")
+                        }
+
+                    }
+                    Button {
+                        text : "Manga updates"
+                        onClicked : {
+                            Qt.openUrlExternally("http://www.mangaupdates.com/search.html?search=" + readingState.getPrettyName())
+                        }
                     }
                 }
             }
