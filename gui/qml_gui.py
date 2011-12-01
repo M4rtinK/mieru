@@ -89,6 +89,10 @@ class QMLGUI(gui.GUI):
 #    self.prevButton.clicked.connect(self._prevCB)
     self.toggleFullscreen()
 
+    # check if first start dialog has to be shown
+    if self.mieru.get("QMLShowFirstStartDialog", True):
+      self.rootObject.openFirstStartDialog()
+
 #  def resize(self, w, h):
 #    self.window.resize(w,h)
 #

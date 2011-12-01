@@ -50,16 +50,33 @@ PageStackWindow {
         mainView.shutdown()
     }
 
+    function openFirstStartDialog() {
+        firstStartDialog.open()
+    }
+
     FileSelector {
       id: fileSelector;
       //anchors.fill : rootWindow
       onAccepted: readingState.openManga(selectedFile);
-      }
+    }
 
     InfoBanner {
         id: notification
         timerShowTime : 5000
         height : rootWindow.height/5.0
-        }
-
     }
+
+    QueryDialog {
+        id : firstStartDialog
+        icon : "image://icons/mieru.svg"
+        titleText : "How to turn pages"
+        message : "Tapp the <b>right half</b> of the screen to go to the <b>next page</b>.<br><br>"
+              +" Tapp the <b>left half</b> to go to the <b>previous page</b>.<br><br>"
+              +"That's it. :)"
+        acceptButtonText : "Don't show again"
+        rejectButtonText : "OK"
+        onAccepted: {
+            options.set("QMLShowFirstStartDialog", false)
+        }
+    }
+}
