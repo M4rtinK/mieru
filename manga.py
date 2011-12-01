@@ -19,7 +19,14 @@ def name2PrettyName(name, path=None):
   # TODO: if path is provided check it the target is file or folder
   # and use this information accordingly
   name, extension = os.path.splitext(name)
+  # remove text in square braces
+  p = re.compile('(\s)*\[(\w)*\]', re.DOTALL)
+  name = p.sub('', name)
+  # replace _ with whitespace
   name = re.sub('_', ' ', name)
+  # assure there is a space before numbers
+  name = re.sub(r"([a-zA-Z])([0-9])", r"\1 \2", name)
+
   return name
 
 def path2prettyName(path):
