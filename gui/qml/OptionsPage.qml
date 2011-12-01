@@ -18,8 +18,6 @@ Page {
         Column {
             id : optionsColumn
             spacing : 10
-            Label { text : "options page"
-            }
             LineText {
                 text : "Page scaling"
                 width : optionsPage.width
