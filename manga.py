@@ -48,6 +48,9 @@ class Manga:
     self.previewBox = None
     self.previewBoxStartingPoint = (0,0)
     self.loadNotify = loadNotify
+    self.scale = 1.0
+    self.shiftX = 0.0
+    self.shiftY = 0.0
 
     """in case we get a manga instance just to grag some pages,
     we don't want it to connect the page shown notify callback"""
@@ -83,7 +86,16 @@ class Manga:
 
   def getPath(self):
     return self.path
+
+  def getScale(self):
+    return self.scale
+
+  def getShiftX(self):
+    return self.shiftX
   
+  def getShiftY(self):
+    return self.shiftY
+
   def getState(self):
     """save current state to a dictionary"""
 
@@ -91,6 +103,12 @@ class Manga:
     state['path'] = self.path
     state['pageNumber'] = self.activePageId
     state['pageCount'] = len(self.pages) # for displaying in the history list
+    scale = self.mieru.gui.getScale()
+    if scale != None:
+      state['scale'] = scale
+    upperLeftShift = self.mieru.gui.getUpperLeftShift()
+    if upperLeftShift != None:
+      state['upperLeftShift'] = upperLeftShift
     return state
 
   def setState(self, state):
@@ -98,6 +116,10 @@ class Manga:
     pageNumber = state.get('pageNumber',0)
     if pageNumber == None:
       pageNumber = 0
+    self.scale = state.get('scale',1.0)
+
+    (self.shiftX, self.shiftY) = state.get('upperLeftShift',(0.0,0.0))
+
     path = state.get('path',None)
     if path:
       self.name = self._nameFromPath(path)
