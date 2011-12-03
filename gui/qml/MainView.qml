@@ -99,17 +99,17 @@ Page {
             }
 
             MenuItem {
-                text : "Options"
-                onClicked : {
-                    rootWindow.openFile("OptionsPage.qml")
-                    }
-            }
-
-            MenuItem {
                 text : "Info"
                 onClicked : {
                     rootWindow.openFile("InfoPage.qml")
                 }
+            }
+
+            MenuItem {
+                text : "Options"
+                onClicked : {
+                    rootWindow.openFile("OptionsPage.qml")
+                    }
             }
         }
     }
@@ -182,6 +182,9 @@ Page {
             property real scale: mainView.rememberScale ? options.get("QMLMangaPageScale", 1.0) : 1.0
             objectName: "pageFlickable"
             anchors.fill : parent
+            // center the page if smaller than viewport
+            anchors.leftMargin : (contentWidth < mainView.width) ? (mainView.width-contentWidth)/2.0 : 0
+            anchors.topMargin : (contentHeight < mainView.height) ? (mainView.height-contentHeight)/2.0 : 0
             contentWidth : mangaPage.width
             contentHeight : mangaPage.height
 
