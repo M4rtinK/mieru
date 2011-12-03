@@ -113,6 +113,12 @@ class QMLGUI(gui.GUI):
 
   def startMainLoop(self):
     """start the main loop or its equivalent"""
+
+    # restore page centering
+    mv = self.rootObject.findChild(QObject, "mainView")
+    mv.restoreContentShift()
+
+    # start main loop
     self.app.exec_()
 
   def _qtWindowClosed(self, event):
@@ -157,6 +163,16 @@ class QMLGUI(gui.GUI):
     self.rootObject.setMaxPageNumber(maxPageNumber)
 
 
+  def getScale(self):
+    """get scale from the page flickable"""
+    mv = self.rootObject.findChild(QObject, "mainView")
+    return mv.getScale()
+
+  def getUpperLeftShift(self):
+    #return (pf.contX(), pf.contY())
+    mv = self.rootObject.findChild(QObject, "mainView")
+    return (mv.getXShift(), mv.getYShift())
+    
   def _nextCB(self):
     print "turning page forward"
     self.mieru.activeManga.next()
@@ -350,6 +366,35 @@ class ReadingState(QObject):
       is actually shown, no need to update it dynamically every time a manga is added
       to history"""
       self.gui.mieru.clearHistory()
+
+    @QtCore.Slot(result=float)
+    def getActiveMangaScale(self):
+      """return the saved scale of the currently active manga"""
+      activeManga = self.mieru.getActiveManga()
+      if activeManga:
+        return activeManga.getScale()
+      else:
+        return 1.0
+
+    @QtCore.Slot(result=float)
+    def getActiveMangaShiftX(self):
+      """return the saved X shift of the currently active manga"""
+      activeManga = self.mieru.getActiveManga()
+      print self.mieru.getActiveManga()
+      if activeManga:
+        return activeManga.getShiftX()
+      else:
+        return 0.0
+
+    @QtCore.Slot(result=float)
+    def getActiveMangaShiftY(self):
+      """return the saved Y shift of the currently active manga"""
+      activeManga = self.mieru.getActiveManga()
+      if activeManga:
+        return activeManga.getShiftY()
+      else:
+        return 0.0
+
 
 class Stats(QtCore.QObject):
     """make stats available to QML and integrable as a property"""

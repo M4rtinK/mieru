@@ -81,6 +81,13 @@ class GUI:
     replacing a previous one"""
     pass
 
+  def getScale(self):
+    """get current scale"""
+    return None
+
+  def getUpperLeftShift(self):
+    return None
+
   def _destroyed(self):
     self.mieru.destroy()
 

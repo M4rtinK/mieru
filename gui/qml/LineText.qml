@@ -5,22 +5,33 @@ import com.nokia.meego 1.0
 Item {
     id: lineTextMain
 
-    height: lineText.height
+    height: label.height
 
-    property alias text : lineText.text
+    property alias text: label.text
 
     Rectangle {
-        height : 2
+        id: line
         color : "black"
-        anchors.left : parent.left
-        anchors.right : lineText.left
-        anchors.verticalCenter : lineText.verticalCenter
+        height : 2
+
+        anchors {
+            left: parent.left
+            right : label.left
+            verticalCenter: parent.verticalCenter
+        }
     }
 
     Label {
-        id : lineText
-        anchors.left : parent.left
+        id: label
+
+        anchors {
+            top: parent.top
+            //left: parent.left
+            right: parent.right
+            leftMargin: 16
+        }
     }
+
 
     
 }

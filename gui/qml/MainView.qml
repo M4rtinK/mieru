@@ -6,6 +6,7 @@ import com.nokia.extras 1.0
 
 Page {
     id : mainView
+    objectName : "mainView"
     anchors.fill : parent
     tools : mainViewToolBar
 
@@ -31,9 +32,9 @@ Page {
         if (url != lastUrl) {
           //console.log(mangaPath + " " + pageNumber)
           mangaPage.source = url
-          // reset the page position
-          pageFlickable.contentX = 0;
-          pageFlickable.contentY = 0;
+              // reset the page position
+              pageFlickable.contentX = 0;
+              pageFlickable.contentY = 0;
           //update page number in the current manga instance
           //NOTE: this is especialy important due to the slider
           readingState.setPageID(pageIndex, mangaPath);
@@ -44,6 +45,18 @@ Page {
         mainView.mangaPath = path
         var pageNr = pageId+1
         mainView.pageNumber = pageNr
+    }
+
+    function restoreContentShift(){
+        /* check if restored scale is consistant
+           between the independently saved value and the
+           value rembered in the manga state
+        */
+        var mangaStateScale = readingState.getActiveMangaScale()
+        if (mangaStateScale==pageFlickable.scale) {
+            pageFlickable.contentX = readingState.getActiveMangaShiftX()
+            pageFlickable.contentY = readingState.getActiveMangaShiftY()
+        }
     }
 
     // ** trigger notifications
@@ -59,6 +72,18 @@ Page {
         it should be only visible with no toolbar */
         fullscreenButton.visible = !fullscreenButton.visible
         rootWindow.showToolBar = !rootWindow.showToolBar;
+    }
+
+    function getScale() {
+        return pageFlickable.scale
+    }
+
+    function getXShift() {
+        return pageFlickable.contentX
+    }
+
+    function getYShift() {
+        return pageFlickable.contentY
     }
 
     ToolBarLayout {
