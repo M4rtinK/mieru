@@ -19,7 +19,6 @@ PageStackWindow {
         mainView.showPage(path, pageId)
         }
 
-
     function setPageNumber(pageNumber) {
         mainView.pageNumber = pageNumber;
         }
@@ -50,6 +49,7 @@ PageStackWindow {
         mainView.shutdown()
     }
 
+    // open dialog with information about how to turn pages
     function openFirstStartDialog() {
         firstStartDialog.open()
     }
