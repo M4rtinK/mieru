@@ -17,18 +17,15 @@ Page {
         contentHeight: optionsColumn.height
         Column {
             id : optionsColumn
-            spacing : 10
+            spacing : 30
+
             LineText {
+                width : optionsPage.width
                 text : "Page scaling"
-                width : optionsPage.width
             }
-            Rectangle {
-                width : optionsPage.width
-                height : 2
-                color : "black"
-            }
+
             SwitchWithText {
-                text : "Remeber scale"
+                text : "<b>Remeber scale</b>"
                 width : optionsPage.width
                 checked : mainView.rememberScale
                 onCheckedChanged : {
