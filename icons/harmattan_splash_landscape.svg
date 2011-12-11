@@ -172,7 +172,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8"
-     inkscape:cx="140.70463"
+     inkscape:cx="67.847486"
      inkscape:cy="67.616916"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -222,7 +222,7 @@
        ry="0"
        transform="matrix(0,1,-1,0,0,0)" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#8080f8;stroke-width:0.06490114;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect5979"
        width="137.45636"
        height="244.74455"
@@ -232,8 +232,8 @@
        ry="0"
        transform="matrix(0,1,-1,0,0,0)"
        inkscape:export-filename="D:\obrazky\!Vlastni.tvorba\mieru\harmattan_splash_landscape.png"
-       inkscape:export-xdpi="313"
-       inkscape:export-ydpi="313" />
+       inkscape:export-xdpi="314.04001"
+       inkscape:export-ydpi="314.04001" />
     <g
        id="g5981"
        transform="translate(7.201565,8.4451585)">

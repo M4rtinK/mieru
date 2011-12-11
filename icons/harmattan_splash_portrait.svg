@@ -137,28 +137,6 @@
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient5076"
-       id="radialGradient6725"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0967739,0,0,1.6248419,697.26457,-79.116414)"
-       cx="70.089287"
-       cy="531.55872"
-       fx="70.089287"
-       fy="531.55872"
-       r="20.955191" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient3258"
-       id="radialGradient6727"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1,0,0,0.6258348,0,220.83219)"
-       cx="96.428596"
-       cy="590.19977"
-       fx="96.428596"
-       fy="590.19977"
-       r="19.515108" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient5076"
        id="radialGradient6773"
        gradientUnits="userSpaceOnUse"
        gradientTransform="matrix(1.0967739,0,0,1.6248419,697.26457,-79.116414)"
@@ -228,8 +206,8 @@
        id="rect5979-7"
        width="244.8584"
        height="438.21747"
-       x="-24.735779"
-       y="-5.85815"
+       x="-27.713764"
+       y="-62.762939"
        rx="0"
        ry="0"
        transform="matrix(0,1,-1,0,0,0)" />
@@ -247,8 +225,8 @@
        id="g6729"
        transform="matrix(0,-1,1,0,-267.21855,-75.841635)"
        inkscape:export-filename="D:\obrazky\!Vlastni.tvorba\mieru\harmattan_splash_portrait.png"
-       inkscape:export-xdpi="313"
-       inkscape:export-ydpi="313">
+       inkscape:export-xdpi="314.28156"
+       inkscape:export-ydpi="314.28156">
       <rect
          inkscape:export-ydpi="313.99603"
          inkscape:export-xdpi="313.99603"
@@ -260,7 +238,7 @@
          height="244.74455"
          width="137.45636"
          id="rect5979"
-         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#8080f8;stroke-width:0.06490114;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
       <g
          transform="translate(5.6127697,9.0405571)"
          id="g5981">
