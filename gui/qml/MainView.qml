@@ -10,11 +10,12 @@ Page {
     anchors.fill : parent
     tools : mainViewToolBar
 
-    property int maxPageNumber : 2
-    property int pageNumber : 1
+    property int maxPageNumber : 0
+    property int pageNumber : 0
     property string mangaPath : ""
     property string lastUrl
     property bool rememberScale : options.get("QMLRememberScale", false)
+    property bool pageLoaded : false
 
     property alias fullscreenButtonOpacity : fullscreenButton.opacity
 
@@ -39,7 +40,8 @@ Page {
               pageFlickable.contentY = 0;
           //update page number in the current manga instance
           //NOTE: this is especialy important due to the slider
-          readingState.setPageID(pageIndex, mangaPath);
+          readingState.setPageID(pageIndex, mangaPath)
+          pageLoaded = true
         }
      }
 
@@ -248,7 +250,7 @@ Page {
         iconId: "toolbar-up"
         anchors.right : mainView.right
         anchors.bottom : mainView.bottom
-        visible : !options.get("QMLToolbarState", true)
+        visible : !rootWindow.showToolBar
         opacity : options.get("QMLFullscreenButtonOpacity", 0.5)
         width : Math.min(parent.width,parent.height)/8.0
         height : Math.min(parent.width,parent.height)/8.0
@@ -294,5 +296,11 @@ Page {
                 }
             }
         }
+    }
+    Label {
+      anchors.centerIn : parent
+      text : "<h1>No pages loaded</h1>"
+      visible : !mainView.pageLoaded
+
     }
 }
