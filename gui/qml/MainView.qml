@@ -16,6 +16,8 @@ Page {
     property string lastUrl
     property bool rememberScale : options.get("QMLRememberScale", false)
 
+    property alias fullscreenButtonOpacity : fullscreenButton.opacity
+
     onMangaPathChanged : { reloadPage() }
     onPageNumberChanged : { reloadPage() }
 
@@ -72,6 +74,7 @@ Page {
         it should be only visible with no toolbar */
         fullscreenButton.visible = !fullscreenButton.visible
         rootWindow.showToolBar = !rootWindow.showToolBar;
+        options.set("QMLToolbarState", rootWindow.showToolBar)
     }
 
     function getScale() {
@@ -245,8 +248,8 @@ Page {
         iconId: "toolbar-up"
         anchors.right : mainView.right
         anchors.bottom : mainView.bottom
-        visible : false
-        opacity : 0.1
+        visible : !options.get("QMLToolbarState", true)
+        opacity : options.get("QMLFullscreenButtonOpacity", 0.5)
         width : Math.min(parent.width,parent.height)/8.0
         height : Math.min(parent.width,parent.height)/8.0
         MouseArea {

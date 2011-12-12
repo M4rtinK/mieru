@@ -21,6 +21,57 @@ Page {
 
             LineText {
                 width : optionsPage.width
+                text : "Page view"
+            }
+
+            SwitchWithText {
+                text : "<b>Show statusbar</b>"
+                width : optionsPage.width
+                checked : rootWindow.showStatusBar
+                onCheckedChanged : {
+                    rootWindow.showStatusBar = checked
+                    options.set("QMLShowStatusBar", checked)
+                }
+            }
+            SwitchWithText {
+                text : "<b>Remeber toolbar state</b>"
+                width : optionsPage.width
+                checked : options.get("QMLRememberToolbarState", false)
+                onCheckedChanged : {
+                    options.set("QMLRememberToolbarState", checked)
+                }
+            }
+
+            Label {
+                text : "Fullscreen button opacity"
+            }
+            Slider {
+                value : mainView.fullscreenButtonOpacity
+                minimumValue: 0.0
+                maximumValue: 1.0
+                stepSize: 0.1
+                valueIndicatorText : Math.round(value*100) + " %"
+                valueIndicatorVisible: true
+                onPressedChanged : {
+                    var outputValue
+                    //completely transparent items don't receive events
+                    if (value == 0) {                        
+                        outputValue = 0.01
+                    } else {
+                        /* round away small fractions
+                        that were created by the asusred lowest value
+                        */
+                        outputValue = Math.round(value*100)/100
+                    }
+                    //update once dragging stopps
+                    options.set("QMLFullscreenButtonOpacity", outputValue)
+                    mainView.fullscreenButtonOpacity = outputValue
+                }
+
+            }
+
+            LineText {
+                width : optionsPage.width
                 text : "Page scaling"
             }
 

@@ -6,7 +6,8 @@ import com.nokia.extras 1.0
 
 //Rectangle {
 PageStackWindow {
-    showStatusBar : false
+    showStatusBar : options.get("QMLShowStatusBar", false)
+    showToolBar : options.get("QMLRememberToolbarState", false) ? options.get("QMLToolbarState", true) : true
     id : rootWindow
     anchors.fill : parent
     initialPage : MainView {
