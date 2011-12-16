@@ -4,6 +4,7 @@ import Qt.labs.folderlistmodel 1.0
 
 Dialog {
   id: fileSelector
+  width : parent.width - 30
   property Style platformStyle: SelectionDialogStyle {}
 
   property variant filterList: [ "*" ]
