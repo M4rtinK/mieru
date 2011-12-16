@@ -11,6 +11,7 @@ Page {
     anchors.bottomMargin : 15
     anchors.leftMargin : 15
     anchors.rightMargin : 15
+
     Flickable {
         anchors.fill : parent
         contentWidth: optionsPage.width
@@ -22,6 +23,47 @@ Page {
             LineText {
                 width : optionsPage.width
                 text : "Page view"
+            }
+
+            Label {
+                text : "<b>Rotation</b>"
+            }
+            ButtonRow {
+              // synchronize with current orientation lock
+              Component.onCompleted : {
+                  console.log("button row")
+                  if (mainView.orientationLock == PageOrientation.Automatic) {
+                      checkedButton = bAuto
+                  } else if (mainView.orientationLock == PageOrientation.LockPortrait) {
+                      checkedButton = bPortrait
+                  } else {
+                      checkedButton = bLandscape
+                  }
+              }
+              Button {
+                id : bAuto
+                text : "auto"
+                onClicked : {
+                    options.set("QMLmainViewRotation", "auto")
+                    mainView.orientationLock = PageOrientation.Automatic
+                }
+              }
+              Button {
+                id : bPortrait
+                text : "portrait"
+                onClicked : {
+                    options.set("QMLmainViewRotation", "portrait")
+                    mainView.orientationLock = PageOrientation.LockPortrait
+                }
+              }
+              Button {
+                id : bLandscape
+                text : "landscape"
+                onClicked : {
+                    options.set("QMLmainViewRotation", "landscape")
+                    mainView.orientationLock = PageOrientation.LockLandscape
+                }
+              }
             }
 
             SwitchWithText {
@@ -43,7 +85,7 @@ Page {
             }
 
             Label {
-                text : "Fullscreen button opacity"
+                text : "<b>Fullscreen button opacity</b>"
             }
             Slider {
                 value : mainView.fullscreenButtonOpacity

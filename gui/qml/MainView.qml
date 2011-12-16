@@ -10,8 +10,8 @@ Page {
     anchors.fill : parent
     tools : mainViewToolBar
 
-    property int maxPageNumber : 0
-    property int pageNumber : 0
+    property int maxPageNumber : 1
+    property int pageNumber : 1
     property string mangaPath : ""
     property string lastUrl
     property bool rememberScale : options.get("QMLRememberScale", false)
@@ -91,14 +91,32 @@ Page {
         return pageFlickable.contentY
     }
 
+    // restore possible saved rotation lock value
+    function restoreRotation() {
+        var savedRotation = options.get("QMLmainViewRotation", "auto")
+        if ( savedRotation == "auto" ) {
+            console.log(1)
+            mainView.orientationLock = PageOrientation.Automatic
+        } else if ( savedRotation == "portrait" ) {
+            console.log(2)
+            mainView.orientationLock = PageOrientation.LockPortrait
+        } else {
+            console.log(3)
+            mainView.orientationLock = PageOrientation.LockLandscape
+        }
+    }
+
+    Component.onCompleted : {
+      restoreRotation()
+    }
+
     ToolBarLayout {
         id : mainViewToolBar
         visible: false
         ToolIcon { iconId: "toolbar-view-menu"; onClicked: mainViewMenu.open() }
         //ToolIcon { iconId: "toolbar-previous" }
         ToolButton { id : pageNumbers
-                     //text : 0/1
-                     text : mainView.pageNumber + "/" + mainView.maxPageNumber
+                     text : mainView.pageLoaded ? mainView.pageNumber + "/" + mainView.maxPageNumber : "-/-"
                      height : parent.height
                      flat : true
                      onClicked : { pagingDialog.open() }
