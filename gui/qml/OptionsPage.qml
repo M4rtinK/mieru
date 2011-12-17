@@ -83,6 +83,15 @@ Page {
                     options.set("QMLRememberToolbarState", checked)
                 }
             }
+            SwitchWithText {
+                text : "<b>Show paging feedback</b>"
+                width : optionsPage.width
+                checked : mainView.pagingFeedback
+                onCheckedChanged : {
+                    mainView.pagingFeedback = checked
+                    options.set("QMLPagingFeedback", checked)
+                }
+            }
 
             Label {
                 text : "<b>Fullscreen button opacity</b>"

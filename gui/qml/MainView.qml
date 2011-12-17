@@ -16,6 +16,7 @@ Page {
     property string lastUrl
     property bool rememberScale : options.get("QMLRememberScale", false)
     property bool pageLoaded : false
+    property bool pagingFeedback : options.get("QMLPagingFeedback", true)
 
     property alias fullscreenButtonOpacity : fullscreenButton.opacity
 
@@ -103,6 +104,20 @@ Page {
         } else {
             console.log(3)
             mainView.orientationLock = PageOrientation.LockLandscape
+        }
+    }
+
+    function showPrevFeedback() {
+    // only show with feedback enabled and no feedback in progress
+        if (mainView.pagingFeedback && !prevFbTimer.running) {
+            prevFbTimer.start()
+        }
+    }
+
+    function showNextFeedback() {
+    // only show with feedback enabled and no feedback in progress
+        if (mainView.pagingFeedback && !nextFbTimer.running) {
+            nextFbTimer.start()
         }
     }
 
@@ -215,11 +230,13 @@ Page {
         drag.filterChildren: true
         onClicked: {
             if (mouseX < width/2.0){
+                mainView.showPrevFeedback()
                 console.log("previous page");
                 readingState.previous();
             }
 
             else{
+                mainView.showNextFeedback()
                 console.log("next page");
                 readingState.next();
             }
@@ -316,9 +333,75 @@ Page {
         }
     }
     Label {
-      anchors.centerIn : parent
-      text : "<h1>No pages loaded</h1>"
-      visible : !mainView.pageLoaded
+        anchors.centerIn : parent
+        text : "<h1>No pages loaded</h1>"
+        visible : !mainView.pageLoaded
+    }
 
+    //paging feedback
+
+    Item {
+        id : previousFeedback
+        visible : false
+        opacity : 0.7
+        anchors.verticalCenter : parent.verticalCenter
+        anchors.left : parent.left
+        anchors.leftMargin : 20
+        Image {
+            id : previousIcon
+            anchors.left : parent.left
+            source : "image://theme/icon-m-toolbar-previous"
+        }
+        /* Text {
+            //text : "<b>PREVIOUS</b>"
+            anchors.left : previousIcon.right
+            anchors.leftMargin : 20
+            anchors.verticalCenter : previousIcon.verticalCenter
+            style : Text.Outline
+            styleColor : "white"
+            font.pixelSize : 25
+        } */
+    }
+    Item {
+        id : nextFeedback
+        visible : false
+        opacity : 0.7
+        anchors.verticalCenter : parent.verticalCenter
+        anchors.right : parent.right
+        anchors.rightMargin : 20
+        Image {
+            id : nextIcon
+            anchors.right : parent.right
+            source : "image://theme/icon-m-toolbar-next"
+        }
+        /* Text {
+            //text : "<b>NEXT</b>"
+            anchors.right : nextIcon.left
+            anchors.rightMargin : 20
+            anchors.verticalCenter : nextIcon.verticalCenter
+            style : Text.Outline
+            styleColor : "white"
+            font.pixelSize : 25
+            //color : "white"
+        } */
+    }
+
+    Timer {
+        id : prevFbTimer
+        interval : 500
+        // we need to show and hide the feedback
+        triggeredOnStart : true
+        onTriggered : {
+            previousFeedback.visible = !previousFeedback.visible
+        }
+    }
+    Timer {
+        id : nextFbTimer
+        interval : 500
+        // we need to show and hide the feedback
+        triggeredOnStart : true
+        onTriggered : {
+            nextFeedback.visible = !nextFeedback.visible
+        }
     }
 }
