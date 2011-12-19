@@ -37,6 +37,13 @@ For details, refer to source.
 """
 
 __version__ = '2.2'
+"""
+Mieru note:
+* for some reasons Mieru freezes on Harmattan
+if it uses rarfile 2.3 or 2.4
+* 2.2 seems to work OK, provided USE_EXTRACT_HACK==1 or else some
+images don't show up
+"""
 
 import sys, os
 from struct import pack, unpack
