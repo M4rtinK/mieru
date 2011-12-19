@@ -262,9 +262,6 @@ def custom_popen(cmd):
         _in = PIPE
         _err = STDOUT
 
-    print "ADADASD"
-    print cmd
-
     # run command
     return Popen(cmd, stdout = PIPE, stdin = _in, stderr = _err, creationflags = creationflags)
 
@@ -1009,8 +1006,6 @@ class RarFile(object):
 
     # extract using unrar
     def _open_unrar(self, rarfile, inf, psw = None, tmpfile = None):
-        print "OPEN UNRAR"
-        print UNRAR_TOOL
         cmd = [UNRAR_TOOL] + list(OPEN_ARGS)
         if psw is not None:
             cmd.append("-p" + psw)
