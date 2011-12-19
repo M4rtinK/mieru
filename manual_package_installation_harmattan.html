@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+
+  <title>Mieru - manual package installation on Harmattan</title>
+
+  <style type="text/css">
+    body {
+      margin-top: 1.0em;
+      background-color: #fc2537;
+      font-family: Helvetica, Arial, FreeSans, san-serif;
+      color: #ffffff;
+    }
+    #container {
+      margin: 0 auto;
+      width: 700px;
+    }
+    h1 { font-size: 3.8em; color: #03dac8; margin-bottom: 3px; }
+    h1 .small { font-size: 0.4em; }
+    h1 a { text-decoration: none }
+    h2 { font-size: 1.5em; color: #03dac8; }
+    h3 { text-align: center; color: #03dac8; }
+    a { color: #03dac8; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .download { float: right; }
+    pre { background: #000; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+  </style>
+</head>
+
+<body>
+
+<h2>Mieru - manual package installation on Harmattan</h2>
+
+<p><b>NOTE:</b> installation from Ovi store or Apps for MeeGo doesn't need developer mode and is fully automatic
+</p>
+
+<ol>
+<li>
+<p><i>become root by running</i>
+
+<pre>devel-su</pre>
+
+<i>with developer mode enabled</i></p>
+</li>
+
+
+<li>manually install all dependencies needed by Mieru <br>
+<pre>
+apt-get update
+apt-get install libzip1, libarchive1, python-pyside.qtgui, python-pyside.qtdeclarative, python-magic, python
+</pre>
+<li>download the Mieru installation package from the <a href="http://repo.pub.meego.com//home:/MartinK:/mieru/MeeGo_1.2_Harmattan_Maemo.org_MeeGo_1.2_Harmattan_standard/all/">Mieru OBS repository</a></li>
+
+<li>install the package<br>
+<pre>dpkg -i CURRENT_MIERU_PACKAGE_NAME</pre>
+</li>
+</ol>
+
+</body>
+</html>
