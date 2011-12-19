@@ -71,7 +71,14 @@ __all__ = ['is_rarfile', 'RarInfo', 'RarFile']
 DEFAULT_CHARSET = "windows-1252"
 
 # 'unrar', 'rar' or full path to either one
-UNRAR_TOOL = "unrar"
+
+# Mieru static library usage
+if os.path.exists('/usr/bin/unrar') == False:
+  # use static unrar library
+  # TODO: non armel version handling
+  UNRAR_TOOL = '/opt/mieru/lib/unrar'
+else:
+  UNRAR_TOOL = "unrar"
 
 # Command line args to use for opening file for reading.
 OPEN_ARGS = ('p', '-inul')
@@ -254,6 +261,9 @@ def custom_popen(cmd):
     except IOError:
         _in = PIPE
         _err = STDOUT
+
+    print "ADADASD"
+    print cmd
 
     # run command
     return Popen(cmd, stdout = PIPE, stdin = _in, stderr = _err, creationflags = creationflags)
@@ -999,6 +1009,8 @@ class RarFile(object):
 
     # extract using unrar
     def _open_unrar(self, rarfile, inf, psw = None, tmpfile = None):
+        print "OPEN UNRAR"
+        print UNRAR_TOOL
         cmd = [UNRAR_TOOL] + list(OPEN_ARGS)
         if psw is not None:
             cmd.append("-p" + psw)

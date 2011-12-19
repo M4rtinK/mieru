@@ -9,11 +9,6 @@ import time
 import traceback
 import sys
 
-if os.path.exists('/usr/bin/unrar') == False:
-  # use static unrar library
-  # TODO: non armel version handling
-  zipfile.UNRAR_TOOL = '/opt/mieru/lib/unrar'
-
 def getFilePathMime(path):
   return magic.from_file(path, mime=True)
 
@@ -298,9 +293,7 @@ class RarContainer(Container):
 
   def getFile(self, filename):
     if self.rf:
-      print zipfile.UNRAR_TOOL
       try:
-        print self.rf.open(unicode(filename),'r')
         return self.rf.open(unicode(filename),'r')
       except Exception, e:
         print "RarContainer: reading file from archive failed: %s" % e
