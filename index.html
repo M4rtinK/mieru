@@ -48,7 +48,7 @@
       <span class="small">by <a href="http://github.com/M4rtinK">Martin Kolman (M4rtinK)</a></span></h1>
 
     <div class="description">
-      Mieru is a flexible manga and comix reader.
+      Mieru is a flexible manga and comic book reader.
     </div>
 
 
@@ -63,13 +63,14 @@
 <li>resume last open chapter</li>
 <li>history of last open titles</li>
 <li>automatic loading of next/previous chapters/volumes</li>
+<li>prettified chapter names</li>
 <li>multiple page fitting modes</li>
 <li>powerful paging dialog</li>
 <li>easily accessible configuration options</li>
 </ul>
 </p>
 
-<h2>Mieru@Harmattan (N9, N950):</h2>
+<h4>Mieru@Harmattan (N9, N950):</h4>
 <p>
 <ul>  
 <li>uses QML and Qt Components</li>
@@ -80,7 +81,7 @@
 </p>
 
 <p>
-<b>Mieru@Maemo(N900)</b>
+<h4>Mieru@Maemo(N900)</h4>
 <ul>  
 <li>uses Hildon widgets + Clutter page view</li>
 <li>uses native notifications</li>
@@ -119,14 +120,37 @@ NOTE:</br>
 The mobile interfaces are currently the most advanced one - the desktop interface is currently very simple, but many features can still be accessed using key shortcuts.
 </p>
 
-<h2>Dependencies</h2>
+<h3>Running Mieru from the tarball</h3>
+<p>
+For platforms that don't yet have Mieru packages available.
+</p>
+
+<h4>Mieru + QML/Qt Components GUI</h4>
+<h5>Dependencies</h5>
+<p>Python 2.5+, 
+Qt Components 1.0+,
+python-pyside.qtgui, 
+python-pyside.qtdeclarative, 
+python-magic, 
+libmagic, 
+rar and zip</p>
+<h5>Installing</h5>
+<p>
+<ul>
+<li>install all dependencies</li>
+<li>run mieru.py -u "harmattan"</li>
+<li> the -u parameter specifies the UI, "harmattan" is used due to the Harmattan GUI being the QML one
+</ul>
+
+<h4>Mieru + GTK/Clutter GUI</h4>
+<h5>Dependencies</h5>
 <p>Python 2.5+, 
 clutter, 
 PyClutter, 
 PyClutter-GTK, 
 libmagic,
 rar and zip</p>
-<h2>Install</h2>
+<h5>Installing</h5>
 <p>
 <ul>
 <li>install all dependencies</li>
