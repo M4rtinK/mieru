@@ -6,7 +6,13 @@ import rarfile
 import magic
 import re
 import time
+import traceback
+import sys
 
+if os.path.exists('/usr/bin/unrar') == False:
+  # use static unrar library
+  # TODO: non armel version handling
+  zipfile.UNRAR_TOOL = '/opt/mieru/lib/unrar'
 
 def getFilePathMime(path):
   return magic.from_file(path, mime=True)
@@ -264,6 +270,9 @@ class ZipContainer(Container):
   def getFile(self, filename):
     if self.zf:
       try:
+        print "ADASDASDASDASD"
+        print filename
+        print self.zf.namelist()
         return self.zf.open(filename,'r')
       except Exception, e:
         print "ZipContainer: reading file from archive failed: %s" % e
@@ -289,10 +298,13 @@ class RarContainer(Container):
 
   def getFile(self, filename):
     if self.rf:
+      print zipfile.UNRAR_TOOL
       try:
-        return self.rf.open(filename,'r')
+        print self.rf.open(unicode(filename),'r')
+        return self.rf.open(unicode(filename),'r')
       except Exception, e:
         print "RarContainer: reading file from archive failed: %s" % e
+        traceback.print_exc(file=sys.stdout)
         return None
 
 
