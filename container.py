@@ -4,6 +4,8 @@ import zipfile26 as zipfile # use backported zipfile from PYthon 2.6
 import os
 import rarfile
 import magic
+import re
+import time
 
 
 def getFilePathMime(path):
@@ -14,12 +16,21 @@ def getFileMime(file):
   file.close() # properly close the file
   return mime
 
-
 def getBufferMime(path, buffer):
   return magic.from_buffer(buffer, mime=True)
 
 def getFileDescription(path):
   return magic.from_file(path)
+
+def humanSort(l):
+  """ Sort the given list in the way that humans expect.
+  source:
+  http://www.codinghorror.com/blog/2007/12/sorting-for-humans-natural-sort-order.html
+  """
+  convert = lambda text: int(text) if text.isdigit() else text
+  alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+  l.sort( key=alphanum_key )
+  return l
 
 def from_path(path):
   # does the path exist ?
@@ -74,8 +85,6 @@ def testPath(path):
   else:
     print "manga: loading failed, path is neither file nor directory"
     return False
-
-
 
 class Container:
   def __init__(self, path):
@@ -137,12 +146,23 @@ class Container:
       print "no image file with index:", id
       return "does not exist"
 
-
-    
-  def _setFileList(self, filenames, sort=True):
+  def _setFileList(self, filenames, sort=True, useHumanSort=True):
     """NOTE: there can be not only files but also directories in the filelist"""
+    start = time.clock()
     if sort:
-      filenames.sort()
+      if useHumanSort:
+        # human sort
+        filenames = humanSort(filenames)
+      else:
+        # normal sort
+        filenames.sort()
+    duration = (1000 * (time.clock() - start))
+
+#    for i in filenames:
+#      print i
+    
+    print "%d filenames sorted in %1.2f ms, human sort: %r" % (len(filenames), duration, useHumanSort)
+
     self.files = filenames
     # update the image list
     self._setImageList(filenames)
