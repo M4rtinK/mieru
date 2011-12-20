@@ -76,7 +76,7 @@ Page {
                 }
             }
             SwitchWithText {
-                text : "<b>Remeber toolbar state</b>"
+                text : "<b>Remember toolbar state</b>"
                 width : optionsPage.width
                 checked : options.get("QMLRememberToolbarState", false)
                 onCheckedChanged : {
