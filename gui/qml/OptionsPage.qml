@@ -127,7 +127,7 @@ Page {
             }
 
             SwitchWithText {
-                text : "<b>Remeber scale</b>"
+                text : "<b>Remember scale</b>"
                 width : optionsPage.width
                 checked : mainView.rememberScale
                 onCheckedChanged : {
