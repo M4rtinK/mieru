@@ -114,7 +114,7 @@ Page {
                         */
                         outputValue = Math.round(value*100)/100
                     }
-                    //update once dragging stopps
+                    //update once dragging stops
                     options.set("QMLFullscreenButtonOpacity", outputValue)
                     mainView.fullscreenButtonOpacity = outputValue
                 }

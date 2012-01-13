@@ -53,9 +53,9 @@ Page {
     }
 
     function restoreContentShift(){
-        /* check if restored scale is consistant
+        /* check if restored scale is consistent
            between the independently saved value and the
-           value rembered in the manga state
+           value remembered in the manga state
         */
         var mangaStateScale = readingState.getActiveMangaScale()
         if (mangaStateScale==pageFlickable.scale) {
