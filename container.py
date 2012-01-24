@@ -265,9 +265,6 @@ class ZipContainer(Container):
   def getFile(self, filename):
     if self.zf:
       try:
-        print "ADASDASDASDASD"
-        print filename
-        print self.zf.namelist()
         return self.zf.open(filename,'r')
       except Exception, e:
         print "ZipContainer: reading file from archive failed: %s" % e
