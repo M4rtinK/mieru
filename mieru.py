@@ -34,8 +34,7 @@ class Mieru:
     start = startup.Startup()
     args = start.args
 
-
-    # restore persistent options
+    # restore the persistent options dictionary
     self.d = {}
     self.options = options.Options(self)
     # options value watching
@@ -86,10 +85,8 @@ class Mieru:
         print("loading manga from path: %s failed" % args.o)
         print(e)
 
-
-    #self.openManga("/home/user/MyDocs/manga/ubunchu/ubunchu.zip")
     """ restore previously saved state (if available and no manga was 
-    susscessfully loaded from a path provided by startup arguments"""
+    sucessfully loaded from a path provided by startup arguments"""
     if self.activeManga == None:
       self._restoreState()
 
@@ -193,8 +190,13 @@ class Mieru:
     #print state
     mangaInstance = manga.Manga(self,load=False)
     mangaInstance.setState(state)
-    # close and replace any current active manga
-    self.setActiveManga(mangaInstance)
+    if mangaInstance.container == None:
+      print("container creation failed")
+      return False
+    else:
+      # close and replace any current active manga
+      self.setActiveManga(mangaInstance)
+      return True
 
   def setActiveManga(self, mangaInstance):
     """set the given instance as the active manga
@@ -208,7 +210,7 @@ class Mieru:
       self.activeManga.close()
     # replace it with the new one
     self.activeManga = mangaInstance
-    # notifiy the GUI there is a new active manga instance
+    # notify the GUI there is a new active manga instance
     self.gui.newActiveManga(self.activeManga)
 
   def getActiveManga(self):
@@ -223,20 +225,21 @@ class Mieru:
 
   def addToHistory(self,mangaState):
     """add a saved manga state to the history"""
-    openMangasHistory = self.get('openMangasHistory',None)
-    if openMangasHistory == None: # history has not yet taken place
-      openMangasHistory = {}
-
-    if mangaState['path'] != None:
-      path = mangaState['path']
-      print("adding to history: %s, on page %d" % (path, mangaState.get('pageNumber',0)))
-      openMangasHistory[path] = {"state":mangaState,"timestamp":time.time()}
-      """the states are saved under their path to store only unique mangas,
-         when the same manga is opened again, its state is replaced by the new one
-         the timestamp is used for chrnological sorting of the list
-      """
-    # save the history back to the persistant store
-    # TODO: limit the size of the history + clearing of history
+    openMangasHistory = self.get('openMangasHistory',{})
+    try:
+      if mangaState['path'] != None:
+        path = mangaState['path']
+        print("adding to history: %s, on page %d" % (path, mangaState.get('pageNumber',0)))
+        openMangasHistory[path] = {"state":mangaState,"timestamp":time.time()}
+        """the states are saved under their path to store only unique mangas,
+           when the same manga is opened again, its state is replaced by the new one
+           the timestamp is used for chronological sorting of the list
+        """
+      # save the history back to the persistent store
+      # TODO: limit the size of the history + clearing of history
+    except Exception, e:
+      print("saving manga to history failed with exception:\n", e)
+      print("manga state was:", mangaState)
     self.set('openMangasHistory', openMangasHistory)
     self.options.save()
 
@@ -302,6 +305,9 @@ class Mieru:
           print "invalid watcher callback :", callback
 
   def get(self, key, default):
+    """
+    get a value from the persistent dictionary
+    """
     try:
       return self.d.get(key, default)
     except Exception, e:
@@ -309,6 +315,9 @@ class Mieru:
       return default
 
   def set(self, key, value):
+    """
+    set a value in the persistent dictionary
+    """
     self.d[key] = value
     self.options.save()
     if key in self.watches.keys():
@@ -325,7 +334,10 @@ class Mieru:
     if openMangasHistory:
       print "restoring last open manga"
       lastOpenMangaState = openMangasHistory[0]['state']
-      self.openMangaFromState(lastOpenMangaState)
+      if self.openMangaFromState(lastOpenMangaState):
+        print "last open manga restored"
+      else:
+        print "restoring last open manga failed"
     else:
       print "no history found"
 
