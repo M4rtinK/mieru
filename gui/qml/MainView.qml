@@ -17,6 +17,7 @@ Page {
     property bool rememberScale : options.get("QMLRememberScale", false)
     property bool pageLoaded : false
     property bool pagingFeedback : options.get("QMLPagingFeedback", true)
+    property string pageFitMode : options.get("fitMode", "original")
 
     property alias fullscreenButtonOpacity : fullscreenButton.opacity
 
@@ -121,6 +122,22 @@ Page {
         }
     }
 
+    function setPageFitMode(fitMode) {
+    // set page fitting - only update on a mode change
+    console.log(fitMode)
+    console.log(mainView.pageFitMode)
+        if (fitMode != mainView.pageFitMode) {
+            options.set("fitMode", fitMode)
+            mainView.pageFitMode = fitMode
+            pageFittingRow.updateChecked(fitMode)
+        }
+    }
+
+    onPageFitModeChanged : {
+        console.log("page fit mode changed")
+    }
+
+
     Component.onCompleted : {
       restoreRotation()
     }
@@ -218,7 +235,13 @@ Page {
             // Move its content within bounds.
             pageFlickable.returnToBounds()
             if (mainView.rememberScale) {
+                // save the new scale so that it can
+                // be used on the next page
                 options.set("QMLMangaPageScale", pageFlickable.scale)
+                // override page fitting with the new scale
+                if (mainView.pageFitMode != "custom") {
+                    mainView.setPageFitMode("custom")
+                }
             }
         }
     }
@@ -301,6 +324,7 @@ Page {
         MenuLayout {
             //width : pagingDialog.width
             id : mLayout
+
             Row {
                 //anchors.left : mLayout.left
                 //anchors.right : mLayout.right
@@ -319,9 +343,7 @@ Page {
                         //only load the page once the user stopped dragging to save resources
                         mainView.pageNumber = value
                     }
-
             }
-
                 CountBubble {
                     //width : mLayout.width*0.2
                     //anchors.left : pagingSlider.righ
@@ -330,6 +352,59 @@ Page {
                     largeSized : true
                 }
             }
+            ButtonRow {
+                id : pageFittingRow
+                // page fitting
+                Component.onCompleted : {
+                    updateChecked(mainView.pageFitMode)
+                }
+
+                function updateChecked(mode) {
+                    if (mode == "original") {
+                        checkedButton = bFitOriginal
+                    } else if (mode == "width") {
+                        checkedButton = bFitWidth
+                    } else if (mode == "height") {
+                        checkedButton =  bFitHeight
+                    } else if (mode == "screen") {
+                        checkedButton = bFitScreen
+                    } else { // custom mode
+                        checkedButton = null
+                    }
+                }
+                checkedButton : updateChecked(mainView.pageFitMode)
+
+                Button {
+                    id : bFitOriginal
+                    text : "original"
+                    onClicked : {
+                        mainView.setPageFitMode("original")
+                    }
+                }
+                Button {
+                    id : bFitWidth
+                    text : "width"
+                    onClicked : {
+                        mainView.setPageFitMode("width")
+                    }
+                }
+                Button {
+                    id : bFitHeight
+                    text : "height"
+                    onClicked : {
+                        mainView.setPageFitMode("height")
+                    }
+                }
+                Button {
+                    id : bFitScreen
+                    text : "screen"
+                    onClicked : {
+                        mainView.setPageFitMode("screen")
+                    }
+                }
+
+            }
+
         }
     }
     Label {
