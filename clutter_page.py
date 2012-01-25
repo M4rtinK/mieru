@@ -1,4 +1,4 @@
-"""clutteR_page.py - a manga/comix book clutter page"""
+"""clutteR_page.py - a manga/comic book clutter page"""
 
 import clutter
 
@@ -94,7 +94,7 @@ class ClutterPage(page.Page, clutter.Texture):
     # check if event was a click or drag
     if buttons.wasClick(dx, dy):
       if dt < 500:
-        self.clickCount+=1 # dlouble click +
+        self.clickCount+=1 # double click +
       else:
         self.clickCount=1 # single click
     else:
@@ -104,8 +104,8 @@ class ClutterPage(page.Page, clutter.Texture):
       self._toggleZoom() # toggle zoom in/out
     else: # continue drag as kinetic scrolling (if enabled) and movement is enabled
       if self.mieru.get('kineticScrolling', True) and self.movementEnabled != (0,0):
-        """if the user clicked - dont start any kinetic scrolling
-           if the user crossed the drag treshold, start kinetic scrolling"""
+        """if the user clicked - don't start any kinetic scrolling
+           if the user crossed the drag threshold, start kinetic scrolling"""
         if not self.clickCount: # last event was a drag  
           self._resetDecel()
           (dt, dx, dy) = self.lastDTDXDY
@@ -226,7 +226,7 @@ class ClutterPage(page.Page, clutter.Texture):
 
 
   def setFitMode(self, mode, resetPosition=True):
-    # recentre first (if enabled)
+    # recenter first (if enabled)
 #    self.resetPosition()
 
     # implement the fit mode
@@ -240,7 +240,7 @@ class ClutterPage(page.Page, clutter.Texture):
       self.fitToScreen()
 
   def _fitAfterResetCB(self, timeline, mode):
-    # NOTE: always set resetPosition=False, it will couase an infinite lopp otherwise
+    # NOTE: always set resetPosition=False, it will couase an infinite loop otherwise
     self.setFitMode(mode, resetPosition=False)
 
   def _enableMovementCB(self, timeline, movementTupple=None):
@@ -278,7 +278,7 @@ class ClutterPage(page.Page, clutter.Texture):
 
     # resolution independent check
     if abs(dxp) <= abs(dxPMS*0.20) and abs(dyp) <= abs(dyPMS*0.20):
-      print "under pms treshold stopping"
+      print "under pms threshold stopping"
       timeline.stop()
       return
 
