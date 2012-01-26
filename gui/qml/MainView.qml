@@ -122,19 +122,71 @@ Page {
         }
     }
 
+    /** Page fitting **/
+
     function setPageFitMode(fitMode) {
     // set page fitting - only update on a mode change
-    console.log(fitMode)
-    console.log(mainView.pageFitMode)
         if (fitMode != mainView.pageFitMode) {
             options.set("fitMode", fitMode)
             mainView.pageFitMode = fitMode
-            pageFittingRow.updateChecked(fitMode)
+            mLayout.updateChecked(fitMode)
         }
+        // disable scale remembering for
+        // non-custom fitting modes
+        mainView.rememberScale = false
     }
 
     onPageFitModeChanged : {
         console.log("page fit mode changed")
+        // trigger page refit
+        fitPage(pageFitMode)
+    }
+
+    // handle viewport resize
+    onWidthChanged : {
+        //console.log("mw width")
+        fitPage(pageFitMode)
+    }
+    onHeightChanged : {
+        //console.log("mw height")
+        fitPage(pageFitMode)
+    }
+
+    function fitPage(mode) {
+        /**
+        console.log("FIT PAGE")
+        console.log(mode)
+
+        console.log(mainView.width)
+        console.log(mainView.height)
+        console.log(mangaPage.sourceSize.width)
+        console.log(mangaPage.sourceSize.height)
+        **/
+
+        // fit the page according to the current fitting mode
+        if (mode == "original") {
+            // 1 : 1
+            pageFlickable.scale = 1.0
+        } else if (mode == "width") {
+            pageFlickable.scale = mainView.width/mangaPage.sourceSize.width
+        } else if (mode == "height") {
+            pageFlickable.scale = mainView.height/mangaPage.sourceSize.height
+        } else if (mode == "screen") {
+            // image
+            var wi = mangaPage.sourceSize.width
+            var hi = mangaPage.sourceSize.height
+            var ri = wi/hi
+            // screen
+            var ws = mainView.width
+            var hs = mainView.height
+            var rs = ws/hs
+            if (rs>ri) {
+                pageFlickable.scale = (wi * hs/hi)/wi
+            } else {
+                pageFlickable.scale = ws/wi
+            }
+        }
+        // nothing needs to be done for the custom mode
     }
 
 
@@ -227,7 +279,6 @@ Page {
             //console.log("pf " + pageFlickable.contentWidth + " " + pageFlickable.contentHeight)
             //console.log("page " + mangaPage.width + " " + mangaPage.height)
             //console.log("scale " + pageFlickable.scale)
-
         }
 
         onPinchFinished: {
@@ -282,6 +333,7 @@ Page {
                 height : sourceSize.height * pageFlickable.scale
                 //smooth : !pageFlickable.moving
                 smooth : true
+                fillMode : Image.PreserveAspectFit
                 //width : pageFlickable.contentWidth
                 //height : pageFlickable.contentHeight
                 // update flickable width once an image is loaded
@@ -290,13 +342,22 @@ Page {
                     //console.log(sourceSize.width + " " + sourceSize.height)
                     //console.log(width + " " + height)
 
-
-                    // reset or remeber scale
-                    if (!mainView.rememberScale) {
-                        pageFlickable.scale = 1.0
+                    // assure page fitting
+                    if (mainView.pageFitMode == "custom") {
+                        // revert scale remembering on next page
+                        // if disabled
+                        if (!mainView.rememberScale) {
+                            pageFlickable.scale = 1.0
+                        }
                     }
                     //pageFlickable.contentWidth = sourceSize.width * pageFlickable.scale
                     //pageFlickable.contentHeight = sourceSize.height * pageFlickable.scale
+                }
+                onSourceSizeChanged : {
+                    console.log("source size changed")
+                        if (mainView.pageFitMode != "custom") {
+                            mainView.fitPage(mainView.pageFitMode)
+                        }
                 }
             }
         }
@@ -324,6 +385,24 @@ Page {
         MenuLayout {
             //width : pagingDialog.width
             id : mLayout
+            function updateChecked(mode) {
+                if (mode == "original") {
+                    pfr.checkedButton = bFitOriginal
+                    pfc.checkedButton = cbFitOriginal
+                } else if (mode == "width") {
+                    pfr.checkedButton = bFitWidth
+                    pfc.checkedButton = cbFitWidth
+                } else if (mode == "height") {
+                    pfr.checkedButton =  bFitHeight
+                    pfc.checkedButton =  cbFitHeight
+                } else if (mode == "screen") {
+                    pfr.checkedButton = bFitScreen
+                    pfc.checkedButton = cbFitScreen
+                } else { // custom mode
+                    pfr.checkedButton = null
+                    pfc.checkedButton = null
+                }
+            }
 
             Row {
                 //anchors.left : mLayout.left
@@ -352,31 +431,21 @@ Page {
                     largeSized : true
                 }
             }
+            /**
             ButtonRow {
-                id : pageFittingRow
+                id : pfr
+                visible : mainView.width <= mainView.height
                 // page fitting
                 Component.onCompleted : {
-                    updateChecked(mainView.pageFitMode)
+                    mLayout.updateChecked(mainView.pageFitMode)
                 }
 
-                function updateChecked(mode) {
-                    if (mode == "original") {
-                        checkedButton = bFitOriginal
-                    } else if (mode == "width") {
-                        checkedButton = bFitWidth
-                    } else if (mode == "height") {
-                        checkedButton =  bFitHeight
-                    } else if (mode == "screen") {
-                        checkedButton = bFitScreen
-                    } else { // custom mode
-                        checkedButton = null
-                    }
-                }
-                checkedButton : updateChecked(mainView.pageFitMode)
+
+                checkedButton : mLayout.updateChecked(mainView.pageFitMode)
 
                 Button {
                     id : bFitOriginal
-                    text : "original"
+                    text : "1:1"
                     onClicked : {
                         mainView.setPageFitMode("original")
                     }
@@ -402,9 +471,48 @@ Page {
                         mainView.setPageFitMode("screen")
                     }
                 }
+            }**/
+            ButtonColumn {
+                id : pfc
+                //visible : mainView.width > mainView.height ? null : mLayout
+                property real realHeight : 0
+                // page fitting
+                Component.onCompleted : {
+                    mLayout.updateChecked(mainView.pageFitMode)
+                }
 
+
+                checkedButton : mLayout.updateChecked(mainView.pageFitMode)
+
+                Button {
+                    id : cbFitOriginal
+                    text : "1:1"
+                    onClicked : {
+                        mainView.setPageFitMode("original")
+                    }
+                }
+                Button {
+                    id : cbFitWidth
+                    text : "width"
+                    onClicked : {
+                        mainView.setPageFitMode("width")
+                    }
+                }
+                Button {
+                    id : cbFitHeight
+                    text : "height"
+                    onClicked : {
+                        mainView.setPageFitMode("height")
+                    }
+                }
+                Button {
+                    id : cbFitScreen
+                    text : "screen"
+                    onClicked : {
+                        mainView.setPageFitMode("screen")
+                    }
+                }
             }
-
         }
     }
     Label {
