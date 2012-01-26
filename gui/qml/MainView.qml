@@ -431,12 +431,14 @@ Page {
                     largeSized : true
                 }
             }
-            /**
+
             ButtonRow {
                 id : pfr
                 visible : mainView.width <= mainView.height
+                height : visible ? 51 : 0
                 // page fitting
                 Component.onCompleted : {
+                    console.log(height)
                     mLayout.updateChecked(mainView.pageFitMode)
                 }
 
@@ -471,13 +473,15 @@ Page {
                         mainView.setPageFitMode("screen")
                     }
                 }
-            }**/
+            }
             ButtonColumn {
                 id : pfc
-                //visible : mainView.width > mainView.height ? null : mLayout
+                visible : mainView.width > mainView.height
+                height : visible ? 204 : 0
                 property real realHeight : 0
                 // page fitting
                 Component.onCompleted : {
+                    console.log(height)
                     mLayout.updateChecked(mainView.pageFitMode)
                 }
 
