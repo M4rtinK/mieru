@@ -12,7 +12,6 @@ Item {
 
     Label {
         id: label
-
         anchors {
             top: parent.top
             left: parent.left
@@ -23,7 +22,6 @@ Item {
 
     Switch {
         id: switcher
-
         anchors {
             right: parent.right
             verticalCenter: parent.verticalCenter
