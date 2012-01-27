@@ -26,7 +26,7 @@ Item {
 
     Button {
         id : pfsButton
-        iconSource : "image://theme/icon-m-toolbar-list"
+        iconSource : "image://theme/icon-m-common-expand"
         width : 200
         anchors {
             right: parent.right

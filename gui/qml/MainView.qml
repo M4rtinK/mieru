@@ -73,7 +73,6 @@ Page {
 
     // ** fullscreen handling
     function toggleFullscreen() {
-        console.log("toggle toolbar");
         /* handle fullscreen button hiding
         it should be only visible with no toolbar */
         fullscreenButton.visible = !fullscreenButton.visible
@@ -97,13 +96,10 @@ Page {
     function restoreRotation() {
         var savedRotation = options.get("QMLmainViewRotation", "auto")
         if ( savedRotation == "auto" ) {
-            console.log(1)
             mainView.orientationLock = PageOrientation.Automatic
         } else if ( savedRotation == "portrait" ) {
-            console.log(2)
             mainView.orientationLock = PageOrientation.LockPortrait
         } else {
-            console.log(3)
             mainView.orientationLock = PageOrientation.LockLandscape
         }
     }
@@ -125,9 +121,11 @@ Page {
     /** Page fitting **/
 
     function setPageFitMode(fitMode) {
+        /**
         console.log("SET PAGE FIT MODE")
         console.log(fitMode)
         console.log(mainView.pageFitMode)
+        **/
         // set page fitting - only update on a mode change
         if (fitMode != mainView.pageFitMode) {
             options.set("fitMode", fitMode)
@@ -146,8 +144,6 @@ Page {
     }
 
     onPageFitModeChanged : {
-        console.log("page fit mode changed")
-        console.log(pageFitMode)
         // trigger page refit
         fitPage(pageFitMode)
     }
@@ -166,7 +162,6 @@ Page {
         /**
         console.log("FIT PAGE")
         console.log(mode)
-
         console.log(mainView.width)
         console.log(mainView.height)
         console.log(mangaPage.sourceSize.width)
@@ -182,25 +177,43 @@ Page {
         } else if (mode == "height") {
             pageFlickable.scale = mainView.height/mangaPage.sourceSize.height
         } else if (mode == "screen") {
-            // image
-            var wi = mangaPage.sourceSize.width
-            var hi = mangaPage.sourceSize.height
-            var ri = wi/hi
-            // screen
-            var ws = mainView.width
-            var hs = mainView.height
-            var rs = ws/hs
-            if (rs>ri) {
-                pageFlickable.scale = (wi * hs/hi)/wi
+            fitPageToScreen()
+        } else if (mode == "orient") {
+            // fit to screen in portrait, fit to width in landscape
+            if (rootWindow.inPortrait) {
+                fitPageToScreen()
             } else {
-                pageFlickable.scale = ws/wi
+                pageFlickable.scale = mainView.width/mangaPage.sourceSize.width
             }
-        }
+        } else if (mode == "most") {
+            // fit fo to the longest side of the image
+            if (pageFlickable.width >= pageFlickable.height) {
+                pageFlickable.scale = mainView.width/mangaPage.sourceSize.width
+            } else {
+                pageFlickable.scale = mainView.height/mangaPage.sourceSize.height
+            }
+
         /** nothing needs to be done for the custom mode
          as the current scale is just used as the initial
          custom scale **/
+        }
     }
 
+    function fitPageToScreen() {
+        // image
+        var wi = mangaPage.sourceSize.width
+        var hi = mangaPage.sourceSize.height
+        var ri = wi/hi
+        // screen
+        var ws = mainView.width
+        var hs = mainView.height
+        var rs = ws/hs
+        if (rs>ri) {
+            pageFlickable.scale = (wi * hs/hi)/wi
+        } else {
+            pageFlickable.scale = ws/wi
+        }
+    }
 
     Component.onCompleted : {
       restoreRotation()
@@ -369,7 +382,6 @@ Page {
                 }
                 **/
                 onSourceSizeChanged : {
-                    console.log("source size changed")
                         if (mainView.pageFitMode != "custom") {
                             mainView.fitPage(mainView.pageFitMode)
                         }
@@ -432,7 +444,7 @@ Page {
                 id : mButtonRow
                 Button {
                     text : mainView.pageFitMode
-                    iconSource : "image://theme/icon-m-toolbar-list"
+                    iconSource : "image://theme/icon-m-common-expand"
                     width : mLayout.width/2.0
                     onClicked : {
                         pageFitSelector.open()

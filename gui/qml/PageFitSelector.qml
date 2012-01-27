@@ -28,15 +28,17 @@ SelectionDialog {
             key : "screen"
         }
         ListElement {
-            name : "<b>show the most</b>"
-            key : "most"
-        }
-        ListElement {
             name : "<b>custom</b> - remember scale"
             key : "custom"
         }
+        ListElement {
+            name : "<b>orientation</b> specific"
+            key : "orient"
+        }
+        ListElement {
+            name : "<b>show the most</b>"
+            key : "most"
+        }
     }
-
-
 }
 
