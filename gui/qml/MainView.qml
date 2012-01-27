@@ -125,19 +125,25 @@ Page {
     /** Page fitting **/
 
     function setPageFitMode(fitMode) {
+    console.log("SET PAGE FIT MODE")
+    console.log(fitMode)
+    console.log(mainView.pageFitMode)
     // set page fitting - only update on a mode change
         if (fitMode != mainView.pageFitMode) {
             options.set("fitMode", fitMode)
             mainView.pageFitMode = fitMode
-            mLayout.updateChecked(fitMode)
         }
         // disable scale remembering for
         // non-custom fitting modes
-        mainView.rememberScale = false
+        if (fitMode != "custom") {
+            mainView.rememberScale = false
+            options.set("QMLRememberScale", false)
+        }
     }
 
     onPageFitModeChanged : {
         console.log("page fit mode changed")
+        console.log(pageFitMode)
         // trigger page refit
         fitPage(pageFitMode)
     }
@@ -186,7 +192,9 @@ Page {
                 pageFlickable.scale = ws/wi
             }
         }
-        // nothing needs to be done for the custom mode
+        /** nothing needs to be done for the custom mode
+         as the current scale is just used as the initial
+         custom scale **/
     }
 
 
@@ -337,6 +345,7 @@ Page {
                 //width : pageFlickable.contentWidth
                 //height : pageFlickable.contentHeight
                 // update flickable width once an image is loaded
+                /**
                 onSourceChanged : {
                     //console.log("SOURCE")
                     //console.log(sourceSize.width + " " + sourceSize.height)
@@ -348,11 +357,13 @@ Page {
                         // if disabled
                         if (!mainView.rememberScale) {
                             pageFlickable.scale = 1.0
+                            mainView.setPageFitMode("original")
                         }
                     }
                     //pageFlickable.contentWidth = sourceSize.width * pageFlickable.scale
                     //pageFlickable.contentHeight = sourceSize.height * pageFlickable.scale
                 }
+                **/
                 onSourceSizeChanged : {
                     console.log("source size changed")
                         if (mainView.pageFitMode != "custom") {
@@ -385,24 +396,6 @@ Page {
         MenuLayout {
             //width : pagingDialog.width
             id : mLayout
-            function updateChecked(mode) {
-                if (mode == "original") {
-                    pfr.checkedButton = bFitOriginal
-                    pfc.checkedButton = cbFitOriginal
-                } else if (mode == "width") {
-                    pfr.checkedButton = bFitWidth
-                    pfc.checkedButton = cbFitWidth
-                } else if (mode == "height") {
-                    pfr.checkedButton =  bFitHeight
-                    pfc.checkedButton =  cbFitHeight
-                } else if (mode == "screen") {
-                    pfr.checkedButton = bFitScreen
-                    pfc.checkedButton = cbFitScreen
-                } else { // custom mode
-                    pfr.checkedButton = null
-                    pfc.checkedButton = null
-                }
-            }
 
             Row {
                 //anchors.left : mLayout.left
@@ -422,7 +415,7 @@ Page {
                         //only load the page once the user stopped dragging to save resources
                         mainView.pageNumber = value
                     }
-            }
+                }
                 CountBubble {
                     //width : mLayout.width*0.2
                     //anchors.left : pagingSlider.righ
@@ -431,89 +424,36 @@ Page {
                     largeSized : true
                 }
             }
+            Row {
+                id : mButtonRow
+                Button {
+                    text : mainView.pageFitMode
+                    iconSource : "image://theme/icon-m-toolbar-list"
+                    width : mLayout.width/2.0
+                    onClicked : {
+                        pageFitSelector.open()
+                    }
+                }
+                Button {
+                    text : "rotation"
+                    iconSource : "image://theme/icon-m-common-" + __iconType
+                    width : mLayout.width/2.0
+                    property string __iconType: (mainView.orientationLock == PageOrientation.LockPrevious) ? "locked" : "unlocked"
 
-            ButtonRow {
-                id : pfr
-                visible : mainView.width <= mainView.height
-                height : visible ? 51 : 0
-                // page fitting
-                Component.onCompleted : {
-                    mLayout.updateChecked(mainView.pageFitMode)
+                    onClicked: {
+                        if (mainView.orientationLock == PageOrientation.LockPrevious) {
+                            mainView.orientationLock = PageOrientation.Automatic
+                        } else {
+                            mainView.orientationLock = PageOrientation.LockPrevious
+                        }
+                    }
                 }
+                /**
+                platformIconId: "icon-m-common-" + __iconType + __inverseString
 
+                property string __inverseString: style.inverted ? "-inverse" : ""
+                **/
 
-                checkedButton : mLayout.updateChecked(mainView.pageFitMode)
-
-                Button {
-                    id : bFitOriginal
-                    text : "1:1"
-                    onClicked : {
-                        mainView.setPageFitMode("original")
-                    }
-                }
-                Button {
-                    id : bFitWidth
-                    text : "width"
-                    onClicked : {
-                        mainView.setPageFitMode("width")
-                    }
-                }
-                Button {
-                    id : bFitHeight
-                    text : "height"
-                    onClicked : {
-                        mainView.setPageFitMode("height")
-                    }
-                }
-                Button {
-                    id : bFitScreen
-                    text : "screen"
-                    onClicked : {
-                        mainView.setPageFitMode("screen")
-                    }
-                }
-            }
-            ButtonColumn {
-                id : pfc
-                visible : mainView.width > mainView.height
-                height : visible ? 204 : 0
-                property real realHeight : 0
-                // page fitting
-                Component.onCompleted : {
-                    mLayout.updateChecked(mainView.pageFitMode)
-                }
-
-
-                checkedButton : mLayout.updateChecked(mainView.pageFitMode)
-
-                Button {
-                    id : cbFitOriginal
-                    text : "1:1"
-                    onClicked : {
-                        mainView.setPageFitMode("original")
-                    }
-                }
-                Button {
-                    id : cbFitWidth
-                    text : "width"
-                    onClicked : {
-                        mainView.setPageFitMode("width")
-                    }
-                }
-                Button {
-                    id : cbFitHeight
-                    text : "height"
-                    onClicked : {
-                        mainView.setPageFitMode("height")
-                    }
-                }
-                Button {
-                    id : cbFitScreen
-                    text : "screen"
-                    onClicked : {
-                        mainView.setPageFitMode("screen")
-                    }
-                }
             }
         }
     }

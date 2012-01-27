@@ -31,7 +31,6 @@ Page {
             ButtonRow {
               // synchronize with current orientation lock
               Component.onCompleted : {
-                  console.log("button row")
                   if (mainView.orientationLock == PageOrientation.Automatic) {
                       checkedButton = bAuto
                   } else if (mainView.orientationLock == PageOrientation.LockPortrait) {
@@ -68,7 +67,6 @@ Page {
 
             SwitchWithText {
                 text : "<b>Show statusbar</b>"
-                width : optionsPage.width
                 checked : rootWindow.showStatusBar
                 onCheckedChanged : {
                     rootWindow.showStatusBar = checked
@@ -77,7 +75,6 @@ Page {
             }
             SwitchWithText {
                 text : "<b>Remember toolbar state</b>"
-                width : optionsPage.width
                 checked : options.get("QMLRememberToolbarState", false)
                 onCheckedChanged : {
                     options.set("QMLRememberToolbarState", checked)
@@ -85,7 +82,6 @@ Page {
             }
             SwitchWithText {
                 text : "<b>Show paging feedback</b>"
-                width : optionsPage.width
                 checked : mainView.pagingFeedback
                 onCheckedChanged : {
                     mainView.pagingFeedback = checked
@@ -110,7 +106,7 @@ Page {
                         outputValue = 0.01
                     } else {
                         /* round away small fractions
-                        that were created by the asusred lowest value
+                        that were created by the assured lowest value
                         */
                         outputValue = Math.round(value*100)/100
                     }
@@ -125,15 +121,10 @@ Page {
                 width : optionsPage.width
                 text : "Page scaling"
             }
-
-            SwitchWithText {
-                text : "<b>Remember scale</b>"
-                width : optionsPage.width
-                checked : mainView.rememberScale
-                onCheckedChanged : {
-                    mainView.rememberScale = checked
-                    options.set("QMLRememberScale", checked)
-                }
+            SelectorButtonWithText {
+                text : "<b>Page fit mode</b>"
+                buttonText : mainView.pageFitMode
+                selector : pageFitSelector
             }
         }
     }

@@ -61,6 +61,11 @@ PageStackWindow {
       onAccepted: readingState.openManga(selectedFile);
     }
 
+    PageFitSelector {
+      id : pageFitSelector
+      onAccepted: mainView.setPageFitMode(pageFitMode)
+    }
+
     InfoBanner {
         id: notification
         timerShowTime : 5000
