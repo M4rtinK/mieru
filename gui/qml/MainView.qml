@@ -438,7 +438,6 @@ Page {
                 height : visible ? 51 : 0
                 // page fitting
                 Component.onCompleted : {
-                    console.log(height)
                     mLayout.updateChecked(mainView.pageFitMode)
                 }
 
@@ -481,7 +480,6 @@ Page {
                 property real realHeight : 0
                 // page fitting
                 Component.onCompleted : {
-                    console.log(height)
                     mLayout.updateChecked(mainView.pageFitMode)
                 }
 
