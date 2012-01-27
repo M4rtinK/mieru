@@ -125,19 +125,23 @@ Page {
     /** Page fitting **/
 
     function setPageFitMode(fitMode) {
-    console.log("SET PAGE FIT MODE")
-    console.log(fitMode)
-    console.log(mainView.pageFitMode)
-    // set page fitting - only update on a mode change
+        console.log("SET PAGE FIT MODE")
+        console.log(fitMode)
+        console.log(mainView.pageFitMode)
+        // set page fitting - only update on a mode change
         if (fitMode != mainView.pageFitMode) {
             options.set("fitMode", fitMode)
             mainView.pageFitMode = fitMode
         }
-        // disable scale remembering for
-        // non-custom fitting modes
+        // scale remembering for
+        // * disable for non-custom fitting modes
+        // * enable for custom fitting mode
         if (fitMode != "custom") {
             mainView.rememberScale = false
             options.set("QMLRememberScale", false)
+        } else {
+            mainView.rememberScale = true
+            options.set("QMLRememberScale", true)
         }
     }
 
