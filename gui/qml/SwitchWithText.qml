@@ -5,6 +5,7 @@ Item {
     id: container
 
     height: label.height
+    width : parent.width
 
     property alias text: label.text
     property alias checked: switcher.checked
