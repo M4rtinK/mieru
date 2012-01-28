@@ -237,7 +237,7 @@ Page {
         //ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
         }
 
-    /** Quick menu **/
+    /** Main menu **/
 
     Menu {
         id : mainViewMenu
@@ -417,7 +417,7 @@ Page {
         }
     }
 
-    /** Main menu **/
+    /** Quick menu **/
 
     Menu {
         id : pagingDialog
@@ -454,10 +454,12 @@ Page {
             }
             Row {
                 id : mButtonRow
+                property int usableWidth : mLayout.width - 10
+                spacing : 10
                 Button {
                     text : mainView.pageFitMode
                     iconSource : "image://theme/icon-m-common-expand"
-                    width : mLayout.width/2.0
+                    width : mButtonRow.usableWidth/2.0
                     onClicked : {
                         pageFitSelector.open()
                     }
@@ -465,7 +467,7 @@ Page {
                 Button {
                     text : "rotation"
                     iconSource : "image://theme/icon-m-common-" + __iconType
-                    width : mLayout.width/2.0
+                    width : mButtonRow.usableWidth/2.0
                     property string __iconType: (mainView.orientationLock == PageOrientation.LockPrevious) ? "locked" : "unlocked"
 
                     onClicked: {
