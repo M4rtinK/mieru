@@ -8,7 +8,7 @@ class QMLPage(page.Page):
     page.Page.__init__(self)
     self.image=image
     self.gui = gui
-    """as the imagdata is actually managed by QML,
+    """as the image data is actually managed by QML,
     the page object just stores an image id"""
 
   def activate(self):

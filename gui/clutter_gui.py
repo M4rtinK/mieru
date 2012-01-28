@@ -153,7 +153,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
       self.oldPage.deactivate()
 
       # no need to remove page manually
-      # -> it will be clread by page cache management
+      # -> it will be cleared by page cache management
 
   def _pageShownNotify(self):
     if self.pageShownCB:
@@ -222,7 +222,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     load next/previous manga - the action is a binding to the
     next/previous method
 
-    we use the gobject idle_add mathod so that it does not block
+    we use the gobject idle_add method so that it does not block
     right after clicking the preview
     """
     if action:

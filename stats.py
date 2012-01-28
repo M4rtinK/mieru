@@ -42,7 +42,7 @@ class Stats:
     self.mieru.set('stats', stats)
 
   def _updateStats(self, key, increment, initialValue):
-    """update an iterm in the statistics dictionary"""
+    """update an item in the statistics dictionary"""
     stats = self._getStats()
     if key in stats:
       stats[key] = stats[key] + increment
@@ -57,18 +57,18 @@ class Stats:
       self.mieru.set('statsPageCount', count + 1)
 
   def incrementUnitCount(self):
-    """increment unit (manga/comix book/chapter/directory) count"""
+    """increment unit (manga/comic book/chapter/directory) count"""
     if self.isOn():
       self._updateStats("unitCount", 1, 0)
 
   def updateUsageTime(self, increment):
-    """usage time is in secconds, integer only"""
+    """usage time is in seconds, integer only"""
     if self.isOn():
       increment = int(increment)
       self._updateStats("usageTime", increment, 0)
 
   def getStatsText(self, headline=True):
-    """get a pretty formated stats info"""
+    """get a pretty formatted stats info"""
     # TODO: more efficient string concatenation ? (if it makes sense here)
     stats = self._getStats()
     if headline:

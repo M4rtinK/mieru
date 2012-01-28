@@ -1,4 +1,4 @@
-"""various miscantelous utility functions for Mieru"""
+"""various miscellaneous utility functions for Mieru"""
 
 class Point:
     def __init__(self, x, y):

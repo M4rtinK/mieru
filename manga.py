@@ -1,4 +1,4 @@
-"""a Mieru class representing a single manga / comix file/folder
+"""a Mieru class representing a single manga / comic book file/folder
    - this is driven by the storage format - it can really be a single chapter,
    or a whole volume if all page images are in  a single file or folder
 """
@@ -143,7 +143,7 @@ class Manga:
       if pageNumber == None: # None means we don't show a page yet
         return True # nothing to go wrong here :)
       else:
-        status = self.gotoPageId(pageNumber) # return if the first-selected page loaded successfull
+        status = self.gotoPageId(pageNumber) # return if the first-selected page loaded successfully
         return status
     else:
       print "manga: container initialization failed"
@@ -177,7 +177,7 @@ class Manga:
 
   def idExistst(self, id):
     if self.pages:
-      if id < 0 or id > (len(self.pages)-1) or id == None: # None idicates initial active id state
+      if id < 0 or id > (len(self.pages)-1) or id == None: # None indicates initial active id state
         print "page id out of range:", id
         return False
       else:
@@ -189,7 +189,7 @@ class Manga:
     result = self.container.getImageFileById(id)
     t2 = time.clock()
     if result:
-      # correct id is reuturned for negative addressing (id=-1, etc.)
+      # correct id is returned for negative addressing (id=-1, etc.)
       (file,id) = result 
       page = self.mieru.gui.getPage(file, self.mieru, fitOnStart=fitOnStart)
       t3 = time.clock()
@@ -202,7 +202,7 @@ class Manga:
         print("* loading to pixbuf & to page & cleanup: %1.2f ms" % (1000 * (t3 - t2)))
 #        print("* initializing page object with pixbuf: %1.2f ms" % (1000 * (t4 - t3)))
 #        print("* closing file and deleting pixbuf: %1.2f ms" % (1000 * (t5 - t4)))
-        print("- image resoution: %d x %d" % (w, h))
+        print("- image resolution: %d x %d" % (w, h))
         print("- image filename: %s" % self.container.getImageFilenameById(id))
 
       return (page, id)
@@ -363,7 +363,7 @@ class Manga:
     return name2PrettyName(self.name)
 
   def onFitModeChanged(self, key, value, oldValue):
-    # notifiy all pages that the fit mode has changed
+    # notify all pages that the fit mode has changed
     page = self.mieru.gui.getCurrentPage()
     if page:
       page.setFitMode(value)

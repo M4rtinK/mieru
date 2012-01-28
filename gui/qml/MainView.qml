@@ -41,7 +41,7 @@ Page {
               pageFlickable.contentX = 0;
               pageFlickable.contentY = 0;
           //update page number in the current manga instance
-          //NOTE: this is especialy important due to the slider
+          //NOTE: this is especially important due to the slider
           readingState.setPageID(pageIndex, mangaPath)
           pageLoaded = true
         }
@@ -446,7 +446,7 @@ Page {
                 }
                 CountBubble {
                     //width : mLayout.width*0.2
-                    //anchors.left : pagingSlider.righ
+                    //anchors.left : pagingSlider.right
                     //anchors.right : mLayout.right
                     value : pagingSlider.value
                     largeSized : true

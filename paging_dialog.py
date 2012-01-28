@@ -111,7 +111,7 @@ class PagingDialog:
     self._destroyDialog()
 
   def _gotoPageAndDestroyCB(self, button, manga, pageId, destroy=True):
-    """select turn a page in the manga to a desired id and optionaly destroy the dialog"""
+    """select turn a page in the manga to a desired id and optionally destroy the dialog"""
     manga.gotoPageId(pageId)
     if destroy:
       self._destroyDialog()

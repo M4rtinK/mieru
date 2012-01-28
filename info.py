@@ -22,7 +22,7 @@ def getShortcutsContent():
   text+= "\n<b>i</b> - fit to width"
   text+= "\n<b>u</b> - fit to height"
   text+= "\n<b>z</b> - fit to screen"
-  text+= "\n<b>doubletap</b> - temporary fit to screen"
+  text+= "\n<b>double-tap</b> - temporary fit to screen"
 
   shortcuts.set_markup(text)
 
@@ -71,9 +71,9 @@ def getAboutText(forum="meego"):
   text+= '<p><b>email</b>: <a href="mailto:mieru.info@gmail.com">mieru.info@gmail.com</a></p>'
   text+= '<p><b>www</b>:  <a href="http://m4rtink.github.com/mieru/">http://m4rtink.github.com/mieru/</a></p>'
   if forum == "meego":
-    text+= '<p><b>discusion</b>: check <a href="http://forum.meego.com">http://forum.meego.com</a></p>'
+    text+= '<p><b>discussion</b>: check <a href="http://forum.meego.com">http://forum.meego.com</a></p>'
   else:
-    text+= '<p><b>discusion</b>: check <a href="http://talk.maemo.org">http://talk.maemo.org</a></p>'
+    text+= '<p><b>discussion</b>: check <a href="http://talk.maemo.org">http://talk.maemo.org</a></p>'
   return text
 
 def getAboutContent(versionString="unknown"):

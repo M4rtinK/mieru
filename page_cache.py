@@ -49,9 +49,9 @@ class PageCache:
     should be called with the lock acquired"""
 
     """the direction determines which item should be preferably removed
-    +1 -> paging from previoous to next => going forward
+    +1 -> paging from previous to next => going forward
        -> remove oldest page
-    -1 -> paging from next to prevous => going back
+    -1 -> paging from next to previous => going back
        -> remove most recently added page
     """
     if direction > 0:
@@ -68,7 +68,7 @@ class PageCache:
 
   def destroyItem(self, item):
     # this is for pages
-    # TODO aribitrary item support ?
+    # TODO arbitrary item support ?
     item.free()
     del item
 

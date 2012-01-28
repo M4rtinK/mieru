@@ -51,7 +51,7 @@ class QMLGUI(gui.GUI):
     self.view.engine().addImageProvider("page",self.pageProvider)
     self.view.engine().addImageProvider("icons",self.iconProvider)
     rc = self.view.rootContext()
-    # make the reading state accesible from QML
+    # make the reading state accessible from QML
     readingState = ReadingState(self)
     rc.setContextProperty("readingState", readingState)
     # make stats accessible from QML
@@ -185,7 +185,7 @@ class QMLGUI(gui.GUI):
 #    print "PAGE BY ID", mangaPath, id
     """as QML automatically caches images by URL,
     using a url consisting from a filesystem path to the container and page id,
-    we basically create a hash with very unlikely colisions (eq. same hash resulting in different images
+    we basically create a hash with very unlikely collisions (eq. same hash resulting in different images
     and thus can avoid doing caching on our side
 
     NOTE: some images might get cached twice
@@ -199,7 +199,7 @@ class QMLGUI(gui.GUI):
       return self.lastTimeRequestedOtherManga.getPageById(id)
     else:
       manga = self.mieru.openManga(mangaPath, None, replaceCurrent=False, loadNotify=False)
-      """for the cached manga instance, we don't wan't any pages to be set as active,
+      """for the cached manga instance, we don't want any pages to be set as active,
          we don't want loafing notifications and we don't want it to replace the current manga"""
       self.lastTimeRequestedOtherManga = manga
       return manga.getPageById(id)
@@ -420,7 +420,7 @@ class Stats(QtCore.QObject):
 
     def _set_statsText(self, statsText):
       """if this method is called, it should trigger the
-      usual propety changed notification
+      usual property changed notification
       NOTE: as the Info page is loaded from file each time
       it is opened, the stats text is updated on startup and
       thus this method doesn't need to be called"""
@@ -458,7 +458,7 @@ class Options(QtCore.QObject):
     @QtCore.Slot(str, str, result=str)
     @QtCore.Slot(str, float, result=float)
     def get(self, key, default):
-      """get a value from Mierus persistant options dictionary"""
+      """get a value from Mierus persistent options dictionary"""
       print "GET"
       print key, default, self.mieru.get(key, default)
       return self.mieru.get(key, default)
@@ -468,7 +468,7 @@ class Options(QtCore.QObject):
     @QtCore.Slot(str, str)
     @QtCore.Slot(str, float)
     def set(self, key, value):
-      """set a keys value in Mierus persistant options dictionary"""
+      """set a keys value in Mierus persistent options dictionary"""
       print "SET"
       print key, value
       return self.mieru.set(key, value)
