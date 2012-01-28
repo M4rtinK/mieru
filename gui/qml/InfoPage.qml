@@ -98,6 +98,7 @@ Page {
                     Button {
                         text : "Google"
                         onClicked : {
+                            mainView.notify("Opening <b>Google</b> search")
                             Qt.openUrlExternally("http://www.google.com/search?as_q=" + readingState.getPrettyName())
                         }
                     }
@@ -105,6 +106,7 @@ Page {
                         //TODO: other language mutations
                         text : "Wikipedia"
                         onClicked : {
+                            mainView.notify("Opening <b>Wikipedia</b> search")
                             Qt.openUrlExternally("http://en.wikipedia.org/w/index.php?search=" + readingState.getPrettyName() + "&go=Go")
                         }
 
@@ -112,6 +114,7 @@ Page {
                     Button {
                         text : "Manga updates"
                         onClicked : {
+                            mainView.notify("Opening <b>Manga updates</b> search")
                             Qt.openUrlExternally("http://www.mangaupdates.com/search.html?search=" + readingState.getPrettyName())
                         }
                     }
@@ -195,9 +198,9 @@ Page {
                 anchors.top : aboutMieruIcon.bottom
                 text: "<style type='text/css'>p { margin-bottom:15px; margin-top:0px; }</style>" + readingState.getAboutText()
 
-
                 onLinkActivated : {
                     console.log('about text link clicked: ' + link)
+                    mainView.notify("Opening:<br><b>"+link+"</b>")
                     Qt.openUrlExternally(link)
                 }
             Button {
