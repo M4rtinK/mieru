@@ -3,14 +3,16 @@
 import zipfile26 as zipfile # use backported zipfile from PYthon 2.6
 import os
 import rarfile
-import magic
+# make sure the built-in python-magic is used
+import white_magic as magic
 import re
 import time
 import traceback
 import sys
 
 def getFilePathMime(path):
-  return magic.from_file(path, mime=True)
+  mime = magic.Magic(mime=True)
+  return mime.from_file(path.encode('utf-8'))
 
 def getFileMime(file):
   mime = magic.from_buffer(file.read(1024), mime=True)
@@ -21,7 +23,7 @@ def getBufferMime(path, buffer):
   return magic.from_buffer(buffer, mime=True)
 
 def getFileDescription(path):
-  return magic.from_file(path)
+  return magic.from_file(path.encode('utf-8'))
 
 def humanSort(l):
   """ Sort the given list in the way that humans expect.
@@ -169,10 +171,10 @@ class Container:
     self._setImageList(filenames)
 
   def _setImageList(self, filenames):
-    """filter the profided filenames - filenames that are both files & images (by mime),
+    """filter the provided filenames - filenames that are both files & images (by mime),
        will be set as the new imageList
        NOTE: this should be only call by the setFileList method to maintain consistency
-       TODO: suport for TXT info files
+       TODO: support for TXT info files
        """
     imageList = []
     for filename in filenames:
@@ -220,13 +222,13 @@ class FolderContainer(Container):
       folderContent = os.listdir(path)
       self._setFileList(folderContent)
     else:
-      print "FolderCantainer: folder does not exist: %s" % filename
+      print "FolderContainer: folder does not exist: %s" % filename
 
     
   def getFile(self, filename):
     """just open the file and return a file object"""
     if filename not in self.files:
-      print "FolderCantainer: file not in file list: %s" % filename
+      print "FolderContainer: file not in file list: %s" % filename
       return None
     path = os.path.join(self.path,filename)
     if os.path.exists(path):
@@ -235,15 +237,15 @@ class FolderContainer(Container):
           f = open(path, 'r')
           return f
         except Exception, e:
-          print "FolderCantainer: loading file failed: %s" % path
+          print "FolderContainer: loading file failed: %s" % path
           return File
 
       else:
-        print "FolderCantainer: path is not a file: %s" % path
+        print "FolderContainer: path is not a file: %s" % path
         return False
 
     else:
-      print "FolderCantainer: path does not exist: %s" % path
+      print "FolderContainer: path does not exist: %s" % path
       return False
 
 class ZipContainer(Container):

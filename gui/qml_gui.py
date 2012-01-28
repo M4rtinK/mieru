@@ -489,10 +489,11 @@ class MangaStateWrapper(QtCore.QObject):
     self._checked = False
 
   def __str__(self):
-      return '%s %d/%d' % (self.mangaName, self.pageNumber, self.pageCount)
+    return u'%s %d/%d'.encode('utf-8') % (self.mangaName, self.pageNumber, self.pageCount)
 
   def _name(self):
-      return str(self)
+    """NOTE: str(self) won't work due to some unicode issues"""
+    return self.__str__()
 
   def is_checked(self):
     return self._checked

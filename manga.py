@@ -132,11 +132,15 @@ class Manga:
     """try to load manga from the given path"""
     print "manga: loading from path: %s" % path
     self.path = path
+
+    start = time.clock()
     container = containerModule.from_path(path)
+    duration = (1000 * (time.clock() - start))
     if container: # was a container created successfully ?
+      print("container created in %1.2f ms" % duration)
       self.container = container
       self.pages = self.container.getImageFileList()
-      if pageNumber == None: # None means we dont show a page yet
+      if pageNumber == None: # None means we don't show a page yet
         return True # nothing to go wrong here :)
       else:
         status = self.gotoPageId(pageNumber) # return if the first-selected page loaded successfull

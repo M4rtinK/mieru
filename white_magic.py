@@ -17,6 +17,8 @@ Usage:
 
 """
 
+#Mieru note - d5fba52 from github, ahupp/python-magic, 29.12.2011
+
 import os.path
 import ctypes
 import ctypes.util
@@ -26,81 +28,81 @@ from ctypes import c_char_p, c_int, c_size_t, c_void_p
 class MagicException(Exception): pass
 
 class Magic:
+  """
+  Magic is a wrapper around the libmagic C library.
+
+  """
+
+  def __init__(self, mime=False, magic_file=None, mime_encoding=False):
     """
-    Magic is a wrapper around the libmagic C library.  
-    
+    Create a new libmagic wrapper.
+
+    mime - if True, mimetypes are returned instead of textual descriptions
+    mime_encoding - if True, codec is returned
+    magic_file - use a mime database other than the system default
+
+    """
+    flags = MAGIC_NONE
+    if mime:
+      flags |= MAGIC_MIME
+    elif mime_encoding:
+      flags |= MAGIC_MIME_ENCODING
+
+    self.cookie = magic_open(flags)
+
+    magic_load(self.cookie, magic_file)
+
+
+  def from_buffer(self, buf):
+    """
+    Identify the contents of `buf`
+    """
+    return magic_buffer(self.cookie, buf)
+
+  def from_file(self, filename):
+    """
+    Identify the contents of file `filename`
+    raises IOError if the file does not exist
     """
 
-    def __init__(self, mime=False, magic_file=None, mime_encoding=False):
-        """
-        Create a new libmagic wrapper.
+    if not os.path.exists(filename):
+      raise IOError("File does not exist: " + filename)
 
-        mime - if True, mimetypes are returned instead of textual descriptions
-        mime_encoding - if True, codec is returned
-        magic_file - use a mime database other than the system default
-        
-        """
-        flags = MAGIC_NONE
-        if mime:
-            flags |= MAGIC_MIME
-        elif mime_encoding:
-            flags |= MAGIC_MIME_ENCODING
+    return magic_file(self.cookie, filename)
 
-        self.cookie = magic_open(flags)
-
-        magic_load(self.cookie, magic_file)
-
-
-    def from_buffer(self, buf):
-        """
-        Identify the contents of `buf`
-        """
-        return magic_buffer(self.cookie, buf)
-
-    def from_file(self, filename):
-        """
-        Identify the contents of file `filename`
-        raises IOError if the file does not exist
-        """
-
-        if not os.path.exists(filename):
-            raise IOError("File does not exist: " + filename)
-
-        return magic_file(self.cookie, filename)
-
-    def __del__(self):
-        if self.cookie:
-            magic_close(self.cookie)
-            self.cookie = None
+  def __del__(self):
+    if self.cookie:
+      magic_close(self.cookie)
+      self.cookie = None
 
 _magic_mime = None
 _magic = None
 
 def _get_magic_mime():
-    global _magic_mime
-    if not _magic_mime:
-        _magic_mime = Magic(mime=True)
-    return _magic_mime
+  global _magic_mime
+  if not _magic_mime:
+    _magic_mime = Magic(mime=True)
+  return _magic_mime
 
 def _get_magic():
-    global _magic
-    if not _magic:
-        _magic = Magic()
-    return _magic
+  global _magic
+  if not _magic:
+    _magic = Magic()
+  return _magic
 
 def _get_magic_type(mime):
-    if mime:
-        return _get_magic_mime()
-    else:
-        return _get_magic()
+  if mime:
+    return _get_magic_mime()
+  else:
+    return _get_magic()
 
 def from_file(filename, mime=False):
-    m = _get_magic_type(mime)
-    return m.from_file(filename)
+  m = _get_magic_type(mime)
+  return m.from_file(filename)
 
 def from_buffer(buffer, mime=False):
-    m = _get_magic_type(mime)
-    return m.from_buffer(buffer)
+  m = _get_magic_type(mime)
+  return m.from_buffer(buffer)
 
 
 
@@ -111,30 +113,30 @@ dll = ctypes.util.find_library('magic') or ctypes.util.find_library('magic1')
 
 # This is necessary because find_library returns None if it doesn't find the library
 if dll:
-    libmagic = ctypes.CDLL(dll)
+  libmagic = ctypes.CDLL(dll)
 
 if not libmagic or not libmagic._name:
-    import sys
-    platform_to_lib = {'darwin': '/opt/local/lib/libmagic.dylib',
-                       'win32': 'magic1.dll'}
-    if sys.platform in platform_to_lib:
-        try:
-            libmagic = ctypes.CDLL(platform_to_lib[sys.platform])
-        except OSError:
-            pass
+  import sys
+  platform_to_lib = {'darwin': '/opt/local/lib/libmagic.dylib',
+                     'win32': 'magic1.dll'}
+  if sys.platform in platform_to_lib:
+    try:
+      libmagic = ctypes.CDLL(platform_to_lib[sys.platform])
+    except OSError:
+      pass
 
 if not libmagic or not libmagic._name:
-    # It is better to raise an ImportError since we are importing magic module
-    raise ImportError('failed to find libmagic.  Check your installation')
+  # It is better to raise an ImportError since we are importing magic module
+  raise ImportError('failed to find libmagic.  Check your installation')
 
 magic_t = ctypes.c_void_p
 
 def errorcheck(result, func, args):
-    err = magic_error(args[0])
-    if err is not None:
-        raise MagicException(err)
-    else:
-        return result
+  err = magic_error(args[0])
+  if err is not None:
+    raise MagicException(err)
+  else:
+    return result
 
 magic_open = libmagic.magic_open
 magic_open.restype = magic_t
@@ -165,7 +167,7 @@ _magic_buffer.errcheck = errorcheck
 
 
 def magic_buffer(cookie, buf):
-    return _magic_buffer(cookie, buf, len(buf))
+  return _magic_buffer(cookie, buf, len(buf))
 
 
 magic_load = libmagic.magic_load
