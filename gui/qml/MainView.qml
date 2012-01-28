@@ -65,15 +65,14 @@ Page {
         }
     }
 
-    // ** trigger notifications
     function notify(text) {
+        // send notifications
         notification.text = text;
         notification.show();
     }
 
-    // ** fullscreen handling
     function toggleFullscreen() {
-        /* handle fullscreen button hiding
+        /* handle fullscreen button hiding,
         it should be only visible with no toolbar */
         fullscreenButton.visible = !fullscreenButton.visible
         rootWindow.showToolBar = !rootWindow.showToolBar;
@@ -121,11 +120,11 @@ Page {
     /** Page fitting **/
 
     function setPageFitMode(fitMode) {
-        /**
+        /*
         console.log("SET PAGE FIT MODE")
         console.log(fitMode)
         console.log(mainView.pageFitMode)
-        **/
+        */
         // set page fitting - only update on a mode change
         if (fitMode != mainView.pageFitMode) {
             options.set("fitMode", fitMode)
@@ -159,14 +158,14 @@ Page {
     }
 
     function fitPage(mode) {
-        /**
+        /*
         console.log("FIT PAGE")
         console.log(mode)
         console.log(mainView.width)
         console.log(mainView.height)
         console.log(mangaPage.sourceSize.width)
         console.log(mangaPage.sourceSize.height)
-        **/
+        */
 
         // fit the page according to the current fitting mode
         if (mode == "original") {
@@ -193,9 +192,9 @@ Page {
                 pageFlickable.scale = mainView.height/mangaPage.sourceSize.height
             }
 
-        /** nothing needs to be done for the custom mode
+        /* nothing needs to be done for the custom mode
          as the current scale is just used as the initial
-         custom scale **/
+         custom scale */
         }
     }
 
@@ -219,6 +218,8 @@ Page {
       restoreRotation()
     }
 
+    /** Toolbar **/
+
     ToolBarLayout {
         id : mainViewToolBar
         visible: false
@@ -236,9 +237,10 @@ Page {
         //ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
         }
 
+    /** Quick menu **/
+
     Menu {
         id : mainViewMenu
-
         MenuLayout {
             MenuItem {
               text : "Open file"
@@ -270,6 +272,8 @@ Page {
             }
         }
     }
+
+    /** Pinch zoom **/
 
     PinchArea {
         //anchors.fill : parent
@@ -322,6 +326,8 @@ Page {
         }
     }
 
+    /** Left/right screen half page switching **/
+
     MouseArea {
         anchors.fill : parent
         id: prevButton
@@ -340,6 +346,8 @@ Page {
                 readingState.next();
             }
         }
+
+        /** Main manga page flickable **/
 
         Flickable {
             id: pageFlickable
@@ -390,6 +398,8 @@ Page {
         }
     }
 
+    /** Fullscreen toggle button **/
+
     ToolIcon {
         id : fullscreenButton
         //source : "image://icons/view-fullscreen.png"
@@ -406,6 +416,8 @@ Page {
             onClicked: mainView.toggleFullscreen();
         }
     }
+
+    /** Main menu **/
 
     Menu {
         id : pagingDialog
@@ -464,22 +476,25 @@ Page {
                         }
                     }
                 }
-                /**
+                /*
                 platformIconId: "icon-m-common-" + __iconType + __inverseString
 
                 property string __inverseString: style.inverted ? "-inverse" : ""
-                **/
+                */
 
             }
         }
     }
+
+    /** No pages loaded label **/
+
     Label {
         anchors.centerIn : parent
         text : "<h1>No pages loaded</h1>"
         visible : !mainView.pageLoaded
     }
 
-    //paging feedback
+    /** Paging feedback **/
 
     Item {
         id : previousFeedback
