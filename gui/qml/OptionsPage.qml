@@ -19,6 +19,9 @@ Page {
         Column {
             id : optionsColumn
             spacing : 30
+            width : optionsPage.width
+
+
 
             LineText {
                 width : optionsPage.width
