@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 from __future__ import with_statement # for python 2.5
+from gui import gui
 
+import timer
 import time
 from threading import RLock
 
 # Mieru modules import
+startTs = timer.start()
 import manga
 import options
 import startup
 import stats
-import gui
+timer.elapsed(startTs, "All modules combined")
 # append the platform modules folder to path
 import sys
 sys.path.append('platforms')
@@ -28,6 +31,7 @@ class Mieru:
 
   def __init__(self):
     # log start
+    initTs = time.clock()
     self.startupTimeStamp = time.time()
 
     # parse startup arguments
@@ -51,12 +55,16 @@ class Mieru:
     initialSize = (800,480)
 
     # create the GUI
+    startTs1 = timer.start()
+
     if args.u == "hildon":
       self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
     if args.u == "harmattan" or args.u=='QML':
       self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)
     else:
       self.gui = gui.getGui(self, 'GTK', accel=True, size=initialSize)
+
+    timer.elapsed(startTs1, "GUI module import")
 
 #    # resize the viewport when window size changes
 #    self.gui.resizeNotify(self._resizeViewport)
@@ -91,6 +99,9 @@ class Mieru:
       self._restoreState()
 
 #    self.gui.toggleFullscreen()
+
+    timer.elapsed(initTs, "Init")
+    timer.elapsed(startTs, "Complete startup")
 
     # start the main loop
     self.gui.startMainLoop()
