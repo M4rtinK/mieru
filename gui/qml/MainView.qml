@@ -359,6 +359,12 @@ Page {
             anchors.topMargin : (contentHeight < mainView.height) ? (mainView.height-contentHeight)/2.0 : 0
             contentWidth : mangaPage.width
             contentHeight : mangaPage.height
+            /*
+            clipping seems to lead to performance degradation so it is only enabled
+            once the GUI-page transition starts to prevent the manga-page overlapping
+            the new GUI-page during transition
+            */
+            clip : rootWindow.pageStack.busy
 
             Image {
                 id: mangaPage
