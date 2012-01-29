@@ -149,11 +149,11 @@ Page {
 
     // handle viewport resize
     onWidthChanged : {
-        //console.log("mw width")
+        //console.log("mw width " + width)
         fitPage(pageFitMode)
     }
     onHeightChanged : {
-        //console.log("mw height")
+        //console.log("mw height " + height)
         fitPage(pageFitMode)
     }
 
