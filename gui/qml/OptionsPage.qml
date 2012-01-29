@@ -69,7 +69,7 @@ Page {
             }
 
             SwitchWithText {
-                text : "<b>Show statusbar</b>"
+                text : "<b>Show status bar</b>"
                 checked : rootWindow.showStatusBar
                 onCheckedChanged : {
                     rootWindow.showStatusBar = checked
