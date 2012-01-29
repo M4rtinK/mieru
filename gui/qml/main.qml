@@ -14,6 +14,9 @@ PageStackWindow {
                       }
 
     property string statsText : ""
+    property int statusBarHeight : 36
+    /* TODO: replace hardcoded value
+    with actual status bar height */
 
     function showPage(path, pageId) {
         mainView.showPage(path, pageId)
@@ -69,6 +72,9 @@ PageStackWindow {
         id: notification
         timerShowTime : 5000
         height : rootWindow.height/5.0
+        // prevent overlapping with status bar
+        y : rootWindow.showStatusBar ? rootWindow.statusBarHeight + 8 : 8
+
     }
 
     QueryDialog {
