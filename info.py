@@ -71,9 +71,9 @@ def getAboutText(forum="meego"):
   text+= '<p><b>email</b>: <a href="mailto:mieru.info@gmail.com">mieru.info@gmail.com</a></p>'
   text+= '<p><b>www</b>:  <a href="http://m4rtink.github.com/mieru/">http://m4rtink.github.com/mieru/</a></p>'
   if forum == "meego":
-    text+= '<p><b>discussion</b>: check <a href="http://forum.meego.com">http://forum.meego.com</a></p>'
+    text+= '<p><b>discussion</b>: <a href="http://forum.meego.com/showthread.php?t=5405">forum.meego.com thread</a></p>'
   else:
-    text+= '<p><b>discussion</b>: check <a href="http://talk.maemo.org">http://talk.maemo.org</a></p>'
+    text+= '<p><b>discussion</b>: check <a href="http://talk.maemo.org/showthread.php?t=73907">talk.maemo.org thread</a></p>'
   return text
 
 def getAboutContent(versionString="unknown"):
