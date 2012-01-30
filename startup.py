@@ -9,6 +9,9 @@ class Startup():
     parser.add_argument('-u',
                         help="specify user interface type", default="pc",
                         action="store", choices=["pc","hildon", "harmattan", "QML"])
+    parser.add_argument('-p',
+                        help="specify user interface type", default="pc",
+                        action="store", choices=["maemo5", "harmattan", "desktop"])
     parser.add_argument('-o',
                         help="specify path to a manga or comic book to open", default=None,
                         action="store", metavar="path to file",)

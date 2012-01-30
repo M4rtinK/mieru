@@ -9,6 +9,9 @@ class Harmattan(BasePlatform):
     BasePlatform.__init__(self)
     self.mieru = mieru
 
+  def getIDString(self):
+    return "harmattan"
+
   def notify(self, message, icon=""):
     self.mieru.gui._notify(message, icon)
 

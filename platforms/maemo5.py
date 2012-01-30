@@ -12,63 +12,78 @@ import info
 from base_platform import BasePlatform
 
 class Maemo5(BasePlatform):
-  def __init__(self, mieru):
+  def __init__(self, mieru, GTK=True):
     BasePlatform.__init__(self)
 
     self.mieru = mieru
-    window = self.mieru.gui.getWindow()
+    self.GTK = GTK
+    if GTK:
+      window = self.mieru.gui.getWindow()
 
-    # enable zoom/volume keys for usage by mieru
-    self.enableZoomKeys(window)
+      # enable zoom/volume keys for usage by mieru
+      self.enableZoomKeys(window)
 
-    # enable rotation
-    self.rotationObject = self._startAutorotation()
+      # enable rotation
+      self.rotationObject = self._startAutorotation()
 
-    # add application menu
-    menu = hildon.AppMenu()
-    openFolderButton = gtk.Button("Open folder")
-    openFolderButton.connect('clicked',self.startChooserCB, "folder")
-    openFileButton = gtk.Button("Open file")
-    openFileButton.connect('clicked',self.startChooserCB, "file")
-    fullscreenButton = gtk.Button("Fullscreen")
-    fullscreenButton.connect('clicked',self._toggleFullscreenCB)
+      # add application menu
+      menu = hildon.AppMenu()
+      openFolderButton = gtk.Button("Open folder")
+      openFolderButton.connect('clicked',self.startChooserCB, "folder")
+      openFileButton = gtk.Button("Open file")
+      openFileButton.connect('clicked',self.startChooserCB, "file")
+      fullscreenButton = gtk.Button("Fullscreen")
+      fullscreenButton.connect('clicked',self._toggleFullscreenCB)
 
-    # last open mangas list
-    self.historyStore = gtk.ListStore(gobject.TYPE_STRING)
-    self.historyLocked = False
-    self._updateHistory()
-    selector = self._getHistorySelector()
-    selector.connect('changed', self._historyRowSelected)
-    historyPickerButton = self.getVerticalPickerButton("History")
-    historyPickerButton.set_selector(selector)
-    self.historyPickerButton = historyPickerButton
-    self.mieru.watch('openMangasHistory', self._updateHistoryCB)
+      # last open mangas list
+      self.historyStore = gtk.ListStore(gobject.TYPE_STRING)
+      self.historyLocked = False
+      self._updateHistory()
+      selector = self._getHistorySelector()
+      selector.connect('changed', self._historyRowSelected)
+      historyPickerButton = self.getVerticalPickerButton("History")
+      historyPickerButton.set_selector(selector)
+      self.historyPickerButton = historyPickerButton
+      self.mieru.watch('openMangasHistory', self._updateHistoryCB)
 
-    optionsButton = gtk.Button("Options")
-    optionsButton.connect('clicked',self._showOptionsCB)
+      optionsButton = gtk.Button("Options")
+      optionsButton.connect('clicked',self._showOptionsCB)
 
-    infoButton = gtk.Button("Info")
-    infoButton.connect('clicked',self._showInfoCB)
+      infoButton = gtk.Button("Info")
+      infoButton.connect('clicked',self._showInfoCB)
 
-    pagingButton = gtk.Button("Paging")
-    pagingButton.connect('clicked',self.showPagingDialogCB)
+      pagingButton = gtk.Button("Paging")
+      pagingButton.connect('clicked',self.showPagingDialogCB)
 
-    fittPickerButton = self._getFittingPickerButton("Page fitting", arangement=hildon.BUTTON_ARRANGEMENT_VERTICAL)
+      fittPickerButton = self._getFittingPickerButton("Page fitting", arangement=hildon.BUTTON_ARRANGEMENT_VERTICAL)
 
-    menu.append(openFileButton)
-    menu.append(openFolderButton)
-    menu.append(fullscreenButton)
-    menu.append(historyPickerButton)
-    menu.append(pagingButton)
-    menu.append(fittPickerButton)
-    menu.append(optionsButton)
-    menu.append(infoButton)
+      menu.append(openFileButton)
+      menu.append(openFolderButton)
+      menu.append(fullscreenButton)
+      menu.append(historyPickerButton)
+      menu.append(pagingButton)
+      menu.append(fittPickerButton)
+      menu.append(optionsButton)
+      menu.append(infoButton)
 
-    # Show all menu items
-    menu.show_all()
+      # Show all menu items
+      menu.show_all()
 
-    # Add the menu to the window
-    window.set_app_menu(menu)
+      # Add the menu to the window
+      window.set_app_menu(menu)
+
+  def getIDString(self):
+    return "maemo5"
+
+  """
+  as the Fremantle toolbar is not shown if using Qt Components,
+  Minimise and Quit buttons are needed
+  """
+  def showMinimiseButton(self):
+    return True
+
+  def showQuitButton(self):
+    return True
 
   def _toggleFullscreenCB(self, button):
     self.mieru.gui.toggleFullscreen()
@@ -401,8 +416,11 @@ class Maemo5(BasePlatform):
       self.mieru.openManga(selectedPath)
 
   def notify(self, message, icon=None):
-    print message
-    hildon.hildon_banner_show_information_with_markup(self.mieru.gui.getWindow(), "icon_text", message)
+    if self.GTK:
+      print message
+      hildon.hildon_banner_show_information_with_markup(self.mieru.gui.getWindow(), "icon_text", message)
+    else:
+      self.mieru.gui._notify(message, icon)
 
   def pagingDialogBeforeOpen(self):
     """notify the user that the window in tha bakcground does not live-update"""

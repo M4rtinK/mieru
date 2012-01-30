@@ -1,8 +1,8 @@
 //MainView.qml
-//import Qt 4.7
-import QtQuick 1.1
-import com.nokia.meego 1.0
-import com.nokia.extras 1.0
+import Qt 4.7
+//import QtQuick 1.1
+import org.maemo.fremantle 1.0
+import org.maemo.extras 1.0
 
 Page {
     id : mainView
@@ -248,47 +248,15 @@ Page {
 
     Menu {
         id : mainViewMenu
-        MenuLayout {
-            MenuItem {
-              text : "Open file"
-              onClicked : {
-                  fileSelector.down(readingState.getSavedFileSelectorPath());
-                  fileSelector.open();
-            }
-        }
-
-            MenuItem {
-                text : "History"
-                onClicked : {
-                    rootWindow.openFile("HistoryPage.qml")
-                    }
-            }
-
-            MenuItem {
-                text : "Info"
-                onClicked : {
-                    rootWindow.openFile("InfoPage.qml")
-                }
-            }
-
-            MenuItem {
-                text : "Options"
-                onClicked : {
-                    rootWindow.openFile("OptionsPage.qml")
-                    }
-            }
-
-            MenuItem {
-                text : "Quit"
-                onClicked : {
-                    readingState.quit()
-                    }
-            }
-        }
+        /*content : platform.showQuitButton ?
+                  Qt.createComponent("MenuL.qml") :
+                  Qt.createComponent("MenuLQuit.qml");
+        */
+        MenuLQuit { }
     }
 
-    /** Pinch zoom **/
-
+    /** Pinch zoom - not available in QML 1.0 **/
+    /*
     PinchArea {
         //anchors.fill : parent
         //onPinchStarted : console.log("pinch started")
@@ -339,6 +307,7 @@ Page {
             }
         }
     }
+    */
 
     /** Left/right screen half page switching **/
 
@@ -580,6 +549,23 @@ Page {
         triggeredOnStart : true
         onTriggered : {
             nextFeedback.visible = !nextFeedback.visible
+        }
+    }
+
+    /** Optional Minimise button **/
+    Image {
+        id : minimiseButton
+        visible: rootWindow.showToolBar && platform.showMinimiseButton()
+        anchors.top : mainView.top
+        anchors.left : mainView.left
+        anchors.topMargin : 10
+        anchors.rightMargin : 10
+        source : "image://icons/switch.png"
+        MouseArea {
+            anchors.fill : parent
+            onClicked : {
+                platform.minimise()
+            }
         }
     }
 }

@@ -54,6 +54,34 @@ class Mieru:
 
     initialSize = (800,480)
 
+
+    # get the platform module
+    self.platform = None
+
+    if args.p:
+      if args.p == "maemo5":
+        import maemo5
+        self.platform = maemo5.Maemo5(self, GTK=False)
+      elif args.p == "harmattan":
+        import harmattan
+        self.platform = harmattan.Harmattan(self)
+      else:
+        import pc
+        self.platform = pc.PC(self)
+
+    else:
+      # no platform provided, decide based on selected GUI
+      if args.u == "hildon":
+        import maemo5
+        self.platform = maemo5.Maemo5(self)
+      elif args.u == "harmattan":
+        import harmattan
+        self.platform = harmattan.Harmattan(self)
+      else:
+        import pc
+        self.platform = pc.PC(self)
+
+
     # create the GUI
     startTs1 = timer.start()
 
@@ -69,17 +97,8 @@ class Mieru:
 #    # resize the viewport when window size changes
 #    self.gui.resizeNotify(self._resizeViewport)
 
-    # get the platform module
-    if args.u == "hildon":
-      import maemo5
-      self.platform = maemo5.Maemo5(self)
-    elif args.u == "harmattan":
-      import harmattan
-      self.platform = harmattan.Harmattan(self)
 
-    else:
-      import pc
-      self.platform = pc.PC(self)
+
 
     self.activeManga = None
 

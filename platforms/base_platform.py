@@ -9,6 +9,12 @@ class BasePlatform:
   def __init__(self):
     pass
 
+  def getIDString(self):
+    """
+    get a unique string identifier for a platform module
+    """
+    return None
+
   def hasPagingKeys(self):
     """report if the device has has some buttons usable for paging"""
     return False
@@ -54,6 +60,26 @@ class BasePlatform:
     """minimize the main window"""
     pass
 
+  def showMinimiseButton(self):
+    """
+    report if a window minimise button needs to be shown somewhere in the
+     application managed UI
+    """
+    return True
+
+  def showQuitButton(self):
+    """
+    report if a quit button needs to be shown somewhere in the
+     application managed UI
+    """
+    return True
+
+  def getDefaultFileSelectorPath(self):
+    """a fail-safe path for the file/folder selector on its first opening"""
+    return '/'
+
+  # GTK specific
+
   def Button(self, label=""):
     """return classic GTK button"""
     return gtk.Button(label)
@@ -62,7 +88,5 @@ class BasePlatform:
     """return classic GTK check button"""
     return gtk.CheckButton(label)
 
-  def getDefaultFileSelectorPath(self):
-    """a failsafe path for the file/folder selector on its first opening"""
-    return '/'
+
 
