@@ -270,6 +270,13 @@ Page {
                     rootWindow.openFile("OptionsPage.qml")
                     }
             }
+
+            MenuItem {
+                text : "Quit"
+                onClicked : {
+                    readingState.quit()
+                    }
+            }
         }
     }
 
