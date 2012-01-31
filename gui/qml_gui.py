@@ -487,6 +487,18 @@ class Platform(QtCore.QObject):
     """
     return self.mieru.platform.showQuitButton()
 
+  @QtCore.Slot(result=bool)
+  def incompleteTheme(self):
+    """
+    The theme is incomplete, use fail-safe or local icons.
+    Hopefully, this can be removed once the themes are in better shape.
+    """
+    # the Fremantle theme is incomplete
+    if self.mieru.platform.getIDString() == "maemo5":
+      return True
+    else:
+      false
+
 class Options(QtCore.QObject):
   """make options available to QML and integrable as a property"""
   def __init__(self, mieru):
