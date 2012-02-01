@@ -260,7 +260,7 @@ class MangaPageImageProvider(QDeclarativeImageProvider):
 #    if requestedSize:
 #      print "requestedSize"
 #      return img.scaled(requestedSize)
-#    else:
+#    else:svw
 #      return img
 #    print img.size()
     return img
@@ -497,7 +497,7 @@ class Platform(QtCore.QObject):
     if self.mieru.platform.getIDString() == "maemo5":
       return True
     else:
-      false
+      return False
 
 class Options(QtCore.QObject):
   """make options available to QML and integrable as a property"""
@@ -521,6 +521,7 @@ class Options(QtCore.QObject):
     print key, default, self.mieru.get(key, default)
     return self.mieru.get(key, default)
 
+
   @QtCore.Slot(str, bool)
   @QtCore.Slot(str, int)
   @QtCore.Slot(str, str)
@@ -530,6 +531,58 @@ class Options(QtCore.QObject):
     print "SET"
     print key, value
     return self.mieru.set(key, value)
+
+  # for old PySide versions that don't support multiple
+  # function decorations
+
+  @QtCore.Slot(str, bool, result=bool)
+  def getB(self, key, default):
+    print "GET"
+    print key, default, self.mieru.get(key, default)
+    return self.mieru.get(key, default)
+
+  @QtCore.Slot(str, str, result=str)
+  def getS(self, key, default):
+    print "GET"
+    print key, default, self.mieru.get(key, default)
+    return self.mieru.get(key, default)
+
+  @QtCore.Slot(str, int, result=int)
+  def getI(self, key, default):
+    print "GET"
+    print key, default, self.mieru.get(key, default)
+    return self.mieru.get(key, default)
+
+  @QtCore.Slot(str, float, result=float)
+  def getF(self, key, default):
+    print "GET"
+    print key, default, self.mieru.get(key, default)
+    return self.mieru.get(key, default)
+
+  @QtCore.Slot(str, bool)
+  def setB(self, key, value):
+    print "SET"
+    print key, value
+    return self.mieru.set(key, value)
+
+  @QtCore.Slot(str, str)
+  def setS(self, key, value):
+    print "SET"
+    print key, value
+    return self.mieru.set(key, value)
+
+  @QtCore.Slot(str, int)
+  def setI(self, key, value):
+    print "SET"
+    print key, value
+    return self.mieru.set(key, value)
+
+  @QtCore.Slot(str, float)
+  def setF(self, key, value):
+    print "SET"
+    print key, value
+    return self.mieru.set(key, value)
+
 
 
 # ** history list wrappers **
@@ -591,9 +644,10 @@ class HistoryListModel(QtCore.QAbstractListModel):
   def data(self, index, role):
     #print "DATA"
     #print self._things
-    if index.isValid() and role == HistoryListModel.COLUMNS.index('thing'):
-      return self._things[index.row()]
-    return None
+    return self._things[index.row()]
+#    if index.isValid() and role == HistoryListModel.COLUMNS.index('thing'):
+#      return self._things[index.row()]
+#    return None
 
   @QtCore.Slot()
   def removeChecked(self):

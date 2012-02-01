@@ -5,8 +5,8 @@ import org.maemo.extras 1.0
 
 //Rectangle {
 PageStackWindow {
-    showStatusBar : options.get("QMLShowStatusBar", false)
-    showToolBar : options.get("QMLRememberToolbarState", false) ? options.get("QMLToolbarState", true) : true
+    showStatusBar : options.getB("QMLShowStatusBar", false)
+    showToolBar : options.getB("QMLRememberToolbarState", false) ? options.get("QMLToolbarState", true) : true
     id : rootWindow
     anchors.fill : parent
     initialPage : MainView {
@@ -86,7 +86,7 @@ PageStackWindow {
         acceptButtonText : "Don't show again"
         rejectButtonText : "OK"
         onAccepted: {
-            options.set("QMLShowFirstStartDialog", false)
+            options.setB("QMLShowFirstStartDialog", false)
         }
     }
 }

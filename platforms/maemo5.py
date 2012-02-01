@@ -423,12 +423,17 @@ class Maemo5(BasePlatform):
       self.mieru.gui._notify(message, icon)
 
   def pagingDialogBeforeOpen(self):
-    """notify the user that the window in tha bakcground does not live-update"""
+    """notify the user that the window in tha background does not live-update"""
     self.notify("<b>Note:</b> the page in background does not refresh automatically", None)
 
   def minimize(self):
     """minimizing is not supported on Maemo :)"""
     self.notify('hiding to panel is not supported ona Maemo (no panel :)', None)
+
+  def getDefaultFileSelectorPath(self):
+    """we default to the MyDocs folder as this is where most
+      users will store their mangas and comic books"""
+    return "/home/user/MyDocs/"
 
   def _getDefaultRotationMode(self):
     return "auto"
