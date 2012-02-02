@@ -19,3 +19,11 @@ class Harmattan(BasePlatform):
     """we default to the MyDocs folder as this is where most
     users will store their mangas and comic books"""
     return "/home/user/MyDocs/"
+
+  def showQuitButton(self):
+    """Swype handles window closing"""
+    return False
+
+  def showMinimiseButton(self):
+    """Swype handles window switching"""
+    return False

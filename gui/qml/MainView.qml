@@ -227,7 +227,11 @@ Page {
             id : backTI
             iconId: "toolbar-view-menu"
             onClicked: {
-                mainViewMenu.open()
+                if (platform.showQuitButton()) {
+                    mainViewMenuWithQuit.open()
+                } else {
+                    mainViewMenu.open()
+                }
             }
         }
         //ToolIcon { iconId: "toolbar-previous" }
@@ -248,6 +252,40 @@ Page {
 
     Menu {
         id : mainViewMenu
+        MenuLayout {
+            MenuItem {
+              text : "Open file"
+              onClicked : {
+                  fileSelector.down(readingState.getSavedFileSelectorPath());
+                  fileSelector.open();
+            }
+        }
+
+            MenuItem {
+                text : "History"
+                onClicked : {
+                    rootWindow.openFile("HistoryPage.qml")
+                    }
+            }
+
+            MenuItem {
+                text : "Info"
+                onClicked : {
+                    rootWindow.openFile("InfoPage.qml")
+                }
+            }
+
+            MenuItem {
+                text : "Options"
+                onClicked : {
+                    rootWindow.openFile("OptionsPage.qml")
+                    }
+            }
+        }
+    }
+
+    Menu {
+        id : mainViewMenuWithQuit
         MenuLayout {
             MenuItem {
               text : "Open file"
