@@ -1,6 +1,6 @@
 Mieru
 
-Mieru is a flexible manga and comix reader.
+Mieru is a flexible manga and comic book reader.
 
 Feature overview:
 * touch friendly interface combined with handy key shortcuts
@@ -48,7 +48,7 @@ Python 2.5+, clutter, PyClutter, PyClutter-GTK, libmagic, rar and zip
 Installing:
 * install all dependencies
 * run mieru.py
- * using the -u parameter, you can specifiy the UI, "pc" = desktop ui,  "hildon" = Maemo 5 UI
+ * using the -u parameter, you can specify the UI, "pc" = desktop ui,  "hildon" = Maemo 5 UI
 
 Package availability
 * Harmattan(N9/50):
