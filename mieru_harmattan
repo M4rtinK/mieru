@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# start Mieru with harmattan platform and GUI modules
+python mieru.py -u harmattan -p harmattan

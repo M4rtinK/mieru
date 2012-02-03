@@ -14,6 +14,10 @@ import startup
 import stats
 timer.elapsed(startTs, "All modules combined")
 
+# set current directory to the directory
+# of this file
+# like this, Mieru can be run from absolute path
+# eq.: ./opt/mieru/mieru.py -p harmattan -u harmattan
 import os
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# start Mieru with fremantle platform module and
+# Qt Components (harmattan) GUI module
+python mieru.py -u harmattan -p maemo5
