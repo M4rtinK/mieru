@@ -13,6 +13,13 @@ import options
 import startup
 import stats
 timer.elapsed(startTs, "All modules combined")
+
+import os
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+
+
 # append the platform modules folder to path
 import sys
 sys.path.append('platforms')
