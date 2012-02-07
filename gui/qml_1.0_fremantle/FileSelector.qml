@@ -224,7 +224,7 @@ Dialog {
         source: "image://theme/icon-m-toolbar-back-white-selected"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-	opacity: parent.canGoUp?(backArea.pressed ? 0.5 : 1.0):0.4
+	    opacity: parent.canGoUp?(backArea.pressed ? 0.5 : 1.0):0.4
       }
 
       Label {

@@ -226,7 +226,7 @@ Dialog {
         "image://theme/icon-m-startup-back"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-	opacity: parent.canGoUp?(backArea.pressed ? 0.5 : 1.0):0.4
+	    opacity: parent.canGoUp?(backArea.pressed ? 0.5 : 1.0):0.4
       }
 
       Label {
