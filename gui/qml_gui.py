@@ -494,10 +494,7 @@ class Platform(QtCore.QObject):
     Hopefully, this can be removed once the themes are in better shape.
     """
     # the Fremantle theme is incomplete
-    if self.mieru.platform.getIDString() == "maemo5":
-      return True
-    else:
-      return False
+    return self.mieru.platform.getIDString() == "maemo5"
 
 class Options(QtCore.QObject):
   """make options available to QML and integrable as a property"""

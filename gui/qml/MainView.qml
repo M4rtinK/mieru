@@ -245,9 +245,9 @@ Page {
         //ToolIcon { iconId: "toolbar-next" }
         ToolIcon { //iconId: "toolbar-down"
                    // fix for incomplete theme on Fremantle
-                   iconId: platform.incompleteTheme ?
-                   "icon-m-common-next" : "toolbar-up"
-                   rotation : platform.incompleteTheme ? 90 : 0
+                   iconId: platform.incompleteTheme() ?
+                   "icon-m-common-next" : "toolbar-down"
+                   rotation : platform.incompleteTheme() ? 90 : 0
                    onClicked: mainView.toggleFullscreen() }
         //ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
         }
@@ -466,9 +466,9 @@ Page {
         id : fullscreenButton
         //source : "image://icons/view-fullscreen.png"
         // fix for incomplete theme on Fremantle
-        iconId: platform.incompleteTheme ?
+        iconId: platform.incompleteTheme() ?
         "icon-m-common-next" : "toolbar-up"
-        rotation : platform.incompleteTheme ? 270 : 0
+        rotation : platform.incompleteTheme() ? 270 : 0
         anchors.right : mainView.right
         anchors.bottom : mainView.bottom
         visible : !rootWindow.showToolBar

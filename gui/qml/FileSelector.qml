@@ -222,7 +222,7 @@ Dialog {
         id: backButton
         //source: "image://theme/icon-m-startup-back"
         // fix Fremantle CSSU icon availability
-        source: platform.incompleteTheme ? "image://theme/icon-m-toolbar-back-white-selected" :
+        source: platform.incompleteTheme() ? "image://theme/icon-m-toolbar-back-white-selected" :
         "image://theme/icon-m-startup-back"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
