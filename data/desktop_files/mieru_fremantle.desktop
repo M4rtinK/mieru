@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=Mieru
+Exec=/usr/bin/mieru
+Icon=/usr/share/icons/hicolor/80x80/apps/mieru.png
+Categories=Graphics;
+X-Window-Icon=
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Type=application/x-executable
