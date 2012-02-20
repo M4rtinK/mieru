@@ -1,11 +1,16 @@
 [Desktop Entry]
 Encoding=UTF-8
-Version=1.0
+Version=1.0.0
 Type=Application
 Name=Mieru
-Exec=/usr/bin/mieru
+Exec=mieru
 Icon=/usr/share/icons/hicolor/80x80/apps/mieru.png
 Categories=Graphics;
 X-Window-Icon=
 X-HildonDesk-ShowInToolbar=true
 X-Osso-Type=application/x-executable
+X-Icon-path=/usr/share/icons/hicolor/80x80/
+X-Window-Icon=mieru
+Terminal=false
+GenericName=Mieru manga and comics reader
+Comment=A manga and comics reader
