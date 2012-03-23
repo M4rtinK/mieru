@@ -3,7 +3,6 @@ import QtQuick 1.1
 import com.nokia.meego 1.0
 import com.nokia.extras 1.0
 
-//Rectangle {
 PageStackWindow {
     showStatusBar : options.get("QMLShowStatusBar", false)
     showToolBar : options.get("QMLRememberToolbarState", false) ? options.get("QMLToolbarState", true) : true
