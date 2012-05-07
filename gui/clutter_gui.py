@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ a clutter based GUI for Mieru """
 
 """

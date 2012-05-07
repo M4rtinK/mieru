@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """args.py a mieru CLI processor
 - it gets the commandline arguments and decides what to do
 """

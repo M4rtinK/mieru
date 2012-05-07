@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """a simple timing module
 
 just call the "elapsed" with a time.clock() timestamp and a message you want displayed and

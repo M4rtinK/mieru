@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """clutteR_page.py - a manga/comic book clutter page"""
 
 import clutter

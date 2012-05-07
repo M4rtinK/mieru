@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """a GTK GUI module for Mieru"""
 
 import pygtk

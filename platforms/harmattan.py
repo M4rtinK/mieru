@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Mieru hildon UI (for Maemo 5@N900)
 """

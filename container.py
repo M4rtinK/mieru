@@ -299,8 +299,6 @@ class RarContainer(Container):
         traceback.print_exc(file=sys.stdout)
         return None
 
-
-
 class TarContainer(Container):
   """This class represents a tar archive containing pictures."""
   def __init__(self, path):

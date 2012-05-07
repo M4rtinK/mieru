@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # [SNIPPET_NAME: How to load a pixbuf in a clutter.Texture]
 # [SNIPPET_CATEGORIES: Clutter]
 # [SNIPPET_DESCRIPTION: Shows how load a pixbuf from gtk into a clutter.Texture. This example is useful when you are working with an embeded clutter stage.]

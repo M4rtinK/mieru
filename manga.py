@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """a Mieru class representing a single manga / comic book file/folder
    - this is driven by the storage format - it can really be a single chapter,
    or a whole volume if all page images are in  a single file or folder

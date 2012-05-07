@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """page.py - a manga/comix book page"""
 
 class Page:

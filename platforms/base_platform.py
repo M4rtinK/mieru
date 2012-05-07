@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """this is a "abstract" class defining the API for platform modules
    NOTE: this is not just API, some multiplatform implementations are there too
 """

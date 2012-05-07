@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """various miscellaneous utility functions for Mieru"""
 
 class Point:

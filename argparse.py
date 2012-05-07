@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Author: Steven J. Bethard <steven.bethard@gmail.com>.
 
 """Command-line parsing library

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Mieru clutter button"""
 
 import clutter

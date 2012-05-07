@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """qml_page.py - a manga/comix book page based on an QML image"""
 
 import page

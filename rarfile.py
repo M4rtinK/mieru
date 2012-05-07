@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # rarfile.py
 #
 # Copyright (c) 2005-2010  Marko Kreen <markokr@gmail.com>

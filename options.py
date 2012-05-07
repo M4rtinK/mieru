@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Mieru persistent options storage"""
 import marshal
 import os

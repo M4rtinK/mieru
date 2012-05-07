@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """provides paging dialog for Mieru"""
 import gtk
 import re

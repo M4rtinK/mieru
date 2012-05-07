@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """page_cache.py - a cache for manga pages for Mieru"""
 from __future__ import with_statement # for python 2.5
 import threading

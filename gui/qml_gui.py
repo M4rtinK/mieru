@@ -1,4 +1,5 @@
 """a QML GUI module for Mieru"""
+# -*- coding: utf-8 -*-
 
 import sys
 import re

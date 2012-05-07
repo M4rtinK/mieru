@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """a Mieru module for displaying info menu content"""
 
 import os

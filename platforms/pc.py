@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """an ui/device/platform module targeted on desktop PCs"""
 
 import gtk
