@@ -203,6 +203,7 @@ Page {
                     mainView.notify("Opening:<br><b>"+link+"</b>")
                     Qt.openUrlExternally(link)
                 }
+            //TODO: mixed up braces ?
             Button {
                 text : "Donate ?"
                 anchors.horizontalCenter : parent.horizontalCenter
