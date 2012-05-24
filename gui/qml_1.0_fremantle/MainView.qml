@@ -591,17 +591,25 @@ Page {
     /** Paging feedback **/
 
     Item {
-        id : previousFeedback
-        visible : false
-        opacity : 0.7
-        anchors.verticalCenter : parent.verticalCenter
-        anchors.left : parent.left
-        anchors.leftMargin : 20
-        Image {
-            id : previousIcon
-            anchors.left : parent.left
-            source : "image://theme/icon-m-toolbar-previous"
-        }
+         id : previousFeedback
+         visible : false
+         opacity : 0.7
+         anchors.fill : parent
+         Rectangle {
+             id : previousRect
+             anchors.top    : parent.top
+             anchors.bottom : parent.bottom
+             anchors.left   : parent.left
+             width : previousIcon.width + 40
+             color: "darkgray"
+         }
+         Image {
+             id : previousIcon
+             anchors.verticalCenter : parent.verticalCenter
+             anchors.left : parent.left
+             anchors.leftMargin : 20
+             source : "image://theme/icon-m-toolbar-previous"
+         }
         /* Text {
             //text : "<b>PREVIOUS</b>"
             anchors.left : previousIcon.right
@@ -614,14 +622,22 @@ Page {
     }
     Item {
         id : nextFeedback
-        visible : false
-        opacity : 0.7
-        anchors.verticalCenter : parent.verticalCenter
-        anchors.right : parent.right
-        anchors.rightMargin : 20
-        Image {
-            id : nextIcon
-            anchors.right : parent.right
+         visible : false
+         opacity : 0.7
+         anchors.fill : parent
+         Rectangle {
+             id : nextRect
+             anchors.top    : parent.top
+             anchors.bottom : parent.bottom
+             anchors.right  : parent.right
+             width : nextIcon.width + 40
+             color: "darkgray"
+         }
+         Image {
+             id : nextIcon
+             anchors.verticalCenter : parent.verticalCenter
+             anchors.right : parent.right
+             anchors.rightMargin : 20
             source : "image://theme/icon-m-toolbar-next"
         }
         /* Text {
