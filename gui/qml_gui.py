@@ -75,16 +75,13 @@ class QMLGUI(gui.GUI):
     rc.setContextProperty('historyListController', historyListController)
     rc.setContextProperty('historyListModel', self.historyListModel)
 
-
     # Create an URL to the QML file
-    print "QT VERSION"
-    print QtCore.__version_info__
-    if QtCore.__version_info__ >= (4,7,4):
+    if self.mieru.platform.getIDString() == "maemo5":
+      # use QtQuick 1.0 (from CSSU)
+      url = QUrl('gui/qml_1.0_fremantle/main.qml')
+    else:
       # use QtQuick 1.1
       url = QUrl('gui/qml/main.qml')
-    else:
-      # QtQuick 1.0 fallback
-      url = QUrl('gui/qml_1.0_fremantle/main.qml')
 
     # Set the QML file and show
     self.view.setSource(url)

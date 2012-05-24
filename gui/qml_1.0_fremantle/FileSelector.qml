@@ -1,5 +1,6 @@
+//FileSelector.qml
 import Qt 4.7
-//import QtQuick 1.0
+import QtQuick 1.0
 import org.maemo.fremantle 1.0
 import Qt.labs.folderlistmodel 1.0
 
@@ -221,7 +222,10 @@ Dialog {
       // add "left" arrow to go up one directory
       Image {
         id: backButton
-        source: "image://theme/icon-m-toolbar-back-white-selected"
+        //source: "image://theme/icon-m-startup-back"
+        // fix Fremantle CSSU icon availability
+        source: platform.incompleteTheme() ? "image://theme/icon-m-toolbar-back-white-selected" :
+        "image://theme/icon-m-startup-back"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
 	    opacity: parent.canGoUp?(backArea.pressed ? 0.5 : 1.0):0.4

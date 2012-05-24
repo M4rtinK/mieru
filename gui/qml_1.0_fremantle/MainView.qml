@@ -1,6 +1,6 @@
 //MainView.qml
 import Qt 4.7
-//import QtQuick 1.1
+import QtQuick 1.0
 import org.maemo.fremantle 1.0
 import org.maemo.extras 1.0
 
@@ -14,10 +14,10 @@ Page {
     property int pageNumber : 1
     property string mangaPath : ""
     property string lastUrl
-    property bool rememberScale : options.getB("QMLRememberScale", false)
+    property bool rememberScale : options.get("QMLRememberScale", false)
     property bool pageLoaded : false
-    property bool pagingFeedback : options.getB("QMLPagingFeedback", true)
-    property string pageFitMode : options.getS("fitMode", "original")
+    property bool pagingFeedback : options.get("QMLPagingFeedback", true)
+    property string pageFitMode : options.get("fitMode", "original")
 
     property alias fullscreenButtonOpacity : fullscreenButton.opacity
 
@@ -84,7 +84,7 @@ Page {
         it should be only visible with no toolbar */
         fullscreenButton.visible = !fullscreenButton.visible
         rootWindow.showToolBar = !rootWindow.showToolBar;
-        options.setB("QMLToolbarState", rootWindow.showToolBar)
+        options.set("QMLToolbarState", rootWindow.showToolBar)
     }
 
     function getScale() {
@@ -101,7 +101,7 @@ Page {
 
     // restore possible saved rotation lock value
     function restoreRotation() {
-        var savedRotation = options.getS("QMLmainViewRotation", "auto")
+        var savedRotation = options.get("QMLmainViewRotation", "auto")
         if ( savedRotation == "auto" ) {
             mainView.orientationLock = PageOrientation.Automatic
         } else if ( savedRotation == "portrait" ) {
@@ -135,7 +135,7 @@ Page {
         */
         // set page fitting - only update on a mode change
         if (fitMode != mainView.pageFitMode) {
-            options.setS("fitMode", fitMode)
+            options.set("fitMode", fitMode)
             mainView.pageFitMode = fitMode
         }
         // scale remembering for
@@ -143,10 +143,10 @@ Page {
         // * enable for custom fitting mode
         if (fitMode != "custom") {
             mainView.rememberScale = false
-            options.setB("QMLRememberScale", false)
+            options.set("QMLRememberScale", false)
         } else {
             mainView.rememberScale = true
-            options.setB("QMLRememberScale", true)
+            options.set("QMLRememberScale", true)
         }
     }
 
@@ -199,11 +199,11 @@ Page {
             } else {
                 pageFlickable.scale = mainView.height/mangaPage.sourceSize.height
             }
-        }
 
         /* nothing needs to be done for the custom mode
          as the current scale is just used as the initial
          custom scale */
+        }
     }
 
     function fitPageToScreen() {
@@ -235,7 +235,11 @@ Page {
             id : backTI
             iconId: "toolbar-view-menu"
             onClicked: {
-                mainViewMenu.open()
+                if (platform.showQuitButton()) {
+                    mainViewMenuWithQuit.open()
+                } else {
+                    mainViewMenu.open()
+                }
             }
         }
         //ToolIcon { iconId: "toolbar-previous" }
@@ -247,10 +251,12 @@ Page {
                      onClicked : { pagingDialog.open() }
         }
         //ToolIcon { iconId: "toolbar-next" }
-        ToolIcon {
-            iconId: "icon-m-common-next"
-            rotation: 90
-            onClicked: mainView.toggleFullscreen() }
+        ToolIcon { //iconId: "toolbar-down"
+                   // fix for incomplete theme on Fremantle
+                   iconId: platform.incompleteTheme() ?
+                   "icon-m-common-next" : "toolbar-down"
+                   rotation : platform.incompleteTheme() ? 90 : 0
+                   onClicked: mainView.toggleFullscreen() }
         //ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
         }
 
@@ -258,11 +264,77 @@ Page {
 
     Menu {
         id : mainViewMenu
-        /*content : platform.showQuitButton ?
-                  Qt.createComponent("MenuL.qml") :
-                  Qt.createComponent("MenuLQuit.qml");
-        */
-        MenuLQuit { }
+        MenuLayout {
+            MenuItem {
+              text : "Open file"
+              onClicked : {
+                  fileSelector.down(readingState.getSavedFileSelectorPath());
+                  fileSelector.open();
+            }
+        }
+
+            MenuItem {
+                text : "History"
+                onClicked : {
+                    rootWindow.openFile("HistoryPage.qml")
+                    }
+            }
+
+            MenuItem {
+                text : "Info"
+                onClicked : {
+                    rootWindow.openFile("InfoPage.qml")
+                }
+            }
+
+            MenuItem {
+                text : "Options"
+                onClicked : {
+                    rootWindow.openFile("OptionsPage.qml")
+                    }
+            }
+        }
+    }
+
+    Menu {
+        id : mainViewMenuWithQuit
+        MenuLayout {
+            MenuItem {
+              text : "Open file"
+              onClicked : {
+                  fileSelector.down(readingState.getSavedFileSelectorPath());
+                  fileSelector.open();
+            }
+        }
+
+            MenuItem {
+                text : "History"
+                onClicked : {
+                    rootWindow.openFile("HistoryPage.qml")
+                    }
+            }
+
+            MenuItem {
+                text : "Info"
+                onClicked : {
+                    rootWindow.openFile("InfoPage.qml")
+                }
+            }
+
+            MenuItem {
+                text : "Options"
+                onClicked : {
+                    rootWindow.openFile("OptionsPage.qml")
+                    }
+            }
+
+            MenuItem {
+                text : "Quit"
+                onClicked : {
+                    readingState.quit()
+                    }
+            }
+        }
     }
 
     /** Pinch zoom - not available in QML 1.0 **/
@@ -309,7 +381,7 @@ Page {
             if (mainView.rememberScale) {
                 // save the new scale so that it can
                 // be used on the next page
-                options.setF("QMLMangaPageScale", pageFlickable.scale)
+                options.set("QMLMangaPageScale", pageFlickable.scale)
                 // override page fitting with the new scale
                 if (mainView.pageFitMode != "custom") {
                     mainView.setPageFitMode("custom")
@@ -344,7 +416,7 @@ Page {
 
         Flickable {
             id: pageFlickable
-            property real scale: mainView.rememberScale ? options.getF("QMLMangaPageScale", 1.0) : 1.0
+            property real scale: mainView.rememberScale ? options.get("QMLMangaPageScale", 1.0) : 1.0
             objectName: "pageFlickable"
             anchors.fill : parent
             // center the page if smaller than viewport
@@ -369,7 +441,7 @@ Page {
                 //width : pageFlickable.contentWidth
                 //height : pageFlickable.contentHeight
                 // update flickable width once an image is loaded
-
+                /**
                 onSourceChanged : {
                     console.log("source changed")
                     console.log(pageFlickable.width)
@@ -381,7 +453,6 @@ Page {
                     //console.log(sourceSize.width + " " + sourceSize.height)
                     //console.log(width + " " + height)
 
-                    /*
                     // assure page fitting
                     if (mainView.pageFitMode == "custom") {
                         // revert scale remembering on next page
@@ -390,11 +461,11 @@ Page {
                             pageFlickable.scale = 1.0
                             mainView.setPageFitMode("original")
                         }
-                    }*/
+                    }
                     //pageFlickable.contentWidth = sourceSize.width * pageFlickable.scale
                     //pageFlickable.contentHeight = sourceSize.height * pageFlickable.scale
                 }
-
+                **/
                 onSourceSizeChanged : {
                         if (mainView.pageFitMode != "custom") {
                             mainView.fitPage(mainView.pageFitMode)
@@ -409,22 +480,20 @@ Page {
     ToolIcon {
         id : fullscreenButton
         //source : "image://icons/view-fullscreen.png"
-        //iconId: "toolbar-up"
-        iconId: "icon-m-common-next"
-        rotation : 270
+        // fix for incomplete theme on Fremantle
+        iconId: platform.incompleteTheme() ?
+        "icon-m-common-next" : "toolbar-up"
+        rotation : platform.incompleteTheme() ? 270 : 0
         anchors.right : mainView.right
         anchors.bottom : mainView.bottom
         visible : !rootWindow.showToolBar
-        opacity : options.getF("QMLFullscreenButtonOpacity", 0.5)
+        opacity : options.get("QMLFullscreenButtonOpacity", 0.5)
         width : Math.min(parent.width,parent.height)/8.0
         height : Math.min(parent.width,parent.height)/8.0
         MouseArea {
             anchors.fill : parent
             drag.filterChildren: true
-            onClicked: {
-                mainView.toggleFullscreen()
-
-            }
+            onClicked: mainView.toggleFullscreen();
         }
     }
 

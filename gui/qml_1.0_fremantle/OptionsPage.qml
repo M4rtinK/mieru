@@ -1,6 +1,6 @@
 //OptionPage.qml
 import Qt 4.7
-//import QtQuick 1.1
+import QtQuick 1.0
 import org.maemo.fremantle 1.0
 
 Page {
@@ -46,7 +46,7 @@ Page {
                 id : bAuto
                 text : "auto"
                 onClicked : {
-                    options.setS("QMLmainViewRotation", "auto")
+                    options.set("QMLmainViewRotation", "auto")
                     mainView.orientationLock = PageOrientation.Automatic
                 }
               }
@@ -54,7 +54,7 @@ Page {
                 id : bPortrait
                 text : "portrait"
                 onClicked : {
-                    options.setS("QMLmainViewRotation", "portrait")
+                    options.set("QMLmainViewRotation", "portrait")
                     mainView.orientationLock = PageOrientation.LockPortrait
                 }
               }
@@ -62,7 +62,7 @@ Page {
                 id : bLandscape
                 text : "landscape"
                 onClicked : {
-                    options.setS("QMLmainViewRotation", "landscape")
+                    options.set("QMLmainViewRotation", "landscape")
                     mainView.orientationLock = PageOrientation.LockLandscape
                 }
               }
@@ -73,14 +73,14 @@ Page {
                 checked : rootWindow.showStatusBar
                 onCheckedChanged : {
                     rootWindow.showStatusBar = checked
-                    options.setB("QMLShowStatusBar", checked)
+                    options.set("QMLShowStatusBar", checked)
                 }
             }
             SwitchWithText {
                 text : "<b>Remember toolbar state</b>"
-                checked : options.getB("QMLRememberToolbarState", false)
+                checked : options.get("QMLRememberToolbarState", false)
                 onCheckedChanged : {
-                    options.setB("QMLRememberToolbarState", checked)
+                    options.set("QMLRememberToolbarState", checked)
                 }
             }
             SwitchWithText {
@@ -88,7 +88,7 @@ Page {
                 checked : mainView.pagingFeedback
                 onCheckedChanged : {
                     mainView.pagingFeedback = checked
-                    options.setB("QMLPagingFeedback", checked)
+                    options.set("QMLPagingFeedback", checked)
                 }
             }
 
@@ -114,7 +114,7 @@ Page {
                         outputValue = Math.round(value*100)/100
                     }
                     //update once dragging stops
-                    options.setF("QMLFullscreenButtonOpacity", outputValue)
+                    options.set("QMLFullscreenButtonOpacity", outputValue)
                     mainView.fullscreenButtonOpacity = outputValue
                 }
 
