@@ -406,13 +406,16 @@ Page {
         objectName: "prevButton"
         drag.filterChildren: true
         onClicked: {
-            if (mouseX < width/2.0){
+            // do not use the full screen area for page switching
+            var margin = width * 0.2; // 20%
+            
+            if (mouseX < margin) {
                 mainView.showPrevFeedback()
                 console.log("previous page");
                 readingState.previous();
             }
 
-            else{
+            if (mouseX > (width - margin)) {
                 mainView.showNextFeedback()
                 console.log("next page");
                 readingState.next();
@@ -652,7 +655,8 @@ Page {
         }
     }
 
-    /** Optional Minimise button **/
+    /** Optional Minimise button for Maemo **/
+    
     Image {
         id : minimiseButton
         //visible: rootWindow.showToolBar && platform.showMinimiseButton()
