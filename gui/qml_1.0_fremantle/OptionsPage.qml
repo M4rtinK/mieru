@@ -129,6 +129,19 @@ Page {
                 buttonText : mainView.pageFitMode
                 selector : pageFitSelector
             }
+            
+            LineText {
+                width : optionsPage.width
+                text : "Miscellaneous"
+            }
+            SwitchWithText {
+                text : "<b>Manga reading mode</b>"
+                checked : rootWindow.enableMangaMode
+                onCheckedChanged : {                                                    
+                    rootWindow.enableMangaMode = checked                                  
+                    options.set("QMLMangaMode", checked)                            
+                } 
+            }
         }
     }
 

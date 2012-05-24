@@ -45,9 +45,16 @@ Page {
           console.log(mangaPage.sourceSize.width)
           console.log(mangaPage.sourceSize.height)
           mangaPage.source = url
-              // reset the page position
-              pageFlickable.contentX = 0;
-              pageFlickable.contentY = 0;
+          
+          // reset the page position
+          pageFlickable.contentX = 0;
+          pageFlickable.contentY = 0;
+
+          // in manga mode reading starts from right - so adjust the initial flick
+          if((rootWindow.enableMangaMode) && (mangaPage.width > mainView.width)) {
+            pageFlickable.contentX = mangaPage.width - mainView.width;
+          }
+          
           //update page number in the current manga instance
           //NOTE: this is especially important due to the slider
           readingState.setPageID(pageIndex, mangaPath)
@@ -424,6 +431,7 @@ Page {
             anchors.topMargin : (contentHeight < mainView.height) ? (mainView.height-contentHeight)/2.0 : 0
             contentWidth : mangaPage.width
             contentHeight : mangaPage.height
+            
             /*
             clipping seems to lead to performance degradation so it is only enabled
             once the GUI-page transition starts to prevent the manga-page overlapping
@@ -438,6 +446,7 @@ Page {
                 //smooth : !pageFlickable.moving
                 smooth : true
                 fillMode : Image.PreserveAspectFit
+                
                 //width : pageFlickable.contentWidth
                 //height : pageFlickable.contentHeight
                 // update flickable width once an image is loaded
