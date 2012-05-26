@@ -1,6 +1,6 @@
 //OptionPage.qml
 import Qt 4.7
-//import QtQuick 1.1
+import QtQuick 1.0
 import org.maemo.fremantle 1.0
 
 Page {
@@ -46,7 +46,7 @@ Page {
                 id : bAuto
                 text : "auto"
                 onClicked : {
-                    options.setS("QMLmainViewRotation", "auto")
+                    options.set("QMLmainViewRotation", "auto")
                     mainView.orientationLock = PageOrientation.Automatic
                 }
               }
@@ -54,7 +54,7 @@ Page {
                 id : bPortrait
                 text : "portrait"
                 onClicked : {
-                    options.setS("QMLmainViewRotation", "portrait")
+                    options.set("QMLmainViewRotation", "portrait")
                     mainView.orientationLock = PageOrientation.LockPortrait
                 }
               }
@@ -62,7 +62,7 @@ Page {
                 id : bLandscape
                 text : "landscape"
                 onClicked : {
-                    options.setS("QMLmainViewRotation", "landscape")
+                    options.set("QMLmainViewRotation", "landscape")
                     mainView.orientationLock = PageOrientation.LockLandscape
                 }
               }
@@ -73,22 +73,14 @@ Page {
                 checked : rootWindow.showStatusBar
                 onCheckedChanged : {
                     rootWindow.showStatusBar = checked
-                    options.setB("QMLShowStatusBar", checked)
+                    options.set("QMLShowStatusBar", checked)
                 }
             }
             SwitchWithText {
                 text : "<b>Remember toolbar state</b>"
-                checked : options.getB("QMLRememberToolbarState", false)
+                checked : options.get("QMLRememberToolbarState", false)
                 onCheckedChanged : {
-                    options.setB("QMLRememberToolbarState", checked)
-                }
-            }
-            SwitchWithText {
-                text : "<b>Show paging feedback</b>"
-                checked : mainView.pagingFeedback
-                onCheckedChanged : {
-                    mainView.pagingFeedback = checked
-                    options.setB("QMLPagingFeedback", checked)
+                    options.set("QMLRememberToolbarState", checked)
                 }
             }
 
@@ -114,10 +106,56 @@ Page {
                         outputValue = Math.round(value*100)/100
                     }
                     //update once dragging stops
-                    options.setF("QMLFullscreenButtonOpacity", outputValue)
+                    options.set("QMLFullscreenButtonOpacity", outputValue)
                     mainView.fullscreenButtonOpacity = outputValue
                 }
 
+            }
+            
+            LineText {
+                width : optionsPage.width
+                text : "Paging options"
+            }
+            
+            Label {
+                text : "<b>Paging mode</b>"
+            }
+            ButtonRow {
+              Component.onCompleted : {
+                  var pm = options.get("QMLPagingMode", "screen")
+                  if (pm == "screen") {
+                      checkedButton = bPMScreen
+                  } else if (pm == "edges") {
+                      checkedButton = bPMEdges
+                  } else {
+                      checkedButton = bPMScreen
+                  }
+              }
+              Button {
+                id : bPMScreen
+                text : "Whole screen"
+                onClicked : {
+                    options.set("QMLPagingMode", "screen")
+                    mainView.pagingMode = "screen"
+                }
+              }
+              Button {
+                id : bPMEdges
+                text : "On edges"
+                onClicked : {
+                    options.set("QMLPagingMode", "edges")
+                    mainView.pagingMode = "edges"
+                }
+              }
+            }
+            
+            SwitchWithText {
+                text : "<b>Show paging feedback</b>"
+                checked : mainView.pagingFeedback
+                onCheckedChanged : {
+                    mainView.pagingFeedback = checked
+                    options.set("QMLPagingFeedback", checked)
+                }
             }
 
             LineText {
@@ -128,6 +166,19 @@ Page {
                 text : "<b>Page fit mode</b>"
                 buttonText : mainView.pageFitMode
                 selector : pageFitSelector
+            }
+            
+            LineText {
+                width : optionsPage.width
+                text : "Miscellaneous"
+            }
+            SwitchWithText {
+                text : "<b>Manga reading mode</b>"
+                checked : rootWindow.enableMangaMode
+                onCheckedChanged : {                                                    
+                    rootWindow.enableMangaMode = checked                                  
+                    options.set("QMLMangaMode", checked)                            
+                } 
             }
         }
     }

@@ -75,16 +75,15 @@ class QMLGUI(gui.GUI):
     rc.setContextProperty('historyListController', historyListController)
     rc.setContextProperty('historyListModel', self.historyListModel)
 
-
-    # Create an URL to the QML file
-    print "QT VERSION"
-    print QtCore.__version_info__
-    if QtCore.__version_info__ >= (4,7,4):
-      # use QtQuick 1.1
+    # check for the installed Qt packages
+    if os.path.isdir("/usr/lib/qt4/imports/com/nokia/meego"):
+      # use com.nokia.meego namespace available
       url = QUrl('gui/qml/main.qml')
-    else:
-      # QtQuick 1.0 fallback
+    elif os.path.isdir("/usr/lib/qt4/imports/org/maemo/fremantle"):
+      # use org.maemo.fremantle
       url = QUrl('gui/qml_1.0_fremantle/main.qml')
+    else:
+      raise Exception("no known Qt import location found")
 
     # Set the QML file and show
     self.view.setSource(url)

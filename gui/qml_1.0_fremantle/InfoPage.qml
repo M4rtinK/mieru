@@ -1,6 +1,6 @@
-//OptionsPage.qml
+//InfoPage.qml
 import Qt 4.7
-//import QtQuick 1.0
+import QtQuick 1.0
 import org.maemo.fremantle 1.0
 
 Page {
@@ -203,6 +203,7 @@ Page {
                     mainView.notify("Opening:<br><b>"+link+"</b>")
                     Qt.openUrlExternally(link)
                 }
+            //TODO: mixed up braces ?
             Button {
                 text : "Donate ?"
                 anchors.horizontalCenter : parent.horizontalCenter

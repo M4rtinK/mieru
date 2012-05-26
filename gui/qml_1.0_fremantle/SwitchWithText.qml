@@ -1,5 +1,6 @@
+//SwitchWithText.qml
 import Qt 4.7
-//import QtQuick 1.1
+import QtQuick 1.0
 import org.maemo.fremantle 1.0
 
 Item {
