@@ -1,4 +1,5 @@
-"""Mieru image files container abstraction"""
+# -*- coding: utf-8 -*-
+"""Mieru manga page container"""
 
 import zipfile26 as zipfile # use backported zipfile from PYthon 2.6
 import os
@@ -136,7 +137,7 @@ class Container:
   def getImageFileById(self, id):
     try:
       filename = self.imageFiles[id]
-      return (self.getFile(filename),self.imageFiles.index(filename))
+      return self.getFile(filename),self.imageFiles.index(filename)
     except IndexError, ValueError:
       print "no image file with index:", id
       return None
@@ -148,6 +149,13 @@ class Container:
     except IndexError, ValueError:
       print "no image file with index:", id
       return "does not exist"
+
+  def getAuthors(self):
+    """
+    return a list of authors of the given work, if available,
+    empty list if not
+    """
+    return []
 
   def _setFileList(self, filenames, sort=True, useHumanSort=True):
     """NOTE: there can be not only files but also directories in the filelist"""
@@ -209,8 +217,6 @@ class Container:
           return True
         else:
           return False
-
-
 
 
 
