@@ -12,6 +12,7 @@ PageStackWindow {
                       id : mainView
                       }
 
+    property bool enableMangaMode : options.get("QMLMangaMode", false)
     property string statsText : ""
     property int statusBarHeight : 36
     /* TODO: replace hardcoded value

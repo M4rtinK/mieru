@@ -82,14 +82,6 @@ Page {
                     options.set("QMLRememberToolbarState", checked)
                 }
             }
-            SwitchWithText {
-                text : "<b>Show paging feedback</b>"
-                checked : mainView.pagingFeedback
-                onCheckedChanged : {
-                    mainView.pagingFeedback = checked
-                    options.set("QMLPagingFeedback", checked)
-                }
-            }
 
             Label {
                 text : "<b>Fullscreen button opacity</b>"
@@ -121,12 +113,71 @@ Page {
 
             LineText {
                 width : optionsPage.width
+                text : "Paging options"
+            }
+
+            Label {
+                text : "<b>Paging mode</b>"
+            }
+            ButtonRow {
+              Component.onCompleted : {
+                  var pm = options.get("QMLPagingMode", "screen")
+                  if (pm == "screen") {
+                      checkedButton = bPMScreen
+                  } else if (pm == "edges") {
+                      checkedButton = bPMEdges
+                  } else {
+                      checkedButton = bPMScreen
+                  }
+              }
+              Button {
+                id : bPMScreen
+                text : "Whole screen"
+                onClicked : {
+                    options.set("QMLPagingMode", "screen")
+                    mainView.pagingMode = "screen"
+                }
+              }
+              Button {
+                id : bPMEdges
+                text : "On edges"
+                onClicked : {
+                    options.set("QMLPagingMode", "edges")
+                    mainView.pagingMode = "edges"
+                }
+              }
+            }
+
+            SwitchWithText {
+                text : "<b>Show paging feedback</b>"
+                checked : mainView.pagingFeedback
+                onCheckedChanged : {
+                    mainView.pagingFeedback = checked
+                    options.set("QMLPagingFeedback", checked)
+                }
+            }
+
+            LineText {
+                width : optionsPage.width
                 text : "Page scaling"
             }
             SelectorButtonWithText {
                 text : "<b>Page fit mode</b>"
                 buttonText : mainView.pageFitMode
                 selector : pageFitSelector
+            }
+
+            LineText {
+                width : optionsPage.width
+                text : "Miscellaneous"
+            }
+            SwitchWithText {
+                text : "<b>Manga reading mode</b>"
+                checked : rootWindow.enableMangaMode
+                onCheckedChanged : {
+                    rootWindow.enableMangaMode = checked
+                    options.set("QMLMangaMode", checked)
+                }
             }
         }
     }

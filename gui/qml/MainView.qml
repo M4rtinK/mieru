@@ -16,6 +16,7 @@ Page {
     property bool rememberScale : options.get("QMLRememberScale", false)
     property bool pageLoaded : false
     property bool pagingFeedback : options.get("QMLPagingFeedback", true)
+    property string pagingMode : options.get("QMLPagingMode", "screen")
     property string pageFitMode : options.get("fitMode", "original")
 
     property alias fullscreenButtonOpacity : fullscreenButton.opacity
@@ -36,9 +37,16 @@ Page {
         if (url != lastUrl) {
           //console.log(mangaPath + " " + pageNumber)
           mangaPage.source = url
-              // reset the page position
-              pageFlickable.contentX = 0;
-              pageFlickable.contentY = 0;
+
+          // reset the page position
+          pageFlickable.contentX = 0;
+          pageFlickable.contentY = 0;
+
+          // in manga mode reading starts from right - so adjust the initial flick
+          if((rootWindow.enableMangaMode) && (mangaPage.width > mainView.width)) {
+            pageFlickable.contentX = mangaPage.width - mainView.width;
+          }
+
           //update page number in the current manga instance
           //NOTE: this is especially important due to the slider
           readingState.setPageID(pageIndex, mangaPath)
@@ -389,13 +397,30 @@ Page {
         objectName: "prevButton"
         drag.filterChildren: true
         onClicked: {
-            if (mouseX < width/2.0){
+            // default to screen paging mode
+            var margin = width / 2;
+
+            if(mainView.pagingMode == "screen") {
+                // nothing to do here - default behaviour
+            }
+            else if(mainView.pagingMode == "edges") {
+                // do not use the full screen area for page switching
+                if(screen.currentOrientation == Screen.Portrait || screen.currentOrientation == Screen.PortraitInverted) {
+                    // margin is bigger for portrait mode
+                    margin = width * 0.30;
+                }
+                else if(screen.currentOrientation == Screen.Landscape || screen.currentOrientation == Screen.LandscapeInverted) {
+                    margin = width * 0.20;
+                }
+            }
+
+            if (mouseX < margin) {
                 mainView.showPrevFeedback()
                 console.log("previous page");
                 readingState.previous();
             }
 
-            else{
+            if (mouseX > (width - margin)) {
                 mainView.showNextFeedback()
                 console.log("next page");
                 readingState.next();
@@ -563,17 +588,25 @@ Page {
     /** Paging feedback **/
 
     Item {
-        id : previousFeedback
-        visible : false
-        opacity : 0.7
-        anchors.verticalCenter : parent.verticalCenter
-        anchors.left : parent.left
-        anchors.leftMargin : 20
-        Image {
-            id : previousIcon
-            anchors.left : parent.left
-            source : "image://theme/icon-m-toolbar-previous"
-        }
+         id : previousFeedback
+         visible : false
+         opacity : 0.7
+         anchors.fill : parent
+         Rectangle {
+             id : previousRect
+             anchors.top    : parent.top
+             anchors.bottom : parent.bottom
+             anchors.left   : parent.left
+             width : previousIcon.width + 40
+             color: "darkgray"
+         }
+         Image {
+             id : previousIcon
+             anchors.verticalCenter : parent.verticalCenter
+             anchors.left : parent.left
+             anchors.leftMargin : 20
+             source : "image://theme/icon-m-toolbar-previous"
+         }
         /* Text {
             //text : "<b>PREVIOUS</b>"
             anchors.left : previousIcon.right
@@ -586,14 +619,22 @@ Page {
     }
     Item {
         id : nextFeedback
-        visible : false
-        opacity : 0.7
-        anchors.verticalCenter : parent.verticalCenter
-        anchors.right : parent.right
-        anchors.rightMargin : 20
-        Image {
-            id : nextIcon
-            anchors.right : parent.right
+         visible : false
+         opacity : 0.7
+         anchors.fill : parent
+         Rectangle {
+             id : nextRect
+             anchors.top    : parent.top
+             anchors.bottom : parent.bottom
+             anchors.right  : parent.right
+             width : nextIcon.width + 40
+             color: "darkgray"
+         }
+         Image {
+             id : nextIcon
+             anchors.verticalCenter : parent.verticalCenter
+             anchors.right : parent.right
+             anchors.rightMargin : 20
             source : "image://theme/icon-m-toolbar-next"
         }
         /* Text {
@@ -624,6 +665,22 @@ Page {
         triggeredOnStart : true
         onTriggered : {
             nextFeedback.visible = !nextFeedback.visible
+        }
+    }
+
+    /** Optional Minimise button for Maemo **/
+
+    Image {
+        id : minimiseButton
+        visible: rootWindow.showToolBar && platform.showMinimiseButton()
+        anchors.top : mainView.top
+        anchors.left : mainView.left
+        source : "image://icons/switch.png"
+        MouseArea {
+            anchors.fill : parent
+            onClicked : {
+                platform.minimise()
+            }
         }
     }
 }

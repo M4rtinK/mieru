@@ -409,7 +409,7 @@ Page {
         onClicked: {
             // default to screen paging mode
             var margin = width / 2;
-        
+
             if(mainView.pagingMode == "screen") {
                 // nothing to do here - default behaviour
             }
