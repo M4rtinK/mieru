@@ -17,6 +17,7 @@ Page {
     property bool rememberScale : options.get("QMLRememberScale", false)
     property bool pageLoaded : false
     property bool pagingFeedback : options.get("QMLPagingFeedback", true)
+    property string pagingMode : options.get("QMLPagingMode", "screen")
     property string pageFitMode : options.get("fitMode", "original")
 
     property alias fullscreenButtonOpacity : fullscreenButton.opacity
@@ -406,8 +407,22 @@ Page {
         objectName: "prevButton"
         drag.filterChildren: true
         onClicked: {
-            // do not use the full screen area for page switching
-            var margin = width * 0.2; // 20%
+            // default to screen paging mode
+            var margin = width / 2;
+        
+            if(mainView.pagingMode == "screen") {
+                // nothing to do here - default behaviour
+            }
+            else if(mainView.pagingMode == "edges") {
+                // do not use the full screen area for page switching
+                if(screen.currentOrientation == Screen.Portrait || screen.currentOrientation == Screen.PortraitInverted) {
+                    // margin is bigger for portrait mode
+                    margin = width * 0.30;
+                }
+                else if(screen.currentOrientation == Screen.Landscape || screen.currentOrientation == Screen.LandscapeInverted) {
+                    margin = width * 0.20;
+                }
+            }
             
             if (mouseX < margin) {
                 mainView.showPrevFeedback()
