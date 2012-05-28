@@ -415,11 +415,11 @@ Page {
             }
             else if(mainView.pagingMode == "edges") {
                 // do not use the full screen area for page switching
-                if(screen.currentOrientation == Screen.Portrait || screen.currentOrientation == Screen.PortraitInverted) {
+                if(rootWindow.inPortrait) {
                     // margin is bigger for portrait mode
                     margin = width * 0.30;
                 }
-                else if(screen.currentOrientation == Screen.Landscape || screen.currentOrientation == Screen.LandscapeInverted) {
+                else {
                     margin = width * 0.20;
                 }
             }
