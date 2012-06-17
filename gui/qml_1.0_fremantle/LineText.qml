@@ -32,7 +32,4 @@ Item {
             leftMargin: 16
         }
     }
-
-
-    
 }

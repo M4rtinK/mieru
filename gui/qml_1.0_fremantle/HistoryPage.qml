@@ -18,7 +18,7 @@ Page {
         }
         ToolButton {
             width : 120
-            text : "Delete"
+            text : qsTr("Delete")
             visible : deleteModeEnabled
             anchors.verticalCenter : parent.verticalCenter
             onClicked: {
@@ -30,7 +30,7 @@ Page {
         }
         ToolButton {
             width : 120
-            text: "Cancel"
+            text: qsTr("Cancel")
             visible : deleteModeEnabled
             anchors.verticalCenter : parent.verticalCenter
             onClicked: historyPage.deleteModeEnabled = false
@@ -47,14 +47,14 @@ Page {
 
         MenuLayout {
             MenuItem {
-              text : historyPage.deleteModeEnabled ? "Don't delete items" : "Delete items"
+              text : historyPage.deleteModeEnabled ? qsTr("Don't delete items") : qsTr("Delete items")
               onClicked : {
                   historyPage.deleteModeEnabled = !historyPage.deleteModeEnabled
-                  rootWindow.notify("Select items to delete")
+                  rootWindow.notify(qsTr("Select items to delete"))
             }
         }
             MenuItem {
-                text : "Erase history"
+                text : qsTr("Erase history")
                 onClicked : {
                     eraseHistoryDialog.open()
                     }
@@ -67,7 +67,7 @@ Page {
         anchors.fill : parent
         Label {
             visible : (historyList.count == 0) ? true : false
-            text : "<b>The history list is empty</b>"
+            text : "<b>" + qsTr("The history list is empty") + "</b>"
             horizontalAlignment : Text.AlignHCenter
             anchors.verticalCenter : historyList.verticalCenter
             width : parent.width
@@ -111,10 +111,10 @@ Page {
     }
     QueryDialog {
         id : eraseHistoryDialog
-        titleText : "Erase history ?"
-        message : "Do you want to erase the history of all mangas and comic books opened by Mieru ?"
-        acceptButtonText : "erase"
-        rejectButtonText : "cancel"
+        titleText : qsTr("Erase history ?")
+        message : qsTr("Do you want to erase the history of all mangas and comic books opened by Mieru ?")
+        acceptButtonText : qsTr("Erase")
+        rejectButtonText : qsTr("Cancel")
         onAccepted : {
             readingState.eraseHistory()
             readingState.updateHistoryListModel()

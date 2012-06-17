@@ -1,6 +1,7 @@
 """a QML GUI module for Mieru"""
 # -*- coding: utf-8 -*-
 
+import locale
 import sys
 import re
 import os
@@ -76,15 +77,22 @@ class QMLGUI(gui.GUI):
     rc.setContextProperty('historyListModel', self.historyListModel)
 
     # check for the installed Qt packages
+    translator = QtCore.QTranslator(self.app)
+   
     if os.path.isdir("/usr/lib/qt4/imports/com/nokia/meego"):
       # use com.nokia.meego namespace available
       url = QUrl('gui/qml/main.qml')
+      translator.load("gui/qml/i18n/qml_" + locale.getlocale()[0])
     elif os.path.isdir("/usr/lib/qt4/imports/org/maemo/fremantle"):
       # use org.maemo.fremantle
       url = QUrl('gui/qml_1.0_fremantle/main.qml')
+      translator.load("gui/qml_1.0_fremantle/i18n/qml_" + locale.getlocale()[0])
     else:
       raise Exception("no known Qt import location found")
-
+    
+    # install the translator
+    self.app.installTranslator(translator)
+    
     # Set the QML file and show
     self.view.setSource(url)
     self.window.closeEvent = self._qtWindowClosed

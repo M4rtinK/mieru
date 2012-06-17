@@ -80,11 +80,11 @@ PageStackWindow {
     QueryDialog {
         id : firstStartDialog
         icon : "image://icons/mieru.svg"
-        titleText : "How to turn pages"
-        message : "Tap the <b>right half</b> of the screen to go to the <b>next page</b>.<br><br>"
-              +" Tap the <b>left half</b> to go to the <b>previous page</b>."
-        acceptButtonText : "Don't show again"
-        rejectButtonText : "OK"
+        titleText : qsTr("How to turn pages")
+        message :   qsTr("Tap the <b>right half</b> of the screen to go to the <b>next page</b>.") + "<br><br>"
+                  + qsTr("Tap the <b>left half</b> to go to the <b>previous page</b>.")
+        acceptButtonText : qsTr("Don't show again")
+        rejectButtonText : qsTr("OK")
         onAccepted: {
             options.set("QMLShowFirstStartDialog", false)
         }

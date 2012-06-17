@@ -11,7 +11,7 @@ Dialog {
 
   property variant filterList: [ "*" ]
 
-  property string titleText: "File Selector"
+  property string titleText: qsTr("File Selector")
   property variant folderModel: folderModel1
   property variant view: view1
   property string selectedFile: "";
@@ -360,4 +360,3 @@ Dialog {
     }
   }
 }
-

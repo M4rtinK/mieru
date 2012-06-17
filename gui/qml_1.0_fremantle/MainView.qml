@@ -274,7 +274,7 @@ Page {
         id : mainViewMenu
         MenuLayout {
             MenuItem {
-              text : "Open file"
+              text : qsTr("Open file")
               onClicked : {
                   fileSelector.down(readingState.getSavedFileSelectorPath());
                   fileSelector.open();
@@ -282,21 +282,21 @@ Page {
         }
 
             MenuItem {
-                text : "History"
+                text : qsTr("History")
                 onClicked : {
                     rootWindow.openFile("HistoryPage.qml")
                     }
             }
 
             MenuItem {
-                text : "Info"
+                text : qsTr("Info")
                 onClicked : {
                     rootWindow.openFile("InfoPage.qml")
                 }
             }
 
             MenuItem {
-                text : "Options"
+                text : qsTr("Options")
                 onClicked : {
                     rootWindow.openFile("OptionsPage.qml")
                     }
@@ -308,7 +308,7 @@ Page {
         id : mainViewMenuWithQuit
         MenuLayout {
             MenuItem {
-              text : "Open file"
+              text : qsTr("Open file")
               onClicked : {
                   fileSelector.down(readingState.getSavedFileSelectorPath());
                   fileSelector.open();
@@ -316,28 +316,28 @@ Page {
         }
 
             MenuItem {
-                text : "History"
+                text : qsTr("History")
                 onClicked : {
                     rootWindow.openFile("HistoryPage.qml")
                     }
             }
 
             MenuItem {
-                text : "Info"
+                text : qsTr("Info")
                 onClicked : {
                     rootWindow.openFile("InfoPage.qml")
                 }
             }
 
             MenuItem {
-                text : "Options"
+                text : qsTr("Options")
                 onClicked : {
                     rootWindow.openFile("OptionsPage.qml")
                     }
             }
 
             MenuItem {
-                text : "Quit"
+                text : qsTr("Quit")
                 onClicked : {
                     readingState.quit()
                     }
@@ -572,7 +572,7 @@ Page {
                     }
                 }
                 Button {
-                    text : "rotation"
+                    text : qsTr("Rotation")
                     iconSource : "image://theme/icon-m-common-" + __iconType
                     width : mButtonRow.usableWidth/2.0
                     property string __iconType: (mainView.orientationLock == PageOrientation.LockPrevious) ? "locked" : "unlocked"
@@ -580,7 +580,7 @@ Page {
                     onClicked: {
                         if (mainView.orientationLock == PageOrientation.LockPrevious) {
                             mainView.orientationLock = PageOrientation.Automatic
-                        } else {
+                         } else {
                             mainView.orientationLock = PageOrientation.LockPrevious
                         }
                     }
@@ -599,7 +599,7 @@ Page {
 
     Label {
         anchors.centerIn : parent
-        text : "<h1>No pages loaded</h1>"
+        text : "<h1>" + qsTr("No pages loaded") + "</h1>"
         visible : !mainView.pageLoaded
     }
 
@@ -626,7 +626,7 @@ Page {
              source : "image://theme/icon-m-toolbar-previous"
          }
         /* Text {
-            //text : "<b>PREVIOUS</b>"
+            //text : qsTr("<b>PREVIOUS</b>")
             anchors.left : previousIcon.right
             anchors.leftMargin : 20
             anchors.verticalCenter : previousIcon.verticalCenter
@@ -656,7 +656,7 @@ Page {
             source : "image://theme/icon-m-toolbar-next"
         }
         /* Text {
-            //text : "<b>NEXT</b>"
+            //text : qsTr("<b>NEXT</b>")
             anchors.right : nextIcon.left
             anchors.rightMargin : 20
             anchors.verticalCenter : nextIcon.verticalCenter

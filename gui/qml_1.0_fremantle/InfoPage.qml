@@ -11,15 +11,15 @@ Page {
         ButtonRow {
             platformStyle: TabButtonStyle { }
             TabButton {
-                text: "Info"
+                text: qsTr("Info")
                 tab: tab1
             }
             TabButton {
-                text: "Stats"
+                text: qsTr("Stats")
                 tab: tab2
             }
             TabButton {
-                text: "About"
+                text: qsTr("About")
                 tab: tab3
             }
         }
@@ -73,7 +73,7 @@ Page {
                     anchors.leftMargin : 10
                     anchors.left : infoFirstPage.right
                     //var remainingPages = mainView.maxPageNumber -1
-                    text: "<h2>+" + (mainView.maxPageNumber-1) + "<br>pages</h2>"
+                    text: "<h2>+" + (mainView.maxPageNumber-1) + "<br>" + qsTr("pages") + "</h2>"
                 }
 
                 }
@@ -84,7 +84,7 @@ Page {
                     anchors.topMargin : 20
                     spacing : 20
                     Label {
-                        text: "<b>Path</b>"
+                        text: "<b>" + qsTr("Path") + "</b>"
                     }
                     Label {
                         text: "" + mainView.mangaPath
@@ -93,12 +93,12 @@ Page {
                         wrapMode : Text.WrapAnywhere
                     }
                     Label {
-                        text: "<h3>Online search</h3>"
+                        text: "<h3>" + qsTr("Online search") + "</h3>"
                     }
                     Button {
                         text : "Google"
                         onClicked : {
-                            mainView.notify("Opening <b>Google</b> search")
+                            mainView.notify(qsTr("Opening <b>Google</b> search"))
                             Qt.openUrlExternally("http://www.google.com/search?as_q=" + readingState.getPrettyName())
                         }
                     }
@@ -106,7 +106,7 @@ Page {
                         //TODO: other language mutations
                         text : "Wikipedia"
                         onClicked : {
-                            mainView.notify("Opening <b>Wikipedia</b> search")
+                            mainView.notify(qsTr("Opening <b>Wikipedia</b> search"))
                             Qt.openUrlExternally("http://en.wikipedia.org/w/index.php?search=" + readingState.getPrettyName() + "&go=Go")
                         }
 
@@ -114,7 +114,7 @@ Page {
                     Button {
                         text : "Manga updates"
                         onClicked : {
-                            mainView.notify("Opening <b>Manga updates</b> search")
+                            mainView.notify(qsTr("Opening <b>Manga updates</b> search"))
                             Qt.openUrlExternally("http://www.mangaupdates.com/search.html?search=" + readingState.getPrettyName())
                         }
                     }
@@ -132,7 +132,7 @@ Page {
             Text {
                anchors.left : parent.left
                id : statsHeadline
-               text : "<b>Usage Statistics</b>"
+               text : "<b>" + qsTr("Usage Statistics") + "</b>"
                font.pointSize: 24
             }
             Switch {
@@ -162,7 +162,7 @@ Page {
             Button {
                 anchors.top : statsText.bottom
                 anchors.topMargin : 50
-                text : "Reset"
+                text : qsTr("Reset")
                 onClicked : {
                     resetStatsDialog.open()
                 }
@@ -205,7 +205,7 @@ Page {
                 }
             //TODO: mixed up braces ?
             Button {
-                text : "Donate ?"
+                text : qsTr("Donate ?")
                 anchors.horizontalCenter : parent.horizontalCenter
                 anchors.topMargin : 25
                 anchors.top : aboutContactInfo.bottom
@@ -222,10 +222,10 @@ Page {
     
     QueryDialog {
         id : resetStatsDialog
-        titleText : "Reset all usage statistics ?"
+        titleText : qsTr("Reset all usage statistics ?")
         //message : "Reset all usage statistics ?"
-        acceptButtonText : "reset"
-        rejectButtonText : "cancel"
+        acceptButtonText : qsTr("Reset")
+        rejectButtonText : qsTr("Cancel")
         onAccepted : { 
             stats.reset()
             statsText.text = stats.statsText
