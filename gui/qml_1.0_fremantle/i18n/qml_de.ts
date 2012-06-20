@@ -12,53 +12,49 @@
 <context>
     <name>HistoryPage</name>
     <message>
-        <location filename="../HistoryPage.qml" line="21"/>
+        <location filename="../HistoryPage.qml" line="20"/>
         <source>Delete</source>
         <translation>Löschen</translation>
     </message>
     <message>
-        <location filename="../HistoryPage.qml" line="33"/>
-        <location filename="../HistoryPage.qml" line="117"/>
+        <location filename="../HistoryPage.qml" line="29"/>
+        <location filename="../HistoryPage.qml" line="113"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../HistoryPage.qml" line="50"/>
-        <source>Don&apos;t delete items</source>
-        <translation>Einträge nicht löschen</translation>
-    </message>
-    <message>
-        <location filename="../HistoryPage.qml" line="50"/>
+        <location filename="../HistoryPage.qml" line="49"/>
         <source>Delete items</source>
         <translation>Einträge löschen</translation>
     </message>
     <message>
-        <location filename="../HistoryPage.qml" line="53"/>
+        <location filename="../HistoryPage.qml" line="49"/>
+        <source>Do not delete items</source>
+        <translation>Keine Einträge löschen</translation>
+    </message>
+    <message>
+        <location filename="../HistoryPage.qml" line="52"/>
         <source>Select items to delete</source>
         <translation>Einträge zum Löschen auswählen</translation>
     </message>
     <message>
-        <location filename="../HistoryPage.qml" line="57"/>
+        <location filename="../HistoryPage.qml" line="56"/>
+        <location filename="../HistoryPage.qml" line="110"/>
         <source>Erase history</source>
         <translation>Verlauf löschen</translation>
     </message>
     <message>
-        <location filename="../HistoryPage.qml" line="70"/>
-        <source>The history list is empty</source>
-        <translation>Der Verlauf ist leer</translation>
+        <location filename="../HistoryPage.qml" line="69"/>
+        <source>no entries</source>
+        <translation>keine Einträge</translation>
     </message>
     <message>
-        <location filename="../HistoryPage.qml" line="114"/>
-        <source>Erase history ?</source>
-        <translation>Verlauf löschen?</translation>
+        <location filename="../HistoryPage.qml" line="111"/>
+        <source>Do you want to erase the history of all mangas and comic books opened by Mieru?</source>
+        <translation>Möchten Sie wirklich den gesamten Verlauf löschen?</translation>
     </message>
     <message>
-        <location filename="../HistoryPage.qml" line="115"/>
-        <source>Do you want to erase the history of all mangas and comic books opened by Mieru ?</source>
-        <translation>Möchten Sie den verlauf löschen?</translation>
-    </message>
-    <message>
-        <location filename="../HistoryPage.qml" line="116"/>
+        <location filename="../HistoryPage.qml" line="112"/>
         <source>Erase</source>
         <translation>Löschen</translation>
     </message>
@@ -81,58 +77,63 @@
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="76"/>
+        <location filename="../InfoPage.qml" line="75"/>
         <source>pages</source>
         <translation>Seiten</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="87"/>
+        <location filename="../InfoPage.qml" line="85"/>
         <source>Path</source>
         <translation>Pfad</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="96"/>
+        <location filename="../InfoPage.qml" line="94"/>
         <source>Online search</source>
         <translation>Online Suche</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="101"/>
+        <location filename="../InfoPage.qml" line="99"/>
         <source>Opening &lt;b&gt;Google&lt;/b&gt; search</source>
         <translation>Öffne &lt;b&gt;Google&lt;/b&gt; Suche</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="109"/>
+        <location filename="../InfoPage.qml" line="107"/>
         <source>Opening &lt;b&gt;Wikipedia&lt;/b&gt; search</source>
         <translation>Öffne &lt;b&gt;Wikipedia&lt;/b&gt; Suche</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="117"/>
+        <location filename="../InfoPage.qml" line="115"/>
         <source>Opening &lt;b&gt;Manga updates&lt;/b&gt; search</source>
         <translation>Öffne &lt;b&gt;Manga Updates&lt;/b&gt; Suche</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="135"/>
+        <location filename="../InfoPage.qml" line="132"/>
         <source>Usage Statistics</source>
         <translation>Nutzungsstatistik</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="165"/>
-        <location filename="../InfoPage.qml" line="227"/>
+        <location filename="../InfoPage.qml" line="162"/>
+        <location filename="../InfoPage.qml" line="218"/>
         <source>Reset</source>
         <translation>Zurücksetzen</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="208"/>
-        <source>Donate ?</source>
-        <translation>Spenden ?</translation>
+        <location filename="../InfoPage.qml" line="202"/>
+        <source>Donate</source>
+        <translation>Spenden</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="225"/>
-        <source>Reset all usage statistics ?</source>
-        <translation>Nutzungsstatistiken rücksetzen?</translation>
+        <location filename="../InfoPage.qml" line="216"/>
+        <source>Reset all usage statistics</source>
+        <translation>Nutzungsstatistiken zurücksetzen</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="228"/>
+        <location filename="../InfoPage.qml" line="217"/>
+        <source>Do you really want to reset all usage statistics?</source>
+        <translation>Möchten Sie wirklich die Nutzungsstatistiken rücksetzen?</translation>
+    </message>
+    <message>
+        <location filename="../InfoPage.qml" line="219"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -140,41 +141,37 @@
 <context>
     <name>MainView</name>
     <message>
-        <location filename="../MainView.qml" line="277"/>
-        <location filename="../MainView.qml" line="311"/>
+        <location filename="../MainView.qml" line="245"/>
         <source>Open file</source>
         <translation>Datei öffnen</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="285"/>
-        <location filename="../MainView.qml" line="319"/>
+        <location filename="../MainView.qml" line="252"/>
         <source>History</source>
         <translation>Verlauf</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="292"/>
-        <location filename="../MainView.qml" line="326"/>
+        <location filename="../MainView.qml" line="256"/>
         <source>Info</source>
         <translation>Informationen</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="299"/>
-        <location filename="../MainView.qml" line="333"/>
+        <location filename="../MainView.qml" line="260"/>
         <source>Options</source>
         <translation>Optionen</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="340"/>
+        <location filename="../MainView.qml" line="264"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="575"/>
+        <location filename="../MainView.qml" line="405"/>
         <source>Rotation</source>
         <translation>Ausrichtung</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="602"/>
+        <location filename="../MainView.qml" line="424"/>
         <source>No pages loaded</source>
         <translation>keine Seite(n) geladen</translation>
     </message>
@@ -313,27 +310,27 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../main.qml" line="83"/>
+        <location filename="../main.qml" line="80"/>
         <source>How to turn pages</source>
         <translation>Blättern der Seiten</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="84"/>
+        <location filename="../main.qml" line="81"/>
         <source>Tap the &lt;b&gt;right half&lt;/b&gt; of the screen to go to the &lt;b&gt;next page&lt;/b&gt;.</source>
         <translation>Die &lt;b&gt;linke&lt;/b&gt; Bildschirmhälfte antippen um zur nächsten Seite zu gelangen.</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="85"/>
+        <location filename="../main.qml" line="82"/>
         <source>Tap the &lt;b&gt;left half&lt;/b&gt; to go to the &lt;b&gt;previous page&lt;/b&gt;.</source>
         <translation>Die &lt;b&gt;rechte&lt;/b&gt; Bildschirmhälfte antippen um zur vorherigen Seite zu gelangen.</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="86"/>
+        <location filename="../main.qml" line="83"/>
         <source>Don&apos;t show again</source>
         <translation>Nicht mehr zeigen</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="87"/>
+        <location filename="../main.qml" line="84"/>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
