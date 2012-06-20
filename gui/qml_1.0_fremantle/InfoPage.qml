@@ -5,11 +5,11 @@ import org.maemo.fremantle 1.0
 
 Page {
     tools: ToolBarLayout {
-        ToolIcon { iconId: "toolbar-back"
+        ToolIcon {
+			iconId: "toolbar-back"
             onClicked: pageStack.pop()
         }
         ButtonRow {
-            platformStyle: TabButtonStyle { }
             TabButton {
                 text: qsTr("Info")
                 tab: tab1
@@ -23,7 +23,8 @@ Page {
                 tab: tab3
             }
         }
-           }
+	}
+
     TabGroup {
         id: tabGroup
 
@@ -32,11 +33,10 @@ Page {
         Page {
             id: tab1
             anchors.fill : parent
-            //anchors.verticalCenter : parent.verticalCenter
-            anchors.topMargin : 30
+            anchors.topMargin    : 30
             anchors.bottomMargin : 30
-            anchors.leftMargin : 30
-            anchors.rightMargin : 30
+            anchors.leftMargin   : 30
+            anchors.rightMargin  : 30
 
             ScrollDecorator {
                  id: scrolldecorator
@@ -46,7 +46,7 @@ Page {
                 id : infoFlickable
                 anchors.fill : parent
                 contentWidth: tab1.width
-                contentHeight: infoHeadline.height + infoFirstPage.height + infoCollumn.height + 30
+                contentHeight: infoHeadline.height + infoFirstPage.height + infoColumn.height + 30
 
                 flickableDirection: Flickable.VerticalFlick
 
@@ -65,21 +65,19 @@ Page {
                     anchors.topMargin : 10
                     source : "image://page/" + mainView.mangaPath + "|0"
                     fillMode : Image.PreserveAspectFit
-                    width : tab1.width/2.0
-                    height : tab1.width/2.0
+                    width  : tab1.width / 2.0
+                    height : tab1.width / 2.0
                     smooth : true
                 Label {
                     anchors.verticalCenter : parent.verticalCenter
                     anchors.leftMargin : 10
                     anchors.left : infoFirstPage.right
-                    //var remainingPages = mainView.maxPageNumber -1
-                    text: "<h2>+" + (mainView.maxPageNumber-1) + "<br>" + qsTr("pages") + "</h2>"
+                    text: "<h2>" + (mainView.maxPageNumber-1) + "<br>" + qsTr("pages") + "</h2>"
                 }
 
                 }
                 Column {
-                    id : infoCollumn
-                    //anchors.horizontalCenter : parent.horizontalCenter
+                    id : infoColumn
                     anchors.top : infoFirstPage.bottom
                     anchors.topMargin : 20
                     spacing : 20
@@ -103,7 +101,7 @@ Page {
                         }
                     }
                     Button {
-                        //TODO: other language mutations
+                        // TODO: other language mutations
                         text : "Wikipedia"
                         onClicked : {
                             mainView.notify(qsTr("Opening <b>Wikipedia</b> search"))
@@ -124,7 +122,6 @@ Page {
         Page {
             id: tab2
             anchors.fill : parent
-            //anchors.verticalCenter : parent.verticalCenter
             anchors.topMargin : 30
             anchors.bottomMargin : 30
             anchors.leftMargin : 30
@@ -172,7 +169,6 @@ Page {
         Page {
             id: tab3
             anchors.fill : parent
-            //anchors.verticalCenter : parent.verticalCenter
             anchors.topMargin : 20
             anchors.bottomMargin : 30
             anchors.leftMargin : 30
@@ -182,7 +178,6 @@ Page {
                 id : aboutTitle
                 anchors.horizontalCenter : parent.horizontalCenter
                 text: "<b>Mieru</b>" + " " + readingState.getVersionString()
-                //font.pointSize: 24
             }
             Image {
                 id : aboutMieruIcon
@@ -194,7 +189,6 @@ Page {
             Label {
                 id : aboutContactInfo
                 anchors.horizontalCenter : parent.horizontalCenter
-                //anchors.topMargin : 10
                 anchors.top : aboutMieruIcon.bottom
                 text: "<style type='text/css'>p { margin-bottom:15px; margin-top:0px; }</style>" + readingState.getAboutText()
 
@@ -203,9 +197,9 @@ Page {
                     mainView.notify("Opening:<br><b>"+link+"</b>")
                     Qt.openUrlExternally(link)
                 }
-            //TODO: mixed up braces ?
+			}
             Button {
-                text : qsTr("Donate ?")
+                text : qsTr("Donate")
                 anchors.horizontalCenter : parent.horizontalCenter
                 anchors.topMargin : 25
                 anchors.top : aboutContactInfo.bottom
@@ -214,16 +208,13 @@ Page {
                     Qt.openUrlExternally('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=martin%2ekolman%40gmail%2ecom&lc=GB&item_name=Mieru%20project&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted')
                 }
             }
-                //font.pointSize: 24
-            }
-
-            }
         }
+    }
     
     QueryDialog {
         id : resetStatsDialog
-        titleText : qsTr("Reset all usage statistics ?")
-        //message : "Reset all usage statistics ?"
+        titleText : qsTr("Reset all usage statistics")
+        message : qsTr("Do you really want to reset all usage statistics?")
         acceptButtonText : qsTr("Reset")
         rejectButtonText : qsTr("Cancel")
         onAccepted : { 
