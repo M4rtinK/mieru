@@ -19,6 +19,7 @@ Page {
     property bool pagingFeedback : options.get("QMLPagingFeedback", true)
     property string pagingMode   : options.get("QMLPagingMode", "screen")
     property string pageFitMode  : options.get("fitMode", "original")
+	property alias fullscreenButtonOpacity : fullscreenButton.opacity
 
     onMangaPathChanged  : reloadPage()
     onPageNumberChanged : reloadPage()
