@@ -136,16 +136,16 @@ Page {
                 id : statsSwitch
                 anchors.left : statsHeadline.right
                 anchors.leftMargin : 35
-                // eliminate checked property binding loop
-                function checkedInit() {
-                    return stats.enabled
-                }
-                checked : checkedInit()
-
+                
                 onCheckedChanged : {
                     // enable/disable stats and update statsText
-                    stats.enabled = statsSwitch.checked
+                    stats.enabled  = statsSwitch.checked
                     statsText.text = stats.statsText
+                }
+                
+                // workaround for checked property binding loop
+                Component.onCompleted : {
+                    checked = stats.enabled
                 }
             }
             Text {
