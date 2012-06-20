@@ -618,6 +618,10 @@ class MangaStateWrapper(QtCore.QObject):
     self._checked = not self._checked
     self.changed.emit()
 
+  def set_checked(self, b = True):
+	self._checked = b
+	self.changed.emit()
+
   # signals
   changed = QtCore.Signal()
 
@@ -666,6 +670,11 @@ class HistoryListModel(QtCore.QAbstractListModel):
     # quick and dirty remove
     for state in checked:
       self._things.remove(state)
+  
+  @QtCore.Slot()	
+  def uncheckAll(self):
+	for entry in self.checked():
+	  entry.set_checked(False)
 
 class HistoryListController(QtCore.QObject):
   def __init__(self, mieru):
