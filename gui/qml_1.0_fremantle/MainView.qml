@@ -14,16 +14,14 @@ Page {
     property int pageNumber : 1
     property string mangaPath : ""
     property string lastUrl
-    property bool rememberScale : options.get("QMLRememberScale", false)
-    property bool pageLoaded : false
+	property bool pageLoaded : false
+    property bool rememberScale  : options.get("QMLRememberScale", false)
     property bool pagingFeedback : options.get("QMLPagingFeedback", true)
-    property string pagingMode : options.get("QMLPagingMode", "screen")
-    property string pageFitMode : options.get("fitMode", "original")
+    property string pagingMode   : options.get("QMLPagingMode", "screen")
+    property string pageFitMode  : options.get("fitMode", "original")
 
-    property alias fullscreenButtonOpacity : fullscreenButton.opacity
-
-    onMangaPathChanged : { reloadPage() }
-    onPageNumberChanged : { reloadPage() }
+    onMangaPathChanged  : reloadPage()
+    onPageNumberChanged : reloadPage()
 
     // workaround for calling python properties causing segfaults
     function shutdown() {
@@ -32,41 +30,40 @@ Page {
 
     function reloadPage() {
         //console.log("** reloading page **")
-        var pageIndex = pageNumber-1
-        var url = "image://page/" + mangaPath + "|" + pageIndex;
+        var pageIndex = pageNumber - 1
+        var url = "image://page/" + mangaPath + "|" + pageIndex
+		
         // check for false alarms
         if (url != lastUrl) {
-          //console.log(mangaPath + " " + pageNumber)
-          console.log("reload page")
-          console.log(pageFlickable.scale)
-          console.log(pageFlickable.contentX)
-          console.log(pageFlickable.contentY)
-          console.log(mangaPage.width)
-          console.log(mangaPage.height)
-          console.log(mangaPage.sourceSize.width)
-          console.log(mangaPage.sourceSize.height)
-          mangaPage.source = url
-          
-          // reset the page position
-          pageFlickable.contentX = 0;
-          pageFlickable.contentY = 0;
+			console.log("reload page")
+			console.log(pageFlickable.scale)
+			console.log(pageFlickable.contentX)
+			console.log(pageFlickable.contentY)
+			console.log(mangaPage.width)
+			console.log(mangaPage.height)
+			console.log(mangaPage.sourceSize.width)
+			console.log(mangaPage.sourceSize.height)
+			mangaPage.source = url
 
-          // in manga mode reading starts from right - so adjust the initial flick
-          if((rootWindow.enableMangaMode) && (mangaPage.width > mainView.width)) {
-            pageFlickable.contentX = mangaPage.width - mainView.width;
-          }
-          
-          //update page number in the current manga instance
-          //NOTE: this is especially important due to the slider
-          readingState.setPageID(pageIndex, mangaPath)
-          pageLoaded = true
+			// reset the page position
+			pageFlickable.contentX = 0
+			pageFlickable.contentY = 0
+
+			// in manga mode reading starts from right - so adjust the initial flick
+			if((rootWindow.enableMangaMode) && (mangaPage.width > mainView.width)) {
+				pageFlickable.contentX = mangaPage.width - mainView.width;
+			}
+
+			// update page number in the current manga instance
+			// NOTE: this is especially important due to the slider
+			readingState.setPageID(pageIndex, mangaPath)
+			pageLoaded = true
         }
      }
 
     function showPage(path, pageId) {
-        mainView.mangaPath = path
-        var pageNr = pageId+1
-        mainView.pageNumber = pageNr
+        mainView.mangaPath  = path
+        mainView.pageNumber = pageId + 1
     }
 
     function restoreContentShift(){
@@ -75,7 +72,7 @@ Page {
            value remembered in the manga state
         */
         var mangaStateScale = readingState.getActiveMangaScale()
-        if (mangaStateScale==pageFlickable.scale) {
+        if (mangaStateScale == pageFlickable.scale) {
             pageFlickable.contentX = readingState.getActiveMangaShiftX()
             pageFlickable.contentY = readingState.getActiveMangaShiftY()
         }
@@ -86,12 +83,11 @@ Page {
         notification.text = text;
         notification.show();
     }
-
-    function toggleFullscreen() {
-        /* handle fullscreen button hiding,
-        it should be only visible with no toolbar */
-        fullscreenButton.visible = !fullscreenButton.visible
-        rootWindow.showToolBar = !rootWindow.showToolBar;
+	
+	function toggleFullscreen() {
+	    // fullscreen button shall only be visible if the toolbar is hidden
+        rootWindow.showToolBar   = !rootWindow.showToolBar;
+        fullscreenButton.visible = !rootWindow.showToolBar;
         options.set("QMLToolbarState", rootWindow.showToolBar)
     }
 
@@ -120,14 +116,14 @@ Page {
     }
 
     function showPrevFeedback() {
-    // only show with feedback enabled and no feedback in progress
+		// only show with feedback enabled and no feedback in progress
         if (mainView.pagingFeedback && !prevFbTimer.running) {
             prevFbTimer.start()
         }
     }
 
     function showNextFeedback() {
-    // only show with feedback enabled and no feedback in progress
+		// only show with feedback enabled and no feedback in progress
         if (mainView.pagingFeedback && !nextFbTimer.running) {
             nextFbTimer.start()
         }
@@ -136,26 +132,17 @@ Page {
     /** Page fitting **/
 
     function setPageFitMode(fitMode) {
-        /*
-        console.log("SET PAGE FIT MODE")
-        console.log(fitMode)
-        console.log(mainView.pageFitMode)
-        */
         // set page fitting - only update on a mode change
         if (fitMode != mainView.pageFitMode) {
             options.set("fitMode", fitMode)
             mainView.pageFitMode = fitMode
         }
-        // scale remembering for
+        // scale remembering for:
         // * disable for non-custom fitting modes
         // * enable for custom fitting mode
-        if (fitMode != "custom") {
-            mainView.rememberScale = false
-            options.set("QMLRememberScale", false)
-        } else {
-            mainView.rememberScale = true
-            options.set("QMLRememberScale", true)
-        }
+		var remember = (fitMode == "custom")
+		mainView.rememberScale = remember
+		options.set("QMLRememberScale", remember)
     }
 
     onPageFitModeChanged : {
@@ -174,18 +161,8 @@ Page {
     }
 
     function fitPage(mode) {
-        /*
-        console.log("FIT PAGE")
-        console.log(mode)
-        console.log(mainView.width)
-        console.log(mainView.height)
-        console.log(mangaPage.sourceSize.width)
-        console.log(mangaPage.sourceSize.height)
-        */
-
         // fit the page according to the current fitting mode
         if (mode == "original") {
-            // 1 : 1
             pageFlickable.scale = 1.0
         } else if (mode == "width") {
             pageFlickable.scale = mainView.width/mangaPage.sourceSize.width
@@ -203,14 +180,14 @@ Page {
         } else if (mode == "most") {
             // fit fo to the longest side of the image
             if (pageFlickable.width >= pageFlickable.height) {
-                pageFlickable.scale = mainView.width/mangaPage.sourceSize.width
+                pageFlickable.scale = mainView.width / mangaPage.sourceSize.width
             } else {
-                pageFlickable.scale = mainView.height/mangaPage.sourceSize.height
+                pageFlickable.scale = mainView.height / mangaPage.sourceSize.height
             }
 
         /* nothing needs to be done for the custom mode
-         as the current scale is just used as the initial
-         custom scale */
+           as the current scale is just used as the initial
+           custom scale */
         }
     }
 
@@ -218,21 +195,19 @@ Page {
         // image
         var wi = mangaPage.sourceSize.width
         var hi = mangaPage.sourceSize.height
-        var ri = wi/hi
+        var ri = wi / hi
         // screen
         var ws = mainView.width
         var hs = mainView.height
-        var rs = ws/hs
-        if (rs>ri) {
-            pageFlickable.scale = (wi * hs/hi)/wi
+        var rs = ws / hs
+        if (rs > ri) {
+            pageFlickable.scale = (wi * hs / hi) / wi
         } else {
-            pageFlickable.scale = ws/wi
+            pageFlickable.scale = ws / wi
         }
     }
 
-    Component.onCompleted : {
-      restoreRotation()
-    }
+    Component.onCompleted : restoreRotation()
 
     /** Toolbar **/
 
@@ -240,33 +215,26 @@ Page {
         id : mainViewToolBar
         visible: false
         ToolIcon {
+			// fix for incomplete theme on Fremantle
+			iconId: platform.incompleteTheme() ?
+			"icon-m-common-next" : "toolbar-down"
+			rotation : platform.incompleteTheme() ? 90 : 0
+			onClicked: mainView.toggleFullscreen()
+		}
+        ToolButton {
+			id : pageNumbers
+            text : mainView.pageLoaded ? mainView.pageNumber + "/" + mainView.maxPageNumber : "-/-"
+            anchors.top : backTI.top
+            anchors.bottom : backTI.bottom
+            flat : true
+            onClicked : pagingDialog.open()
+        }
+		ToolIcon {
             id : backTI
             iconId: "toolbar-view-menu"
-            onClicked: {
-                if (platform.showQuitButton()) {
-                    mainViewMenuWithQuit.open()
-                } else {
-                    mainViewMenu.open()
-                }
-            }
+            onClicked: mainViewMenu.open()
         }
-        //ToolIcon { iconId: "toolbar-previous" }
-        ToolButton { id : pageNumbers
-                     text : mainView.pageLoaded ? mainView.pageNumber + "/" + mainView.maxPageNumber : "-/-"
-                     anchors.top : backTI.top
-                     anchors.bottom : backTI.bottom
-                     flat : true
-                     onClicked : { pagingDialog.open() }
-        }
-        //ToolIcon { iconId: "toolbar-next" }
-        ToolIcon { //iconId: "toolbar-down"
-                   // fix for incomplete theme on Fremantle
-                   iconId: platform.incompleteTheme() ?
-                   "icon-m-common-next" : "toolbar-down"
-                   rotation : platform.incompleteTheme() ? 90 : 0
-                   onClicked: mainView.toggleFullscreen() }
-        //ToolIcon { iconSource: "image://icons/view-normal.png"; onClicked: mainView.toggleFullscreen() }
-        }
+    }
 
     /** Main menu **/
 
@@ -274,130 +242,31 @@ Page {
         id : mainViewMenu
         MenuLayout {
             MenuItem {
-              text : qsTr("Open file")
-              onClicked : {
-                  fileSelector.down(readingState.getSavedFileSelectorPath());
-                  fileSelector.open();
-            }
-        }
-
+				text : qsTr("Open file")
+				onClicked : {
+					fileSelector.down(readingState.getSavedFileSelectorPath());
+					fileSelector.open();
+				}
+			}
             MenuItem {
                 text : qsTr("History")
-                onClicked : {
-                    rootWindow.openFile("HistoryPage.qml")
-                    }
-            }
-
+                onClicked : rootWindow.openFile("HistoryPage.qml")
+			}
             MenuItem {
                 text : qsTr("Info")
-                onClicked : {
-                    rootWindow.openFile("InfoPage.qml")
-                }
+                onClicked : rootWindow.openFile("InfoPage.qml")
             }
-
             MenuItem {
                 text : qsTr("Options")
-                onClicked : {
-                    rootWindow.openFile("OptionsPage.qml")
-                    }
+                onClicked : rootWindow.openFile("OptionsPage.qml")
             }
-        }
-    }
-
-    Menu {
-        id : mainViewMenuWithQuit
-        MenuLayout {
-            MenuItem {
-              text : qsTr("Open file")
-              onClicked : {
-                  fileSelector.down(readingState.getSavedFileSelectorPath());
-                  fileSelector.open();
-            }
-        }
-
-            MenuItem {
-                text : qsTr("History")
-                onClicked : {
-                    rootWindow.openFile("HistoryPage.qml")
-                    }
-            }
-
-            MenuItem {
-                text : qsTr("Info")
-                onClicked : {
-                    rootWindow.openFile("InfoPage.qml")
-                }
-            }
-
-            MenuItem {
-                text : qsTr("Options")
-                onClicked : {
-                    rootWindow.openFile("OptionsPage.qml")
-                    }
-            }
-
             MenuItem {
                 text : qsTr("Quit")
-                onClicked : {
-                    readingState.quit()
-                    }
-            }
+				visible : platform.showQuitButton()
+                onClicked : readingState.quit()
+			}
         }
     }
-
-    /** Pinch zoom - not available in QML 1.0 **/
-    /*
-    PinchArea {
-        //anchors.fill : parent
-        //onPinchStarted : console.log("pinch started")
-        //pinch.target : mangaPage
-        //pinch.minimumScale: 0.5
-        //pinch.maximumScale: 2
-        width: Math.max(pageFlickable.contentWidth, pageFlickable.width)
-        height: Math.max(pageFlickable.contentHeight, pageFlickable.height)
-        property real initialScale
-        property real initialWidth
-        property real initialHeight
-
-        onPinchStarted: {
-            initialScale = pageFlickable.scale
-            initialWidth = pageFlickable.contentWidth
-            initialHeight = pageFlickable.contentHeight
-            //pageFlickable.interactive = false
-            //console.log("start " + pinch.scale)
-        }
-
-        onPinchUpdated: {
-            // adjust content pos due to drag
-            pageFlickable.contentX += pinch.previousCenter.x - pinch.center.x
-            pageFlickable.contentY += pinch.previousCenter.y - pinch.center.y
-
-            // resize content
-            pageFlickable.resizeContent(initialWidth * pinch.scale, initialHeight * pinch.scale, pinch.center)
-            // remember current scale
-            pageFlickable.scale = initialScale * pinch.scale
-
-            //console.log("pf " + pageFlickable.contentWidth + " " + pageFlickable.contentHeight)
-            //console.log("page " + mangaPage.width + " " + mangaPage.height)
-            //console.log("scale " + pageFlickable.scale)
-        }
-
-        onPinchFinished: {
-            //pageFlickable.interactive = true
-            // Move its content within bounds.
-            pageFlickable.returnToBounds()
-            if (mainView.rememberScale) {
-                // save the new scale so that it can
-                // be used on the next page
-                options.set("QMLMangaPageScale", pageFlickable.scale)
-                // override page fitting with the new scale
-                if (mainView.pageFitMode != "custom") {
-                    mainView.setPageFitMode("custom")
-                }
-            }
-        }
-    }
-    */
 
     /** Left/right screen half page switching **/
 
@@ -461,42 +330,13 @@ Page {
                 id: mangaPage
                 width : sourceSize.width * pageFlickable.scale
                 height : sourceSize.height * pageFlickable.scale
-                //smooth : !pageFlickable.moving
                 smooth : true
                 fillMode : Image.PreserveAspectFit
                 
-                //width : pageFlickable.contentWidth
-                //height : pageFlickable.contentHeight
-                // update flickable width once an image is loaded
-                /**
-                onSourceChanged : {
-                    console.log("source changed")
-                    console.log(pageFlickable.width)
-                    console.log(pageFlickable.height)
-                    console.log(pageFlickable.scale)
-                    console.log(width)
-                    console.log(height)
-                    //console.log("SOURCE")
-                    //console.log(sourceSize.width + " " + sourceSize.height)
-                    //console.log(width + " " + height)
-
-                    // assure page fitting
-                    if (mainView.pageFitMode == "custom") {
-                        // revert scale remembering on next page
-                        // if disabled
-                        if (!mainView.rememberScale) {
-                            pageFlickable.scale = 1.0
-                            mainView.setPageFitMode("original")
-                        }
-                    }
-                    //pageFlickable.contentWidth = sourceSize.width * pageFlickable.scale
-                    //pageFlickable.contentHeight = sourceSize.height * pageFlickable.scale
-                }
-                **/
                 onSourceSizeChanged : {
-                        if (mainView.pageFitMode != "custom") {
-                            mainView.fitPage(mainView.pageFitMode)
-                        }
+                    if (mainView.pageFitMode != "custom") {
+                        mainView.fitPage(mainView.pageFitMode)
+                    }
                 }
             }
         }
@@ -506,17 +346,18 @@ Page {
 
     ToolIcon {
         id : fullscreenButton
-        //source : "image://icons/view-fullscreen.png"
         // fix for incomplete theme on Fremantle
         iconId: platform.incompleteTheme() ?
         "icon-m-common-next" : "toolbar-up"
         rotation : platform.incompleteTheme() ? 270 : 0
-        anchors.right : mainView.right
+        
+        anchors.left   : mainView.left
         anchors.bottom : mainView.bottom
+        anchors.leftMargin : 10
         visible : !rootWindow.showToolBar
         opacity : options.get("QMLFullscreenButtonOpacity", 0.5)
-        width : Math.min(parent.width,parent.height)/8.0
-        height : Math.min(parent.width,parent.height)/8.0
+        width   : Math.min(parent.width, parent.height) / 8.0
+        height  : Math.min(parent.width, parent.height) / 8.0
         MouseArea {
             anchors.fill : parent
             drag.filterChildren: true
@@ -529,68 +370,49 @@ Page {
     Menu {
         id : pagingDialog
         MenuLayout {
-            //width : pagingDialog.width
             id : mLayout
 
-            Row {
-                //anchors.left : mLayout.left
-                //anchors.right : mLayout.right
+            Column {
+                spacing : 10
                 Slider {
                     id : pagingSlider
-                    width : mLayout.width*0.9
-                    //anchors.topMargin : height*0.5
-                    //anchors.left : mLayout.left
+                    width : mLayout.width
                     maximumValue: mainView.maxPageNumber
                     minimumValue: 1
                     value: mainView.pageNumber
                     stepSize: 1
                     valueIndicatorVisible: false
-                    //orientation : Qt.Vertical
                     onPressedChanged : {
-                        //only load the page once the user stopped dragging to save resources
+                        // only load the page once the user stopped dragging to save resources
                         mainView.pageNumber = value
                     }
                 }
                 CountBubble {
-                    //width : mLayout.width*0.2
-                    //anchors.left : pagingSlider.right
-                    //anchors.right : mLayout.right
+                    anchors.horizontalCenter : parent.horizontalCenter
                     value : pagingSlider.value
                     largeSized : true
                 }
-            }
-            Row {
-                id : mButtonRow
-                property int usableWidth : mLayout.width - 10
-                spacing : 10
                 Button {
-                    text : mainView.pageFitMode
+					width : mLayout.width
+                    text  : mainView.pageFitMode
                     iconSource : "image://theme/icon-m-common-expand"
-                    width : mButtonRow.usableWidth/2.0
                     onClicked : {
-                        pageFitSelector.open()
-                    }
+					    pageFitSelector.open()
+					}
                 }
                 Button {
-                    text : qsTr("Rotation")
+					width : mLayout.width
+                    text  : qsTr("Rotation")
                     iconSource : "image://theme/icon-m-common-" + __iconType
-                    width : mButtonRow.usableWidth/2.0
-                    property string __iconType: (mainView.orientationLock == PageOrientation.LockPrevious) ? "locked" : "unlocked"
-
-                    onClicked: {
+                    property string __iconType: (mainView.orientationLock == PageOrientation.LockPrevious) ? "locked" : "unlocked"					
+                    onClicked : {
                         if (mainView.orientationLock == PageOrientation.LockPrevious) {
                             mainView.orientationLock = PageOrientation.Automatic
-                         } else {
+                        } else {
                             mainView.orientationLock = PageOrientation.LockPrevious
                         }
                     }
                 }
-                /*
-                platformIconId: "icon-m-common-" + __iconType + __inverseString
-
-                property string __inverseString: style.inverted ? "-inverse" : ""
-                */
-
             }
         }
     }
@@ -606,101 +428,76 @@ Page {
     /** Paging feedback **/
 
     Item {
-         id : previousFeedback
-         visible : false
-         opacity : 0.7
-         anchors.fill : parent
-         Rectangle {
-             id : previousRect
-             anchors.top    : parent.top
-             anchors.bottom : parent.bottom
-             anchors.left   : parent.left
-             width : previousIcon.width + 40
-             color: "darkgray"
-         }
-         Image {
-             id : previousIcon
-             anchors.verticalCenter : parent.verticalCenter
-             anchors.left : parent.left
-             anchors.leftMargin : 20
-             source : "image://theme/icon-m-toolbar-previous"
-         }
-        /* Text {
-            //text : qsTr("<b>PREVIOUS</b>")
-            anchors.left : previousIcon.right
+        id : previousFeedback
+        visible : false
+        opacity : 0.7
+        anchors.fill : parent
+        Rectangle {
+            id : previousRect
+            anchors.top    : parent.top
+            anchors.bottom : parent.bottom
+            anchors.left   : parent.left
+            width : previousIcon.width + 40
+            color : "darkgray"
+        }
+        Image {
+            id : previousIcon
+            anchors.verticalCenter : parent.verticalCenter
+            anchors.left : parent.left
             anchors.leftMargin : 20
-            anchors.verticalCenter : previousIcon.verticalCenter
-            style : Text.Outline
-            styleColor : "white"
-            font.pixelSize : 25
-        } */
+            source : "image://theme/icon-m-toolbar-previous"
+        }
     }
     Item {
         id : nextFeedback
-         visible : false
-         opacity : 0.7
-         anchors.fill : parent
-         Rectangle {
-             id : nextRect
-             anchors.top    : parent.top
-             anchors.bottom : parent.bottom
-             anchors.right  : parent.right
-             width : nextIcon.width + 40
-             color: "darkgray"
-         }
-         Image {
-             id : nextIcon
-             anchors.verticalCenter : parent.verticalCenter
-             anchors.right : parent.right
-             anchors.rightMargin : 20
+        visible : false
+        opacity : 0.7
+        anchors.fill : parent
+        Rectangle {
+            id : nextRect
+            anchors.top    : parent.top
+            anchors.bottom : parent.bottom
+            anchors.right  : parent.right
+            width : nextIcon.width + 40
+            color : "darkgray"
+        }
+        Image {
+            id : nextIcon
+            anchors.verticalCenter : parent.verticalCenter
+            anchors.right : parent.right
+            anchors.rightMargin : 20
             source : "image://theme/icon-m-toolbar-next"
         }
-        /* Text {
-            //text : qsTr("<b>NEXT</b>")
-            anchors.right : nextIcon.left
-            anchors.rightMargin : 20
-            anchors.verticalCenter : nextIcon.verticalCenter
-            style : Text.Outline
-            styleColor : "white"
-            font.pixelSize : 25
-            //color : "white"
-        } */
     }
 
     Timer {
         id : prevFbTimer
         interval : 500
-        // we need to show and hide the feedback
         triggeredOnStart : true
-        onTriggered : {
-            previousFeedback.visible = !previousFeedback.visible
-        }
+        onTriggered : previousFeedback.visible = !previousFeedback.visible
     }
+	
     Timer {
         id : nextFbTimer
         interval : 500
-        // we need to show and hide the feedback
         triggeredOnStart : true
-        onTriggered : {
-            nextFeedback.visible = !nextFeedback.visible
-        }
+        onTriggered : nextFeedback.visible = !nextFeedback.visible
     }
 
     /** Optional Minimise button for Maemo **/
     
     Image {
         id : minimiseButton
-        //visible: rootWindow.showToolBar && platform.showMinimiseButton()
-        anchors.top : mainView.top
+        anchors.top  : mainView.top
         anchors.left : mainView.left
-        //anchors.topMargin : 10
-        //anchors.rightMargin : 10
+        anchors.topMargin  : 10
+        anchors.leftMargin : 10
         source : "image://icons/switch.png"
+        width  : 48
+        height : 48
         MouseArea {
             anchors.fill : parent
-            onClicked : {
-                platform.minimise()
-            }
+            onClicked : platform.minimise()
         }
     }
 }
