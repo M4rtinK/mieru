@@ -28,11 +28,6 @@ PageStackWindow {
         mainView.maxPageNumber = maxPageNumber;
     }
 
-    function notify(text) {
-        notification.text = text;
-        notification.show();
-    }
-
     // open a page and push it in the stack
     function openFile(file) {
         // create the Qt component based on the file/qml page to load.
@@ -68,10 +63,19 @@ PageStackWindow {
     InfoBanner {
         id : notification
         timerShowTime : 5000
-        height : rootWindow.height/5.0
+        height : rootWindow.height / 5.0
         // prevent overlapping with status bar
-		// TODO: check if necessary
         y : rootWindow.showStatusBar ? rootWindow.statusBarHeight + 8 : 8
+    }
+    function notify(text) {
+        if(platform.getPlatformID() == "maemo5") {
+            // TODO: fix notification on Fremantle and remove this
+            console.log("NOTIFY: " + text);
+        }
+        else {
+            notification.text = text;
+            notification.show();
+        }
     }
 
     QueryDialog {
