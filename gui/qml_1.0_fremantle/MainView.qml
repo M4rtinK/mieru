@@ -78,12 +78,6 @@ Page {
             pageFlickable.contentY = readingState.getActiveMangaShiftY()
         }
     }
-
-    function notify(text) {
-        // send notifications
-        notification.text = text;
-        notification.show();
-    }
 	
 	function toggleFullscreen() {
 	    // fullscreen button shall only be visible if the toolbar is hidden
