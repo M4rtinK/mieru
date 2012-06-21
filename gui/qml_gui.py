@@ -504,6 +504,11 @@ class Platform(QtCore.QObject):
     # the Fremantle theme is incomplete
     return self.mieru.platform.getIDString() == "maemo5"
 
+  @QtCore.Slot(result=str)
+  def getPlatformID(self):
+    # can be used to check which UI portions shall be visible
+    return self.mieru.platform.getIDString()
+
 class Options(QtCore.QObject):
   """make options available to QML and integrable as a property"""
   def __init__(self, mieru):

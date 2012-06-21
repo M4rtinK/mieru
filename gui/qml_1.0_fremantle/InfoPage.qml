@@ -27,7 +27,6 @@ Page {
 
     TabGroup {
         id: tabGroup
-
         currentTab: tab1
 
         Page {
@@ -39,21 +38,20 @@ Page {
             anchors.rightMargin  : 30
 
             ScrollDecorator {
-                 id: scrolldecorator
-                 flickableItem: infoFlickable
+                 id : scrolldecorator
+                 flickableItem : infoFlickable
             }
             Flickable {
                 id : infoFlickable
-                anchors.fill : parent
-                contentWidth: tab1.width
-                contentHeight: infoHeadline.height + infoFirstPage.height + infoColumn.height + 30
-
-                flickableDirection: Flickable.VerticalFlick
+                anchors.fill  : parent
+                contentWidth  : tab1.width
+                contentHeight : infoHeadline.height + infoFirstPage.height + infoColumn.height + 30
+                flickableDirection : Flickable.VerticalFlick
 
                 Label {
                     id : infoHeadline
                     anchors.horizontalCenter : parent.horizontalCenter
-                    text: "<h1>" + readingState.getPrettyName() + "</h1>"
+                    text  : "<h1>" + readingState.getPrettyName() + "</h1>"
                     width : tab1.width
                     wrapMode : Text.WordWrap
                     horizontalAlignment : Text.AlignHCenter
@@ -68,51 +66,54 @@ Page {
                     width  : tab1.width / 2.0
                     height : tab1.width / 2.0
                     smooth : true
-                Label {
-                    anchors.verticalCenter : parent.verticalCenter
-                    anchors.leftMargin : 10
-                    anchors.left : infoFirstPage.right
-                    text: "<h2>" + (mainView.maxPageNumber-1) + "<br>" + qsTr("pages") + "</h2>"
-                }
-
-                }
+				}
                 Column {
                     id : infoColumn
                     anchors.top : infoFirstPage.bottom
                     anchors.topMargin : 20
                     spacing : 20
+					
+					LineText {
+						width : tab1.width
+						text : qsTr("Properties")
+					}
+					Label {
+						text : "<b>" + qsTr("Pages") + ":</b> " + (mainView.maxPageNumber - 1)
+					}
                     Label {
-                        text: "<b>" + qsTr("Path") + "</b>"
-                    }
-                    Label {
-                        text: "" + mainView.mangaPath
+                        text : "<b>" + qsTr("Path") + ":</b> " + mainView.mangaPath
+						
                         // explicit width is needed for wrapping to work
-                        width : tab1.width
+                        width    : tab1.width
                         wrapMode : Text.WrapAnywhere
                     }
-                    Label {
-                        text: "<h3>" + qsTr("Online search") + "</h3>"
-                    }
+					LineText {
+						width : tab1.width
+						text  : qsTr("Online search")
+					}
                     Button {
                         text : "Google"
+                        anchors.horizontalCenter : parent.horizontalCenter
                         onClicked : {
-                            mainView.notify(qsTr("Opening <b>Google</b> search"))
+                            rootWindow.notify(qsTr("Opening <b>Google</b> search"))
                             Qt.openUrlExternally("http://www.google.com/search?as_q=" + readingState.getPrettyName())
                         }
                     }
                     Button {
                         // TODO: other language mutations
                         text : "Wikipedia"
+                        anchors.horizontalCenter : parent.horizontalCenter
                         onClicked : {
-                            mainView.notify(qsTr("Opening <b>Wikipedia</b> search"))
+                            rootWindow.notify(qsTr("Opening <b>Wikipedia</b> search"))
                             Qt.openUrlExternally("http://en.wikipedia.org/w/index.php?search=" + readingState.getPrettyName() + "&go=Go")
                         }
 
                     }
                     Button {
                         text : "Manga updates"
+                        anchors.horizontalCenter : parent.horizontalCenter
                         onClicked : {
-                            mainView.notify(qsTr("Opening <b>Manga updates</b> search"))
+                            rootWindow.notify(qsTr("Opening <b>Manga updates</b> search"))
                             Qt.openUrlExternally("http://www.mangaupdates.com/search.html?search=" + readingState.getPrettyName())
                         }
                     }
@@ -174,38 +175,52 @@ Page {
             anchors.leftMargin : 30
             anchors.rightMargin : 30
 
-            Label {
-                id : aboutTitle
-                anchors.horizontalCenter : parent.horizontalCenter
-                text: "<b>Mieru</b>" + " " + readingState.getVersionString()
-            }
-            Image {
-                id : aboutMieruIcon
-                anchors.horizontalCenter : parent.horizontalCenter
-                anchors.topMargin : 10
-                anchors.top : aboutTitle.bottom
-                source : "image://icons/mieru.svg"
-            }
-            Label {
-                id : aboutContactInfo
-                anchors.horizontalCenter : parent.horizontalCenter
-                anchors.top : aboutMieruIcon.bottom
-                text: "<style type='text/css'>p { margin-bottom:15px; margin-top:0px; }</style>" + readingState.getAboutText()
-
-                onLinkActivated : {
-                    console.log('about text link clicked: ' + link)
-                    mainView.notify("Opening:<br><b>"+link+"</b>")
-                    Qt.openUrlExternally(link)
+            Column {
+                spacing : 25
+                Column {
+                    anchors.horizontalCenter : parent.horizontalCenter
+                    spacing : 5
+                    Label {
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        text : "<h2>Mieru " + readingState.getVersionString() + "</h2>"
+                    }
+                    Image {
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        source : "image://icons/mieru.svg"
+                    }
+                    Label {
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        text : qsTr("Mieru is a flexible Manga and comic book reader.")
+                    }
                 }
-			}
-            Button {
-                text : qsTr("Donate")
-                anchors.horizontalCenter : parent.horizontalCenter
-                anchors.topMargin : 25
-                anchors.top : aboutContactInfo.bottom
-                onClicked : {
-                    console.log('donation button clicked')
-                    Qt.openUrlExternally('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=martin%2ekolman%40gmail%2ecom&lc=GB&item_name=Mieru%20project&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted')
+                Column {
+                    spacing : 5
+    				Label {
+    					text : "<b>" + qsTr("main developer") + ":</b> Martin Kolman"
+    				}
+    				Label {
+    					text : "<b>" + qsTr("email") + ":</b> <a href='mailto:mieru.info@gmail.com'>mieru.info@gmail.com</a>"
+    					onLinkActivated : Qt.openUrlExternally(link)
+    				}
+    				Label {
+    				    width : tab3.width
+    					text  : "<b>" + qsTr("discussion") + ":</b> "
+    					Component.onCompleted : {
+    						if(platform.getPlatformID() == "harmattan")
+    							text += "<a href='http://forum.meego.com/showthread.php?t=5405'>forum.meego.com</a>"
+    						else
+    							text += "<a href='http://talk.maemo.org/showthread.php?t=73907'>talk.maemo.org</a>"
+    					}
+    					onLinkActivated : Qt.openUrlExternally(link)
+    				}
+    			}
+                Button {
+                    text : qsTr("Donate")
+                    anchors.horizontalCenter : parent.horizontalCenter
+                    onClicked : {
+                        console.log('donation button clicked')
+                        Qt.openUrlExternally('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=martin%2ekolman%40gmail%2ecom&lc=GB&item_name=Mieru%20project&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted')
+                    }
                 }
             }
         }
