@@ -78,15 +78,20 @@ class QMLGUI(gui.GUI):
 
     # check for the installed Qt packages
     translator = QtCore.QTranslator(self.app)
+
+    if self.mieru.args.locale is not None:
+      localeId = self.mieru.args.locale
+    else:
+      localeId = locale.getlocale()[0]
    
     if os.path.isdir("/usr/lib/qt4/imports/com/nokia/meego"):
       # use com.nokia.meego namespace available
       url = QUrl('gui/qml/main.qml')
-      translator.load("gui/qml/i18n/qml_" + locale.getlocale()[0])
+      translator.load("gui/qml/i18n/qml_" + localeId)
     elif os.path.isdir("/usr/lib/qt4/imports/org/maemo/fremantle"):
       # use org.maemo.fremantle
       url = QUrl('gui/qml_1.0_fremantle/main.qml')
-      translator.load("gui/qml_1.0_fremantle/i18n/qml_" + locale.getlocale()[0])
+      translator.load("gui/qml_1.0_fremantle/i18n/qml_" + localeId)
     else:
       raise Exception("no known Qt import location found")
     
@@ -107,7 +112,8 @@ class QMLGUI(gui.GUI):
 #    self.nextButton.clicked.connect(self._nextCB)
 #    self.pageFlickable.clicked.connect(self._prevCB)
 #    self.prevButton.clicked.connect(self._prevCB)
-    self.toggleFullscreen()
+    if self.mieru.platform.startInFullscreen():
+      self.toggleFullscreen()
 
     # check if first start dialog has to be shown
     if self.mieru.get("QMLShowFirstStartDialog", True):
@@ -477,7 +483,7 @@ class Platform(QtCore.QObject):
 
   @QtCore.Slot()
   def minimise(self):
-    return self.mieru.platform.minimise()
+    return self.mieru.platform.minimize()
 
   @QtCore.Slot(result=bool)
   def showMinimiseButton(self):
