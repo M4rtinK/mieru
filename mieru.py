@@ -115,7 +115,7 @@ class Mieru:
     self.activeManga = None
 
     # check if a path was specified in the startup arguments
-    if args.o != None:
+    if args.o is not None:
       try:
         print("loading manga from: %s" % args.o)
         self.setActiveManga(self.openManga(args.o))
@@ -126,7 +126,7 @@ class Mieru:
 
     """ restore previously saved state (if available and no manga was 
     sucessfully loaded from a path provided by startup arguments"""
-    if self.activeManga == None:
+    if self.activeManga is None:
       self._restoreState()
 
 #    self.gui.toggleFullscreen()
@@ -232,7 +232,7 @@ class Mieru:
     #print state
     mangaInstance = manga.Manga(self,load=False)
     mangaInstance.setState(state)
-    if mangaInstance.container == None:
+    if mangaInstance.container is None:
       print("container creation failed")
       return False
     else:
@@ -269,7 +269,7 @@ class Mieru:
     """add a saved manga state to the history"""
     openMangasHistory = self.get('openMangasHistory',{})
     try:
-      if mangaState['path'] != None:
+      if mangaState['path'] is not None:
         path = mangaState['path']
         print("adding to history: %s, on page %d" % (path, mangaState.get('pageNumber',0)))
         openMangasHistory[path] = {"state":mangaState,"timestamp":time.time()}
