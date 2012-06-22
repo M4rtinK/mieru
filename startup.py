@@ -12,9 +12,12 @@ class Startup():
                         action="store", choices=["pc","hildon", "harmattan", "QML"])
     parser.add_argument('-p',
                         help="specify user interface type", default="pc",
-                        action="store", choices=["maemo5", "harmattan", "desktop"])
+                        action="store", choices=["maemo5", "harmattan", "pc"])
     parser.add_argument('-o',
                         help="specify path to a manga or comic book to open", default=None,
                         action="store", metavar="path to file",)
+    parser.add_argument('--locale',
+                        help="override system locale", default=None,
+                        action="store", metavar="language code",)
     self.args = parser.parse_args()
 
