@@ -49,6 +49,7 @@ class Mieru:
     # parse startup arguments
     start = startup.Startup()
     args = start.args
+    self.args = args
 
     # restore the persistent options dictionary
     self.d = {}
