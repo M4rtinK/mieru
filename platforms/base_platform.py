@@ -81,6 +81,10 @@ class BasePlatform:
 
   # GTK specific
 
+  def startInFullscreen(self):
+    """"should Mieru start in fullscreen on this platform ?"""
+    return True
+
   def Button(self, label=""):
     """return classic GTK button"""
     return gtk.Button(label)

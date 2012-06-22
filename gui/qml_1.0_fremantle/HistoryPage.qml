@@ -17,23 +17,22 @@ Page {
             onClicked : pageStack.pop()
         }
         ToolButton {
-            width : 120
-            text : "Delete"
+            text : qsTr("Delete")
             visible : deleteModeEnabled
-            anchors.verticalCenter : parent.verticalCenter
             onClicked: {
                 historyListModel.removeChecked()
                 historyPage.deleteModeEnabled = false
                 readingState.updateHistoryListModel()
-                
             }
         }
         ToolButton {
-            width : 120
-            text: "Cancel"
+            text: qsTr("Cancel")
             visible : deleteModeEnabled
-            anchors.verticalCenter : parent.verticalCenter
-            onClicked: historyPage.deleteModeEnabled = false
+            onClicked: {
+				historyListModel.uncheckAll()
+			    historyPage.deleteModeEnabled = false
+				readingState.updateHistoryListModel()
+			}
         }
         ToolIcon {
             id : histMenu
@@ -47,74 +46,71 @@ Page {
 
         MenuLayout {
             MenuItem {
-              text : historyPage.deleteModeEnabled ? "Don't delete items" : "Delete items"
-              onClicked : {
-                  historyPage.deleteModeEnabled = !historyPage.deleteModeEnabled
-                  rootWindow.notify("Select items to delete")
+                text : historyPage.deleteModeEnabled ? qsTr("Do not delete items") : qsTr("Delete items")
+                onClicked : {
+                    historyPage.deleteModeEnabled = !historyPage.deleteModeEnabled
+                    rootWindow.notify(qsTr("Select items to delete"))
+                }
             }
-        }
             MenuItem {
-                text : "Erase history"
+                text : qsTr("Erase history")
                 onClicked : {
                     eraseHistoryDialog.open()
-                    }
-            }
-        }
-    }
-
-    ListView {
-        id: historyList
-        anchors.fill : parent
-        Label {
-            visible : (historyList.count == 0) ? true : false
-            text : "<b>The history list is empty</b>"
-            horizontalAlignment : Text.AlignHCenter
-            anchors.verticalCenter : historyList.verticalCenter
-            width : parent.width
-            height : 80
-            }
-
-
-
-        model: historyListModel
-
-        delegate: Component {
-            Rectangle {
-                width: historyList.width
-                height: 80
-                color: model.thing.checked?"#00B8F5":(index%2?"#eee":"#ddd")
-                Label {
-                    id: title
-                    elide: Text.ElideRight
-                    text: model.thing.name
-                    //color: "white"
-                    color: (model.thing.checked?"white":"black")
-                    font.bold: true
-                    anchors.leftMargin: 10
-                    anchors.fill: parent
-                    verticalAlignment: Text.AlignVCenter
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        if (historyPage.deleteModeEnabled) {
-                            historyListController.toggled(historyListModel, model.thing)
-                        }
-                        else {
-                            pageStack.pop()
-                            historyListController.thingSelected(model.thing)
-                        }
-                    }
                 }
             }
         }
     }
+
+	ListView {
+		id: historyList
+		anchors.fill : parent
+		Label {
+			visible : (historyList.count == 0) ? true : false
+			text : "<b>" + qsTr("no entries") + "</b>"
+			horizontalAlignment : Text.AlignHCenter
+			anchors.verticalCenter : historyList.verticalCenter
+			width : parent.width
+			height : 80
+		}
+		model: historyListModel
+
+		delegate: Component {
+			Rectangle {
+				width: historyList.width
+				height: 80
+				color: model.thing.checked?"#00B8F5":(index%2?"#eee":"#ddd")
+				Label {
+					id: title
+					elide: Text.ElideRight
+					text: model.thing.name
+					color: (model.thing.checked?"white":"black")
+					font.bold: true
+					anchors.leftMargin: 10
+					anchors.fill: parent
+					verticalAlignment: Text.AlignVCenter
+				}
+				MouseArea {
+					anchors.fill: parent
+					onClicked: {
+						if (historyPage.deleteModeEnabled) {
+							historyListController.toggled(historyListModel, model.thing)
+						}
+						else {
+							pageStack.pop()
+							historyListController.thingSelected(model.thing)
+						}
+					}
+				}
+			}
+		}
+	}
+	
     QueryDialog {
         id : eraseHistoryDialog
-        titleText : "Erase history ?"
-        message : "Do you want to erase the history of all mangas and comic books opened by Mieru ?"
-        acceptButtonText : "erase"
-        rejectButtonText : "cancel"
+        titleText : qsTr("Erase history")
+        message : qsTr("Do you want to erase the history of all mangas and comic books opened by Mieru?")
+        acceptButtonText : qsTr("Erase")
+        rejectButtonText : qsTr("Cancel")
         onAccepted : {
             readingState.eraseHistory()
             readingState.updateHistoryListModel()

@@ -5,25 +5,26 @@ import org.maemo.fremantle 1.0
 
 Page {
     tools: ToolBarLayout {
-        ToolIcon { iconId: "toolbar-back"
+        ToolIcon {
+			iconId: "toolbar-back"
             onClicked: pageStack.pop()
         }
         ButtonRow {
-            platformStyle: TabButtonStyle { }
             TabButton {
-                text: "Info"
+                text: qsTr("Info")
                 tab: tab1
             }
             TabButton {
-                text: "Stats"
+                text: qsTr("Stats")
                 tab: tab2
             }
             TabButton {
-                text: "About"
+                text: qsTr("About")
                 tab: tab3
             }
         }
-           }
+	}
+
     TabGroup {
         id: tabGroup
 
@@ -32,11 +33,10 @@ Page {
         Page {
             id: tab1
             anchors.fill : parent
-            //anchors.verticalCenter : parent.verticalCenter
-            anchors.topMargin : 30
+            anchors.topMargin    : 30
             anchors.bottomMargin : 30
-            anchors.leftMargin : 30
-            anchors.rightMargin : 30
+            anchors.leftMargin   : 30
+            anchors.rightMargin  : 30
 
             ScrollDecorator {
                  id: scrolldecorator
@@ -46,7 +46,7 @@ Page {
                 id : infoFlickable
                 anchors.fill : parent
                 contentWidth: tab1.width
-                contentHeight: infoHeadline.height + infoFirstPage.height + infoCollumn.height + 30
+                contentHeight: infoHeadline.height + infoFirstPage.height + infoColumn.height + 30
 
                 flickableDirection: Flickable.VerticalFlick
 
@@ -65,26 +65,24 @@ Page {
                     anchors.topMargin : 10
                     source : "image://page/" + mainView.mangaPath + "|0"
                     fillMode : Image.PreserveAspectFit
-                    width : tab1.width/2.0
-                    height : tab1.width/2.0
+                    width  : tab1.width / 2.0
+                    height : tab1.width / 2.0
                     smooth : true
                 Label {
                     anchors.verticalCenter : parent.verticalCenter
                     anchors.leftMargin : 10
                     anchors.left : infoFirstPage.right
-                    //var remainingPages = mainView.maxPageNumber -1
-                    text: "<h2>+" + (mainView.maxPageNumber-1) + "<br>pages</h2>"
+                    text: "<h2>" + (mainView.maxPageNumber-1) + "<br>" + qsTr("pages") + "</h2>"
                 }
 
                 }
                 Column {
-                    id : infoCollumn
-                    //anchors.horizontalCenter : parent.horizontalCenter
+                    id : infoColumn
                     anchors.top : infoFirstPage.bottom
                     anchors.topMargin : 20
                     spacing : 20
                     Label {
-                        text: "<b>Path</b>"
+                        text: "<b>" + qsTr("Path") + "</b>"
                     }
                     Label {
                         text: "" + mainView.mangaPath
@@ -93,20 +91,20 @@ Page {
                         wrapMode : Text.WrapAnywhere
                     }
                     Label {
-                        text: "<h3>Online search</h3>"
+                        text: "<h3>" + qsTr("Online search") + "</h3>"
                     }
                     Button {
                         text : "Google"
                         onClicked : {
-                            mainView.notify("Opening <b>Google</b> search")
+                            mainView.notify(qsTr("Opening <b>Google</b> search"))
                             Qt.openUrlExternally("http://www.google.com/search?as_q=" + readingState.getPrettyName())
                         }
                     }
                     Button {
-                        //TODO: other language mutations
+                        // TODO: other language mutations
                         text : "Wikipedia"
                         onClicked : {
-                            mainView.notify("Opening <b>Wikipedia</b> search")
+                            mainView.notify(qsTr("Opening <b>Wikipedia</b> search"))
                             Qt.openUrlExternally("http://en.wikipedia.org/w/index.php?search=" + readingState.getPrettyName() + "&go=Go")
                         }
 
@@ -114,7 +112,7 @@ Page {
                     Button {
                         text : "Manga updates"
                         onClicked : {
-                            mainView.notify("Opening <b>Manga updates</b> search")
+                            mainView.notify(qsTr("Opening <b>Manga updates</b> search"))
                             Qt.openUrlExternally("http://www.mangaupdates.com/search.html?search=" + readingState.getPrettyName())
                         }
                     }
@@ -124,7 +122,6 @@ Page {
         Page {
             id: tab2
             anchors.fill : parent
-            //anchors.verticalCenter : parent.verticalCenter
             anchors.topMargin : 30
             anchors.bottomMargin : 30
             anchors.leftMargin : 30
@@ -132,23 +129,23 @@ Page {
             Text {
                anchors.left : parent.left
                id : statsHeadline
-               text : "<b>Usage Statistics</b>"
+               text : "<b>" + qsTr("Usage Statistics") + "</b>"
                font.pointSize: 24
             }
             Switch {
                 id : statsSwitch
                 anchors.left : statsHeadline.right
                 anchors.leftMargin : 35
-                // eliminate checked property binding loop
-                function checkedInit() {
-                    return stats.enabled
-                }
-                checked : checkedInit()
-
+                
                 onCheckedChanged : {
                     // enable/disable stats and update statsText
-                    stats.enabled = statsSwitch.checked
+                    stats.enabled  = statsSwitch.checked
                     statsText.text = stats.statsText
+                }
+                
+                // workaround for checked property binding loop
+                Component.onCompleted : {
+                    checked = stats.enabled
                 }
             }
             Text {
@@ -162,7 +159,7 @@ Page {
             Button {
                 anchors.top : statsText.bottom
                 anchors.topMargin : 50
-                text : "Reset"
+                text : qsTr("Reset")
                 onClicked : {
                     resetStatsDialog.open()
                 }
@@ -172,7 +169,6 @@ Page {
         Page {
             id: tab3
             anchors.fill : parent
-            //anchors.verticalCenter : parent.verticalCenter
             anchors.topMargin : 20
             anchors.bottomMargin : 30
             anchors.leftMargin : 30
@@ -182,7 +178,6 @@ Page {
                 id : aboutTitle
                 anchors.horizontalCenter : parent.horizontalCenter
                 text: "<b>Mieru</b>" + " " + readingState.getVersionString()
-                //font.pointSize: 24
             }
             Image {
                 id : aboutMieruIcon
@@ -194,7 +189,6 @@ Page {
             Label {
                 id : aboutContactInfo
                 anchors.horizontalCenter : parent.horizontalCenter
-                //anchors.topMargin : 10
                 anchors.top : aboutMieruIcon.bottom
                 text: "<style type='text/css'>p { margin-bottom:15px; margin-top:0px; }</style>" + readingState.getAboutText()
 
@@ -203,9 +197,9 @@ Page {
                     mainView.notify("Opening:<br><b>"+link+"</b>")
                     Qt.openUrlExternally(link)
                 }
-            //TODO: mixed up braces ?
+			}
             Button {
-                text : "Donate ?"
+                text : qsTr("Donate")
                 anchors.horizontalCenter : parent.horizontalCenter
                 anchors.topMargin : 25
                 anchors.top : aboutContactInfo.bottom
@@ -214,18 +208,15 @@ Page {
                     Qt.openUrlExternally('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=martin%2ekolman%40gmail%2ecom&lc=GB&item_name=Mieru%20project&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted')
                 }
             }
-                //font.pointSize: 24
-            }
-
-            }
         }
+    }
     
     QueryDialog {
         id : resetStatsDialog
-        titleText : "Reset all usage statistics ?"
-        //message : "Reset all usage statistics ?"
-        acceptButtonText : "reset"
-        rejectButtonText : "cancel"
+        titleText : qsTr("Reset all usage statistics")
+        message : qsTr("Do you really want to reset all usage statistics?")
+        acceptButtonText : qsTr("Reset")
+        rejectButtonText : qsTr("Cancel")
         onAccepted : { 
             stats.reset()
             statsText.text = stats.statsText

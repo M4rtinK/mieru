@@ -1,6 +1,7 @@
 """a QML GUI module for Mieru"""
 # -*- coding: utf-8 -*-
 
+import locale
 import sys
 import re
 import os
@@ -76,15 +77,27 @@ class QMLGUI(gui.GUI):
     rc.setContextProperty('historyListModel', self.historyListModel)
 
     # check for the installed Qt packages
+    translator = QtCore.QTranslator(self.app)
+
+    if self.mieru.args.locale is not None:
+      localeId = self.mieru.args.locale
+    else:
+      localeId = locale.getlocale()[0]
+   
     if os.path.isdir("/usr/lib/qt4/imports/com/nokia/meego"):
       # use com.nokia.meego namespace available
       url = QUrl('gui/qml/main.qml')
+      translator.load("gui/qml/i18n/qml_" + localeId)
     elif os.path.isdir("/usr/lib/qt4/imports/org/maemo/fremantle"):
       # use org.maemo.fremantle
       url = QUrl('gui/qml_1.0_fremantle/main.qml')
+      translator.load("gui/qml_1.0_fremantle/i18n/qml_" + localeId)
     else:
       raise Exception("no known Qt import location found")
-
+    
+    # install the translator
+    self.app.installTranslator(translator)
+    
     # Set the QML file and show
     self.view.setSource(url)
     self.window.closeEvent = self._qtWindowClosed
@@ -99,7 +112,8 @@ class QMLGUI(gui.GUI):
 #    self.nextButton.clicked.connect(self._nextCB)
 #    self.pageFlickable.clicked.connect(self._prevCB)
 #    self.prevButton.clicked.connect(self._prevCB)
-    self.toggleFullscreen()
+    if self.mieru.platform.startInFullscreen():
+      self.toggleFullscreen()
 
     # check if first start dialog has to be shown
     if self.mieru.get("QMLShowFirstStartDialog", True):
@@ -469,7 +483,7 @@ class Platform(QtCore.QObject):
 
   @QtCore.Slot()
   def minimise(self):
-    return self.mieru.platform.minimise()
+    return self.mieru.platform.minimize()
 
   @QtCore.Slot(result=bool)
   def showMinimiseButton(self):
@@ -610,6 +624,10 @@ class MangaStateWrapper(QtCore.QObject):
     self._checked = not self._checked
     self.changed.emit()
 
+  def set_checked(self, b = True):
+	self._checked = b
+	self.changed.emit()
+
   # signals
   changed = QtCore.Signal()
 
@@ -658,6 +676,11 @@ class HistoryListModel(QtCore.QAbstractListModel):
     # quick and dirty remove
     for state in checked:
       self._things.remove(state)
+  
+  @QtCore.Slot()	
+  def uncheckAll(self):
+	for entry in self.checked():
+	  entry.set_checked(False)
 
 class HistoryListController(QtCore.QObject):
   def __init__(self, mieru):

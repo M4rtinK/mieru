@@ -4,43 +4,41 @@ import org.maemo.fremantle 1.0
 import org.maemo.extras 1.0
 
 PageStackWindow {
-    showStatusBar : options.get("QMLShowStatusBar", false)
-    showToolBar : options.get("QMLRememberToolbarState", false) ? options.get("QMLToolbarState", true) : true
     id : rootWindow
     anchors.fill : parent
-    initialPage : MainView {
-                      id : mainView
-                      }
+    initialPage : MainView { id : mainView }
 
     property bool enableMangaMode : options.get("QMLMangaMode", false)
     property string statsText : ""
+	// TODO: replace hardcoded value with actual status bar height
     property int statusBarHeight : 36
-    /* TODO: replace hardcoded value
-    with actual status bar height */
+	
+	showStatusBar : options.get("QMLShowStatusBar", false)
+    showToolBar   : options.get("QMLRememberToolbarState", false) ? options.get("QMLToolbarState", true) : true
 
     function showPage(path, pageId) {
         mainView.showPage(path, pageId)
-        }
+    }
 
     function setPageNumber(pageNumber) {
         mainView.pageNumber = pageNumber;
-        }
+    }
 
     function setMaxPageNumber(maxPageNumber) {
         mainView.maxPageNumber = maxPageNumber;
-        }
+    }
 
-    // ** trigger notifications
     function notify(text) {
         notification.text = text;
         notification.show();
-        }
+    }
 
-    // ** Open a page and push it in the stack
+    // open a page and push it in the stack
     function openFile(file) {
-        // Create the Qt component based on the file/qml page to load.
+        // create the Qt component based on the file/qml page to load.
         var component = Qt.createComponent(file)
-        // If the page is ready to be managed it is pushed onto the stack
+
+        // if the page is ready to be managed it is pushed onto the stack
         if (component.status == Component.Ready)
             pageStack.push(component);
         else
@@ -58,34 +56,33 @@ PageStackWindow {
     }
 
     FileSelector {
-      id: fileSelector;
-      //anchors.fill : rootWindow
-      onAccepted: readingState.openManga(selectedFile);
+        id : fileSelector;
+        onAccepted : readingState.openManga(selectedFile);
     }
 
     PageFitSelector {
-      id : pageFitSelector
-      onAccepted: mainView.setPageFitMode(pageFitMode)
+        id : pageFitSelector
+        onAccepted : mainView.setPageFitMode(pageFitMode)
     }
 
     InfoBanner {
-        id: notification
+        id : notification
         timerShowTime : 5000
         height : rootWindow.height/5.0
         // prevent overlapping with status bar
+		// TODO: check if necessary
         y : rootWindow.showStatusBar ? rootWindow.statusBarHeight + 8 : 8
-
     }
 
     QueryDialog {
         id : firstStartDialog
         icon : "image://icons/mieru.svg"
-        titleText : "How to turn pages"
-        message : "Tap the <b>right half</b> of the screen to go to the <b>next page</b>.<br><br>"
-              +" Tap the <b>left half</b> to go to the <b>previous page</b>."
-        acceptButtonText : "Don't show again"
-        rejectButtonText : "OK"
-        onAccepted: {
+        titleText : qsTr("How to turn pages")
+        message :   qsTr("Tap the <b>right half</b> of the screen to go to the <b>next page</b>.") + "<br><br>"
+                  + qsTr("Tap the <b>left half</b> to go to the <b>previous page</b>.")
+        acceptButtonText : qsTr("Don't show again")
+        rejectButtonText : qsTr("OK")
+        onAccepted : {
             options.set("QMLShowFirstStartDialog", false)
         }
     }

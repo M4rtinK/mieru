@@ -25,11 +25,11 @@ Page {
 
             LineText {
                 width : optionsPage.width
-                text : "Page view"
+                text : qsTr("Page view")
             }
 
             Label {
-                text : "<b>Rotation</b>"
+                text : "<b>" + qsTr("Rotation") + "</b>"
             }
             ButtonRow {
               // synchronize with current orientation lock
@@ -44,7 +44,7 @@ Page {
               }
               Button {
                 id : bAuto
-                text : "auto"
+                text : qsTr("auto")
                 onClicked : {
                     options.set("QMLmainViewRotation", "auto")
                     mainView.orientationLock = PageOrientation.Automatic
@@ -52,7 +52,7 @@ Page {
               }
               Button {
                 id : bPortrait
-                text : "portrait"
+                text : qsTr("portrait")
                 onClicked : {
                     options.set("QMLmainViewRotation", "portrait")
                     mainView.orientationLock = PageOrientation.LockPortrait
@@ -60,7 +60,7 @@ Page {
               }
               Button {
                 id : bLandscape
-                text : "landscape"
+                text : qsTr("landscape")
                 onClicked : {
                     options.set("QMLmainViewRotation", "landscape")
                     mainView.orientationLock = PageOrientation.LockLandscape
@@ -69,7 +69,7 @@ Page {
             }
 
             SwitchWithText {
-                text : "<b>Show status bar</b>"
+                text : "<b>" + qsTr("Show status bar") + "</b>"
                 checked : rootWindow.showStatusBar
                 onCheckedChanged : {
                     rootWindow.showStatusBar = checked
@@ -77,7 +77,7 @@ Page {
                 }
             }
             SwitchWithText {
-                text : "<b>Remember toolbar state</b>"
+                text : "<b>" + qsTr("Remember toolbar state") + "</b>"
                 checked : options.get("QMLRememberToolbarState", false)
                 onCheckedChanged : {
                     options.set("QMLRememberToolbarState", checked)
@@ -85,7 +85,7 @@ Page {
             }
 
             Label {
-                text : "<b>Fullscreen button opacity</b>"
+                text : "<b>" + qsTr("Fullscreen button opacity") + "</b>"
             }
             Slider {
                 value : mainView.fullscreenButtonOpacity
@@ -114,11 +114,11 @@ Page {
             
             LineText {
                 width : optionsPage.width
-                text : "Paging options"
+                text : qsTr("Paging options")
             }
             
             Label {
-                text : "<b>Paging mode</b>"
+                text : "<b>" + qsTr("Paging mode") + "</b>"
             }
             ButtonRow {
               Component.onCompleted : {
@@ -133,7 +133,7 @@ Page {
               }
               Button {
                 id : bPMScreen
-                text : "Whole screen"
+                text : qsTr("Whole screen")
                 onClicked : {
                     options.set("QMLPagingMode", "screen")
                     mainView.pagingMode = "screen"
@@ -141,7 +141,7 @@ Page {
               }
               Button {
                 id : bPMEdges
-                text : "On edges"
+                text : qsTr("On edges")
                 onClicked : {
                     options.set("QMLPagingMode", "edges")
                     mainView.pagingMode = "edges"
@@ -150,7 +150,7 @@ Page {
             }
             
             SwitchWithText {
-                text : "<b>Show paging feedback</b>"
+                text : "<b>" + qsTr("Show paging feedback") + "</b>"
                 checked : mainView.pagingFeedback
                 onCheckedChanged : {
                     mainView.pagingFeedback = checked
@@ -160,20 +160,20 @@ Page {
 
             LineText {
                 width : optionsPage.width
-                text : "Page scaling"
+                text : qsTr("Page scaling")
             }
             SelectorButtonWithText {
-                text : "<b>Page fit mode</b>"
+                text : "<b>" + qsTr("Page fit mode") + "</b>"
                 buttonText : mainView.pageFitMode
                 selector : pageFitSelector
             }
             
             LineText {
                 width : optionsPage.width
-                text : "Miscellaneous"
+                text : qsTr("Miscellaneous")
             }
             SwitchWithText {
-                text : "<b>Manga reading mode</b>"
+                text : "<b>" + qsTr("Manga reading mode") + "</b>"
                 checked : rootWindow.enableMangaMode
                 onCheckedChanged : {                                                    
                     rootWindow.enableMangaMode = checked                                  
@@ -184,8 +184,8 @@ Page {
     }
 
     tools: ToolBarLayout {
-               ToolIcon { iconId: "toolbar-back"
-                  onClicked: pageStack.pop()
-                  }
-               }
+       ToolIcon { iconId: "toolbar-back"
+          onClicked: pageStack.pop()
+          }
+       }
     }
