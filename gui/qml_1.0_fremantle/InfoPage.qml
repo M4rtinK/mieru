@@ -203,6 +203,10 @@ Page {
     					onLinkActivated : Qt.openUrlExternally(link)
     				}
     				Label {
+                        text : "<b>" + qsTr("www") + ":</b> <a href="http://m4rtink.github.com/mieru/">http://m4rtink.github.com/mieru/</a>"
+                        onLinkActivated : Qt.openUrlExternally(link)
+                    }
+    				Label {
     				    width : tab3.width
     					text  : "<b>" + qsTr("discussion") + ":</b> "
     					Component.onCompleted : {
