@@ -171,37 +171,72 @@
 <context>
     <name>MainView</name>
     <message>
-        <location filename="../MainView.qml" line="233"/>
+        <location filename="../MainView.qml" line="156"/>
+        <source>original</source>
+        <translation>Original</translation>
+    </message>
+    <message>
+        <location filename="../MainView.qml" line="158"/>
+        <source>width</source>
+        <translation>Breite</translation>
+    </message>
+    <message>
+        <location filename="../MainView.qml" line="160"/>
+        <source>height</source>
+        <translation>Höhe</translation>
+    </message>
+    <message>
+        <location filename="../MainView.qml" line="162"/>
+        <source>screen</source>
+        <translation>Bildschirm</translation>
+    </message>
+    <message>
+        <location filename="../MainView.qml" line="164"/>
+        <source>orient</source>
+        <translation>Ausrichtung</translation>
+    </message>
+    <message>
+        <location filename="../MainView.qml" line="171"/>
+        <source>most</source>
+        <translation>Meiste</translation>
+    </message>
+    <message>
+        <location filename="../MainView.qml" line="179"/>
+        <source>custom</source>
+        <translation>Benutzer</translation>
+    </message>
+    <message>
+        <location filename="../MainView.qml" line="237"/>
         <source>Open file</source>
         <translation>Datei öffnen</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="240"/>
+        <location filename="../MainView.qml" line="244"/>
         <source>History</source>
         <translation>Verlauf</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="244"/>
+        <location filename="../MainView.qml" line="248"/>
         <source>Info</source>
         <translation>Informationen</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="248"/>
+        <location filename="../MainView.qml" line="252"/>
         <source>Options</source>
         <translation>Optionen</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="254"/>
+        <location filename="../MainView.qml" line="258"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="446"/>
+        <location filename="../MainView.qml" line="450"/>
         <source>Rotation</source>
         <translation>Ausrichtung</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="465"/>
+        <location filename="../MainView.qml" line="469"/>
         <source>No pages loaded</source>
         <translation>keine Seite(n) geladen</translation>
     </message>
@@ -307,34 +342,34 @@
         <translation>&lt;b&gt;1:1&lt;/b&gt; - Originalgröße</translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="22"/>
+        <location filename="../PageFitSelector.qml" line="19"/>
         <source>&lt;b&gt;fit to width&lt;/b&gt;</source>
         <translation>&lt;b&gt;an Breite anpassen&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="26"/>
+        <location filename="../PageFitSelector.qml" line="20"/>
         <source>&lt;b&gt;fit to height&lt;/b&gt;</source>
         <translation>&lt;b&gt;an Höhe anpassen&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="30"/>
+        <location filename="../PageFitSelector.qml" line="21"/>
         <source>&lt;b&gt;fit to screen&lt;/b&gt;</source>
         <translation>&lt;b&gt;an Bildschirm anpassen&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="34"/>
+        <location filename="../PageFitSelector.qml" line="22"/>
         <source>&lt;b&gt;custom&lt;/b&gt; - remember scale</source>
         <translation>&lt;b&gt;benutzerdefiniert&lt;/b&gt; - Skalierung merken</translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="38"/>
+        <location filename="../PageFitSelector.qml" line="23"/>
         <source>&lt;b&gt;orientation&lt;/b&gt; specific</source>
-        <translation>&lt;b&gt;Ausrichtungsspezifisch&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;ausrichtungsspezifisch&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="42"/>
+        <location filename="../PageFitSelector.qml" line="24"/>
         <source>&lt;b&gt;show the most&lt;/b&gt;</source>
-        <translation>&lt;b&gt;das meiste zeigen&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;das Meiste zeigen&lt;/b&gt;</translation>
     </message>
 </context>
 <context>

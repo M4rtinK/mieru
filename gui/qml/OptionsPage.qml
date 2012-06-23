@@ -153,7 +153,7 @@ Page {
             }
             SelectorButtonWithText {
                 text : "<b>" + qsTr("Page fit mode") + "</b>"
-                buttonText : mainView.pageFitMode
+                buttonText : qsTranslate("MainView", mainView.pageFitMode)
                 // FIXME: incomplete theme on Fremantle
                 iconSource: platform.incompleteTheme() ?
                 "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-image-expand"

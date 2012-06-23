@@ -149,33 +149,37 @@ Page {
     }
 
     function fitPage(mode) {
+        // translateable strings are marked up using QT_TR_NOOP()
+        // the actual translation is located in the paging dialog
+    
         // fit the page according to the current fitting mode
-        if (mode == "original") {
+        if (mode == QT_TR_NOOP("original")) {
             pageFlickable.scale = 1.0
-        } else if (mode == "width") {
+        } else if (mode == QT_TR_NOOP("width")) {
             pageFlickable.scale = mainView.width  / mangaPage.sourceSize.width
-        } else if (mode == "height") {
+        } else if (mode == QT_TR_NOOP("height")) {
             pageFlickable.scale = mainView.height / mangaPage.sourceSize.height
-        } else if (mode == "screen") {
+        } else if (mode == QT_TR_NOOP("screen")) {
             fitPageToScreen()
-        } else if (mode == "orient") {
+        } else if (mode == QT_TR_NOOP("orient")) {
             // fit to screen in portrait, fit to width in landscape
             if (rootWindow.inPortrait) {
                 fitPageToScreen()
             } else {
                 pageFlickable.scale = mainView.width/mangaPage.sourceSize.width
             }
-        } else if (mode == "most") {
+        } else if (mode == QT_TR_NOOP("most")) {
             // fit fo to the longest side of the image
             if (pageFlickable.width >= pageFlickable.height) {
                 pageFlickable.scale = mainView.width / mangaPage.sourceSize.width
             } else {
                 pageFlickable.scale = mainView.height / mangaPage.sourceSize.height
             }
-
+        }
+        else if(mode == QT_TR_NOOP("custom")) {
             /* nothing needs to be done for the custom mode
                as the current scale is just used as the initial
-               custom scale */
+               custom scale */        
         }
     }
 
@@ -435,7 +439,7 @@ Page {
                 }
                 Button {
                     width : mLayout.width
-                    text  : mainView.pageFitMode
+                    text  : qsTr(mainView.pageFitMode)
                     // FIXME: incomplete theme on Fremantle
                     iconSource: platform.incompleteTheme() ?
                     "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-image-expand"
