@@ -76,25 +76,13 @@ class QMLGUI(gui.GUI):
     rc.setContextProperty('historyListController', historyListController)
     rc.setContextProperty('historyListModel', self.historyListModel)
 
-    # check for the installed Qt packages
+    # activate translation
     translator = QtCore.QTranslator(self.app)
-   
-    if os.path.isdir("/usr/lib/qt4/imports/com/nokia/meego"):
-      # use com.nokia.meego namespace available
-      url = QUrl('gui/qml/main.qml')
-      translator.load("gui/qml/i18n/qml_" + locale.getlocale()[0])
-    elif os.path.isdir("/usr/lib/qt4/imports/org/maemo/fremantle"):
-      # use org.maemo.fremantle
-      url = QUrl('gui/qml_1.0_fremantle/main.qml')
-      translator.load("gui/qml_1.0_fremantle/i18n/qml_" + locale.getlocale()[0])
-    else:
-      raise Exception("no known Qt import location found")
-    
-    # install the translator
+    translator.load("gui/qml/i18n/qml_" + locale.getlocale()[0])
     self.app.installTranslator(translator)
     
     # Set the QML file and show
-    self.view.setSource(url)
+    self.view.setSource(QUrl('gui/qml/main.qml'))
     self.window.closeEvent = self._qtWindowClosed
     self.window.show()
 

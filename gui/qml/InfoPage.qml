@@ -1,58 +1,56 @@
 //InfoPage.qml
+import Qt 4.7
 import QtQuick 1.1
 import com.nokia.meego 1.0
 
 Page {
     tools: ToolBarLayout {
-        ToolIcon { iconId: "toolbar-back"
+        ToolIcon {
+            iconId: "toolbar-back"
             onClicked: pageStack.pop()
         }
         ButtonRow {
-            platformStyle: TabButtonStyle { }
             TabButton {
-                text: "Info"
+                text: qsTr("Info")
                 tab: tab1
             }
             TabButton {
-                text: "Stats"
+                text: qsTr("Stats")
                 tab: tab2
             }
             TabButton {
-                text: "About"
+                text: qsTr("About")
                 tab: tab3
             }
         }
-           }
-    TabGroup {
-        id: tabGroup
+    }
 
-        currentTab: tab1
+    TabGroup {
+        id : tabGroup
+        currentTab : tab1
 
         Page {
-            id: tab1
+            id : tab1
             anchors.fill : parent
-            //anchors.verticalCenter : parent.verticalCenter
-            anchors.topMargin : 30
+            anchors.topMargin    : 30
             anchors.bottomMargin : 30
-            anchors.leftMargin : 30
-            anchors.rightMargin : 30
+            anchors.leftMargin   : 30
+            anchors.rightMargin  : 30
 
             ScrollDecorator {
-                 id: scrolldecorator
-                 flickableItem: infoFlickable
+                 flickableItem : infoFlickable
             }
             Flickable {
                 id : infoFlickable
-                anchors.fill : parent
-                contentWidth: tab1.width
-                contentHeight: infoHeadline.height + infoFirstPage.height + infoCollumn.height + 30
-
-                flickableDirection: Flickable.VerticalFlick
+                anchors.fill  : parent
+                contentWidth  : tab1.width
+                contentHeight : infoHeadline.height + infoFirstPage.height + infoColumn.height + 30
+                flickableDirection : Flickable.VerticalFlick
 
                 Label {
                     id : infoHeadline
                     anchors.horizontalCenter : parent.horizontalCenter
-                    text: "<h1>" + readingState.getPrettyName() + "</h1>"
+                    text  : "<h1>" + readingState.getPrettyName() + "</h1>"
                     width : tab1.width
                     wrapMode : Text.WordWrap
                     horizontalAlignment : Text.AlignHCenter
@@ -64,56 +62,57 @@ Page {
                     anchors.topMargin : 10
                     source : "image://page/" + mainView.mangaPath + "|0"
                     fillMode : Image.PreserveAspectFit
-                    width : tab1.width/2.0
-                    height : tab1.width/2.0
+                    width  : tab1.width / 2.0
+                    height : tab1.width / 2.0
                     smooth : true
-                Label {
-                    anchors.verticalCenter : parent.verticalCenter
-                    anchors.leftMargin : 10
-                    anchors.left : infoFirstPage.right
-                    //var remainingPages = mainView.maxPageNumber -1
-                    text: "<h2>+" + (mainView.maxPageNumber-1) + "<br>pages</h2>"
-                }
-
-                }
+				}
                 Column {
-                    id : infoCollumn
-                    //anchors.horizontalCenter : parent.horizontalCenter
+                    id : infoColumn
                     anchors.top : infoFirstPage.bottom
                     anchors.topMargin : 20
                     spacing : 20
-                    Label {
-                        text: "<b>Path</b>"
+					
+                    LineText {
+                        width : tab1.width
+                        text : qsTr("Properties")
                     }
                     Label {
-                        text: "" + mainView.mangaPath
+                        text : "<b>" + qsTr("Pages") + ":</b> " + (mainView.maxPageNumber - 1)
+                    }
+                    Label {
+                        text : "<b>" + qsTr("Path") + ":</b> " + mainView.mangaPath
+						
                         // explicit width is needed for wrapping to work
-                        width : tab1.width
+                        width    : tab1.width
                         wrapMode : Text.WrapAnywhere
                     }
-                    Label {
-                        text: "<h3>Online search</h3>"
+                    LineText {
+                        width : tab1.width
+                        text  : qsTr("Online search")
                     }
                     Button {
                         text : "Google"
+                        anchors.horizontalCenter : parent.horizontalCenter
                         onClicked : {
-                            mainView.notify("Opening <b>Google</b> search")
+                            rootWindow.notify(qsTr("Opening <b>Google</b> search"))
                             Qt.openUrlExternally("http://www.google.com/search?as_q=" + readingState.getPrettyName())
                         }
                     }
                     Button {
-                        //TODO: other language mutations
+                        // TODO: other language mutations
                         text : "Wikipedia"
+                        anchors.horizontalCenter : parent.horizontalCenter
                         onClicked : {
-                            mainView.notify("Opening <b>Wikipedia</b> search")
+                            rootWindow.notify(qsTr("Opening <b>Wikipedia</b> search"))
                             Qt.openUrlExternally("http://en.wikipedia.org/w/index.php?search=" + readingState.getPrettyName() + "&go=Go")
                         }
 
                     }
                     Button {
                         text : "Manga updates"
+                        anchors.horizontalCenter : parent.horizontalCenter
                         onClicked : {
-                            mainView.notify("Opening <b>Manga updates</b> search")
+                            rootWindow.notify(qsTr("Opening <b>Manga updates</b> search"))
                             Qt.openUrlExternally("http://www.mangaupdates.com/search.html?search=" + readingState.getPrettyName())
                         }
                     }
@@ -123,7 +122,6 @@ Page {
         Page {
             id: tab2
             anchors.fill : parent
-            //anchors.verticalCenter : parent.verticalCenter
             anchors.topMargin : 30
             anchors.bottomMargin : 30
             anchors.leftMargin : 30
@@ -131,23 +129,23 @@ Page {
             Text {
                anchors.left : parent.left
                id : statsHeadline
-               text : "<b>Usage Statistics</b>"
+               text : "<b>" + qsTr("Usage Statistics") + "</b>"
                font.pointSize: 24
             }
             Switch {
                 id : statsSwitch
                 anchors.left : statsHeadline.right
                 anchors.leftMargin : 35
-                // eliminate checked property binding loop
-                function checkedInit() {
-                    return stats.enabled
-                }
-                checked : checkedInit()
-
+                
                 onCheckedChanged : {
                     // enable/disable stats and update statsText
-                    stats.enabled = statsSwitch.checked
+                    stats.enabled  = statsSwitch.checked
                     statsText.text = stats.statsText
+                }
+                
+                // workaround for checked property binding loop
+                Component.onCompleted : {
+                    checked = stats.enabled
                 }
             }
             Text {
@@ -161,7 +159,7 @@ Page {
             Button {
                 anchors.top : statsText.bottom
                 anchors.topMargin : 50
-                text : "Reset"
+                text : qsTr("Reset")
                 onClicked : {
                     resetStatsDialog.open()
                 }
@@ -171,60 +169,80 @@ Page {
         Page {
             id: tab3
             anchors.fill : parent
-            //anchors.verticalCenter : parent.verticalCenter
             anchors.topMargin : 20
             anchors.bottomMargin : 30
             anchors.leftMargin : 30
             anchors.rightMargin : 30
 
-            Label {
-                id : aboutTitle
-                anchors.horizontalCenter : parent.horizontalCenter
-                text: "<b>Mieru</b>" + " " + readingState.getVersionString()
-                //font.pointSize: 24
+            ScrollDecorator {
+                 flickableItem : aboutFlickable
             }
-            Image {
-                id : aboutMieruIcon
-                anchors.horizontalCenter : parent.horizontalCenter
-                anchors.topMargin : 10
-                anchors.top : aboutTitle.bottom
-                source : "image://icons/mieru.svg"
-            }
-            Label {
-                id : aboutContactInfo
-                anchors.horizontalCenter : parent.horizontalCenter
-                //anchors.topMargin : 10
-                anchors.top : aboutMieruIcon.bottom
-                text: "<style type='text/css'>p { margin-bottom:15px; margin-top:0px; }</style>" + readingState.getAboutText()
-
-                onLinkActivated : {
-                    console.log('about text link clicked: ' + link)
-                    mainView.notify("Opening:<br><b>"+link+"</b>")
-                    Qt.openUrlExternally(link)
+            Flickable {
+                id : aboutFlickable
+                anchors.fill  : parent
+                contentWidth  : tab3.width
+                contentHeight : aboutColumn.height + 30
+                flickableDirection : Flickable.VerticalFlick
+                
+                Column {
+                    id : aboutColumn
+                    spacing : 25
+                    Column {
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        spacing : 5
+                        Label {
+                            anchors.horizontalCenter : parent.horizontalCenter
+                            text : "<h2>Mieru " + readingState.getVersionString() + "</h2>"
+                        }
+                        Image {
+                            anchors.horizontalCenter : parent.horizontalCenter
+                            source : "image://icons/mieru.svg"
+                        }
+                        Label {
+                            anchors.horizontalCenter : parent.horizontalCenter
+                            width    : tab3.width
+                            wrapMode : Text.WordWrap
+                            text : qsTr("Mieru is a flexible Manga and comic book reader.")
+                        }
+                    }
+                    Column {
+                        spacing : 5
+                        Label {
+                            text : "<b>" + qsTr("main developer") + ":</b> Martin Kolman"
+                        }
+                        Label {
+                            text : "<b>" + qsTr("email") + ":</b> <a href='mailto:mieru.info@gmail.com'>mieru.info@gmail.com</a>"
+                            onLinkActivated : Qt.openUrlExternally(link)
+                        }
+                        Label {
+                            text : "<b>" + qsTr("www") + ":</b> <a href='http://m4rtink.github.com/mieru/'>http://m4rtink.github.com/mieru/</a>"
+                            onLinkActivated : Qt.openUrlExternally(link)
+                        }
+                        Label {
+                            width : tab3.width
+                            text  : "<b>" + qsTr("discussion") + ":</b> " + "<a href='http://forum.meego.com/showthread.php?t=5405'>forum.meego.com</a>"
+                            onLinkActivated : Qt.openUrlExternally(link)
+                        }
+                    }
+                    Button {
+                        text : qsTr("Donate")
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        onClicked : {
+                            console.log('donation button clicked')
+                            Qt.openUrlExternally('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=martin%2ekolman%40gmail%2ecom&lc=GB&item_name=Mieru%20project&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted')
+                        }
+                    }
                 }
-            //TODO: mixed up braces ?
-            Button {
-                text : "Donate ?"
-                anchors.horizontalCenter : parent.horizontalCenter
-                anchors.topMargin : 25
-                anchors.top : aboutContactInfo.bottom
-                onClicked : {
-                    console.log('donation button clicked')
-                    Qt.openUrlExternally('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=martin%2ekolman%40gmail%2ecom&lc=GB&item_name=Mieru%20project&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted')
-                }
-            }
-                //font.pointSize: 24
-            }
-
             }
         }
+    }
     
     QueryDialog {
         id : resetStatsDialog
-        titleText : "Reset all usage statistics ?"
-        //message : "Reset all usage statistics ?"
-        acceptButtonText : "reset"
-        rejectButtonText : "cancel"
+        titleText : qsTr("Reset all usage statistics")
+        message : qsTr("Do you really want to reset all usage statistics?")
+        acceptButtonText : qsTr("Reset")
+        rejectButtonText : qsTr("Cancel")
         onAccepted : { 
             stats.reset()
             statsText.text = stats.statsText

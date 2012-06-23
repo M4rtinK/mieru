@@ -1,4 +1,5 @@
 //PageFitSelector.qml
+import Qt 4.7
 import QtQuick 1.0
 import com.nokia.meego 1.0
 
@@ -6,40 +7,40 @@ SelectionDialog {
     id: pageFitSelector
     property Style platformStyle: SelectionDialogStyle {}
     property string pageFitMode : "original"
-    titleText : "Page fit mode"
+    titleText : qsTr("Page fit mode")
     onSelectedIndexChanged : {
         pageFitMode = model.get(selectedIndex).key
         accept()
     }
     model : ListModel {
+        // qsTr() does not work for properties...
         ListElement {
-            name : "<b>1:1</b> - original size"
+            name : QT_TR_NOOP("<b>1:1</b> - original size")
             key : "original"
         }
         ListElement {
-            name : "<b>fit to width</b>"
+            name : QT_TR_NOOP("<b>fit to width</b>")
             key : "width"
         }
         ListElement {
-            name : "<b>fit to height</b>"
+            name : QT_TR_NOOP("<b>fit to height</b>")
             key : "height"
         }
         ListElement {
-            name : "<b>fit to screen</b>"
+            name : QT_TR_NOOP("<b>fit to screen</b>")
             key : "screen"
         }
         ListElement {
-            name : "<b>custom</b> - remember scale"
+            name : QT_TR_NOOP("<b>custom</b> - remember scale")
             key : "custom"
         }
         ListElement {
-            name : "<b>orientation</b> specific"
+            name : QT_TR_NOOP("<b>orientation</b> specific")
             key : "orient"
         }
         ListElement {
-            name : "<b>show the most</b>"
+            name : QT_TR_NOOP("<b>show the most</b>")
             key : "most"
         }
     }
 }
-
