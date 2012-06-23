@@ -233,6 +233,7 @@ Page {
     Menu {
         id : mainViewMenu
         MenuLayout {
+            id : mainLayout
             MenuItem {
                 text : qsTr("Open file")
                 onClicked : {
@@ -255,8 +256,16 @@ Page {
             // TODO: shall this be really platform dependent?
             //       using 'visible' property does not look good
             MenuItem {
+                id : quitButton
                 text : qsTr("Quit")
                 onClicked : readingState.quit()
+            }
+            Component.onCompleted : {
+                // don't show the Quit button on platforms
+                // where it is not needed
+                if (!platform.showQuitButton()) {
+                    quitButton.destroy()
+                }
             }
         }
     }
