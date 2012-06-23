@@ -78,7 +78,12 @@ class QMLGUI(gui.GUI):
 
     # activate translation
     translator = QtCore.QTranslator(self.app)
-    translator.load("gui/qml/i18n/qml_" + locale.getlocale()[0])
+    
+    if self.mieru.args.locale is not None:
+      localeId = self.mieru.args.locale
+    else:
+      localeId = locale.getlocale()[0]
+    translator.load("gui/qml/i18n/qml_" + localeId)
     self.app.installTranslator(translator)
     
     # Set the QML file and show
@@ -95,7 +100,8 @@ class QMLGUI(gui.GUI):
 #    self.nextButton.clicked.connect(self._nextCB)
 #    self.pageFlickable.clicked.connect(self._prevCB)
 #    self.prevButton.clicked.connect(self._prevCB)
-    self.toggleFullscreen()
+    if self.mieru.platform.startInFullscreen():
+      self.toggleFullscreen()
 
     # check if first start dialog has to be shown
     if self.mieru.get("QMLShowFirstStartDialog", True):
@@ -465,7 +471,7 @@ class Platform(QtCore.QObject):
 
   @QtCore.Slot()
   def minimise(self):
-    return self.mieru.platform.minimise()
+    return self.mieru.platform.minimize()
 
   @QtCore.Slot(result=bool)
   def showMinimiseButton(self):

@@ -9,11 +9,15 @@ class PC(BasePlatform):
   def __init__(self, mieru):
     BasePlatform.__init__(self)
     self.mieru = mieru
-    self.mb = self._addMenu()
+#    self.mb = self._addMenu()
 
   def hasPagingKeys(self):
     """keyboard support"""
     return True
+
+  def startInFullscreen(self):
+    """Mieru should start in window on desktop"""
+    return False
 
   def startChooser(self, type):
     if type == "folder":
