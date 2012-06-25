@@ -474,8 +474,11 @@ Page {
     /** No pages loaded label **/
 
     Label {
+        width : parent.width
         anchors.centerIn : parent
         text : "<h1>" + qsTr("No pages loaded") + "</h1>"
+        wrapMode : Text.WordWrap
+        horizontalAlignment : Text.AlignHCenter
         visible : !mainView.pageLoaded
     }
 
