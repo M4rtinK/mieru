@@ -206,37 +206,37 @@
         <translation>Benutzer</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="237"/>
+        <location filename="../MainView.qml" line="238"/>
         <source>Open file</source>
         <translation>Datei öffnen</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="244"/>
+        <location filename="../MainView.qml" line="245"/>
         <source>History</source>
         <translation>Verlauf</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="248"/>
+        <location filename="../MainView.qml" line="249"/>
         <source>Info</source>
         <translation>Informationen</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="252"/>
+        <location filename="../MainView.qml" line="253"/>
         <source>Options</source>
         <translation>Optionen</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="258"/>
+        <location filename="../MainView.qml" line="260"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="450"/>
+        <location filename="../MainView.qml" line="459"/>
         <source>Rotation</source>
         <translation>Ausrichtung</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="469"/>
+        <location filename="../MainView.qml" line="478"/>
         <source>No pages loaded</source>
         <translation>keine Seite(n) geladen</translation>
     </message>
