@@ -236,7 +236,7 @@
         <translation>Положение</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="478"/>
+        <location filename="../MainView.qml" line="479"/>
         <source>No pages loaded</source>
         <translation>Страницы не загружены</translation>
     </message>
@@ -369,7 +369,7 @@
     <message>
         <location filename="../PageFitSelector.qml" line="24"/>
         <source>&lt;b&gt;show the most&lt;/b&gt;</source>
-        <translation>&lt;b&gt;показзывать максимум&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;показывать максимум&lt;/b&gt;</translation>
     </message>
 </context>
 <context>

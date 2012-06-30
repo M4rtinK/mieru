@@ -236,7 +236,7 @@
         <translation>Ausrichtung</translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="478"/>
+        <location filename="../MainView.qml" line="479"/>
         <source>No pages loaded</source>
         <translation>keine Seite(n) geladen</translation>
     </message>
