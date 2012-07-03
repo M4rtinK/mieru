@@ -8,7 +8,7 @@ class Options:
     self.mieru = mieru
     optionsFilename = 'mieru_options.bin'
     mieruProfileFolderName = '.mieru'
-    userHomePath = os.getenv("HOME")
+    userHomePath = os.getenv("HOME", "")
     self.profileFolderPath = os.path.join(userHomePath, mieruProfileFolderName)
     self.optionsPath = os.path.join(self.profileFolderPath, optionsFilename)
     self.checkProfilePath()
