@@ -38,7 +38,7 @@ class Mieru:
 
     self.saveActiveMangaState()
     self.options.save()
-    print "mieru quiting"
+    print("Mieru quiting")
     self.gui.stopMainLoop()
 
   def __init__(self):
@@ -224,18 +224,18 @@ class Mieru:
       if self.activeManga:
         self.activeManga.next()
     elif not self.platform.handleKeyPress(keyName):
-      print "key: %s" % keyName
+      print("key: %s" % keyName)
 
   def on_button_press_event(actor, event):
-    print "button press event"
+    print("button press event")
 
   def notify(self, message, icon=""):
-    print "notification: %s" % message
+    print("notification: %s" % message)
     self.platform.notify(message,icon)
 
   def openManga(self, path, startOnPage=0, replaceCurrent=True, loadNotify=True):
     if replaceCurrent:
-      print "opening %s on page %d" % (path,startOnPage)
+      print("opening %s on page %d" % (path,startOnPage))
       mangaInstance = manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
       # close and replace any current active manga
       self.setActiveManga(mangaInstance)
@@ -249,7 +249,7 @@ class Mieru:
       return manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
 
   def openMangaFromState(self, state):
-    print "opening manga from state"
+    print("opening manga from state")
     #print state
     mangaInstance = manga.Manga(self,load=False)
     mangaInstance.setState(state)
@@ -319,7 +319,7 @@ class Mieru:
     if openMangasHistory:
       for path in paths:
         if path in openMangasHistory:
-          print "deleting %s" % path
+          print("deleting %s" % path)
           del openMangasHistory[path]
     self.set('openMangasHistory', openMangasHistory)
     print("removing done")
@@ -365,7 +365,7 @@ class Mieru:
         if callback:
           callback(key,value,oldValue, *args)
         else:
-          print "invalid watcher callback :", callback
+          print("invalid watcher callback :", callback)
 
   def get(self, key, default):
     """
@@ -374,7 +374,7 @@ class Mieru:
     try:
       return self.d.get(key, default)
     except Exception, e:
-      print "options: exception while working with persistent dictionary:\n%s" % e
+      print("options: exception while working with persistent dictionary:\n%s" % e)
       return default
 
   def set(self, key, value):
@@ -387,7 +387,7 @@ class Mieru:
       self._notifyWatcher(key, value)
 
   def saveActiveMangaState(self):
-    print "saving active manga state state"
+    print("saving active manga state state")
     if self.activeManga: # is some manga actually loaded ?
       state = self.activeManga.getState()
       self.addToHistory(state)
@@ -395,14 +395,14 @@ class Mieru:
   def _restoreState(self):
     openMangasHistory = self.getSortedHistory()
     if openMangasHistory:
-      print "restoring last open manga"
+      print("restoring last open manga")
       lastOpenMangaState = openMangasHistory[0]['state']
       if self.openMangaFromState(lastOpenMangaState):
-        print "last open manga restored"
+        print("last open manga restored")
       else:
-        print "restoring last open manga failed"
+        print("restoring last open manga failed")
     else:
-      print "no history found"
+      print("no history found")
 
   def _resizeViewport(self,allocation):
     self.viewport = allocation
