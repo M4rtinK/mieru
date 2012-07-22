@@ -73,7 +73,7 @@ class Manga:
       if self.load(path,startOnPage):
         if loadNotify:
           self.mieru.notify('<b>%s</b> loaded on page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(startOnPage)))
-        #print '<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage))
+        #print('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
       else:
         if loadNotify:
           self.mieru.gui.newMangaLoaded(self) # notify the GUI
@@ -100,22 +100,19 @@ class Manga:
   def getState(self):
     """save current state to a dictionary"""
 
-    state = {}
-    state['path'] = self.path
-    state['pageNumber'] = self.activePageId
-    state['pageCount'] = len(self.pages) # for displaying in the history list
+    state = {'path': self.path, 'pageNumber': self.activePageId, 'pageCount': len(self.pages)}
     scale = self.mieru.gui.getScale()
-    if scale != None:
+    if scale is not None:
       state['scale'] = scale
     upperLeftShift = self.mieru.gui.getUpperLeftShift()
-    if upperLeftShift != None:
+    if upperLeftShift is not None:
       state['upperLeftShift'] = upperLeftShift
     return state
 
   def setState(self, state):
     """restore from the state dictionary"""
     pageNumber = state.get('pageNumber',0)
-    if pageNumber == None:
+    if pageNumber is None:
       pageNumber = 0
     self.scale = state.get('scale',1.0)
 
@@ -131,7 +128,7 @@ class Manga:
 
   def load(self, path, pageNumber=0):
     """try to load manga from the given path"""
-    print "manga: loading from path: %s" % path
+    print("manga: loading from path: %s" % path)
     self.path = path
 
     start = time.clock()
@@ -141,13 +138,13 @@ class Manga:
       print("container created in %1.2f ms" % duration)
       self.container = container
       self.pages = self.container.getImageFileList()
-      if pageNumber == None: # None means we don't show a page yet
+      if pageNumber is None: # None means we don't show a page yet
         return True # nothing to go wrong here :)
       else:
         status = self.gotoPageId(pageNumber) # return if the first-selected page loaded successfully
         return status
     else:
-      print "manga: container initialization failed"
+      print("manga: container initialization failed")
       return False
 
   def close(self):
@@ -162,12 +159,12 @@ class Manga:
 
   def ID2PageNumber(self, id):
     """guess page number from id"""
-    if id == None:
+    if id is None:
       return -1
     if id >= 0:
       return id + 1
     else: # negative addressing
-      return (len(self.pages) + id + 1)
+      return len(self.pages) + id + 1
 
   def PageNumber2ID(self, pageNumber):
     """convert page number to id"""
@@ -176,10 +173,10 @@ class Manga:
     else:
       return pageNumber-1
 
-  def idExistst(self, id):
+  def idExists(self, id):
     if self.pages:
-      if id < 0 or id > (len(self.pages)-1) or id == None: # None indicates initial active id state
-        print "page id out of range:", id
+      if id < 0 or id > (len(self.pages)-1) or id is None: # None indicates initial active id state
+        print("page id out of range:", id)
         return False
       else:
         return True
@@ -206,9 +203,9 @@ class Manga:
         print("- image resolution: %d x %d" % (w, h))
         print("- image filename: %s" % self.container.getImageFilenameById(id))
 
-      return (page, id)
+      return page, id
     else:
-      print "manga: page not found, id: ", id
+      print("manga: page not found, id: ", id)
       return None
 
   def getActivePageId(self):
@@ -217,7 +214,7 @@ class Manga:
   def setActivePageId(self, id):
     """set active page id to a given value"""
     #TODO: support negative indexing
-    if id >= 0 and id <= self.getMaxId():
+    if 0 <= id <= self.getMaxId():
       self.activePageId = id
 
   def getActivePageNumber(self):
@@ -226,13 +223,13 @@ class Manga:
 
   def getMaxId(self):
     if self.pages:
-      return (len(self.pages)-1)
+      return len(self.pages)-1
     else:
       return None
 
   def getMaxPageNumber(self):
     maxId = self.getMaxId()
-    if maxId == None:
+    if maxId is None:
       return 0
     else:
       return self.ID2PageNumber(maxId)
@@ -258,10 +255,10 @@ class Manga:
     page = self.cache.get(currentId, None) # try to load from cache
     if page: # page was in cache
       newPage = page
-      print "# page from cache"
+      print("# page from cache")
     else: # not in cache, load from storage
       newPageQuery = self.getPageById(currentId)
-      print "# page from storage"
+      print("# page from storage")
       if newPageQuery:
         (newPage,newPageId) = newPageQuery
         cacheThisPage = True
@@ -284,7 +281,7 @@ class Manga:
       # success
       return True
     else:
-      print "switching to page failed, id: ", currentId
+      print("switching to page failed, id: ", currentId)
       # enable to skip invalid pages that have valid id
       return False
 
@@ -295,16 +292,16 @@ class Manga:
       (isTrue, path) = self.nextArmed # get the path
       self._hidePreview()
       self.mieru.openManga(path, 0) # open it on first page
-      return(False, "loadingNext") # done
+      return False, "loadingNext" # done
 
     currentId = self.activePageId
-    if currentId == None:
-      return(False,"Error")
+    if currentId is None:
+      return False,"Error"
     nextId = currentId + 1
     # sanity check the id
     if nextId < len(self.pages):
       self.gotoPageId(nextId, +1)
-      return(True, nextId)
+      return True, nextId
     else:
       print("manga: end reached")
       if self.mieru.continuousReading:
@@ -315,13 +312,13 @@ class Manga:
           self.mieru.notify('this is the <b>last</b> page,\n<u>press again</u> to load:\n<b>%s</b>' % name)
           self.nextArmed = (True, nextMangaPath)
           #self._showPreview(nextMangaPath, "next")
-          return(False, "press4Next")
+          return False, "press4Next"
         else:
           self.mieru.notify('this is the <b>last</b> page,\n there is no <i>previous</i> to load')
-          return(False, "noNext")
+          return False, "noNext"
       else:
         self.mieru.notify('this is the <b>last</b> page')
-        return(False, "thisIsLastPage")
+        return False, "thisIsLastPage"
 
   def previous(self):
     """go one page back"""
@@ -330,15 +327,15 @@ class Manga:
       (isTrue, path) = self.previousArmed # get the path
       self._hidePreview()
       self.mieru.openManga(path, -1) # open it on last page
-      return(False, "loadingPrev") # done
+      return False, "loadingPrev" # done
     currentId = self.activePageId
-    if currentId == None:
-      return(False,"Error")
+    if currentId is None:
+      return False,"Error"
     prevId = currentId - 1
     # sanity check the id
     if prevId >= 0:
       self.gotoPageId(prevId, -1)
-      return(True,prevId)
+      return True,prevId
     else:
       print("manga: start reached") # TODO: display a notification & go to next archive/folder (?)
       if self.mieru.continuousReading:
@@ -351,13 +348,13 @@ class Manga:
           self.previousArmed = (True, previousMangaPath)
 
           #self._showPreview(previousMangaPath, "previous")
-          return(False, "press4Prev")
+          return False, "press4Prev"
         else:
           self.mieru.notify('this is the <b>first</b> page,\n there is no <i>previous</i> to load')
-          return(False, "noPrev")
+          return False, "noPrev"
       else:
         self.mieru.notify('this is the <b>first</b> page')
-        return(False, "thisIsFirstPage")
+        return False, "thisIsFirstPage"
 
   def getPrettyName(self):
     """get a pretty name of this manga instance"""
@@ -386,7 +383,7 @@ class Manga:
           prevPath = os.path.join(folderPath,folderContent[prevId])
         if nextId <= maxId:
           nextPath = os.path.join(folderPath,folderContent[nextId])
-    return (prevPath, nextPath)
+    return prevPath, nextPath
 
   def getPrevMangaPath(self):
     (prevPath,nextPath) = self.getNeighborPaths()
@@ -394,7 +391,7 @@ class Manga:
       containerModule.testPath(prevPath)
       return prevPath
     else:
-      print "manga: previous path uses unsupported format:\n%s" % prevPath
+      print("manga: previous path uses unsupported format:\n%s" % prevPath)
       return False
     return prevPath
         
@@ -408,7 +405,7 @@ class Manga:
       return False
     return nextPath
 
-  def getPrevisousMangaStartID(self):
+  def getPreviousMangaStartID(self):
     return -1
 
   def getNextMangaStartID(self):
@@ -436,7 +433,7 @@ class Manga:
 #    self.mieru.gui.statusReport()
 
   def _updateTitleText(self):
-    """update the title text on the mieru window (and possibly elswhere)"""
+    """update the title text on the mieru window (and possibly elsewhere)"""
     title = self._getTitleText()
     self.mieru.gui.setWindowTitle(title)
 
@@ -541,7 +538,7 @@ class Manga:
 
 
 #    (tw,th) = thumbnail.get_size()
-#    print (tw,th)
+#    print(tw,th)
 #    thumbnail.move_by(border+(pBoxInSide-tw)/2.0,border+(pBoxInSide-th)/2.0)
 
 
