@@ -56,14 +56,14 @@ class Maemo5(BasePlatform):
       pagingButton = gtk.Button("Paging")
       pagingButton.connect('clicked',self.showPagingDialogCB)
 
-      fittPickerButton = self._getFittingPickerButton("Page fitting", arangement=hildon.BUTTON_ARRANGEMENT_VERTICAL)
+      fitPickerButton = self._getFittingPickerButton("Page fitting", arangement=hildon.BUTTON_ARRANGEMENT_VERTICAL)
 
       menu.append(openFileButton)
       menu.append(openFolderButton)
       menu.append(fullscreenButton)
       menu.append(historyPickerButton)
       menu.append(pagingButton)
-      menu.append(fittPickerButton)
+      menu.append(fitPickerButton)
       menu.append(optionsButton)
       menu.append(infoButton)
 
@@ -122,7 +122,7 @@ class Maemo5(BasePlatform):
       if lastUsedValue == mode[0]:
         lastUsedValueId = id
       id+=1
-    if lastUsedValue != None:
+    if lastUsedValue is not None:
       touchSelector.set_active(0,lastUsedValueId)
     return touchSelector
 
@@ -137,15 +137,15 @@ class Maemo5(BasePlatform):
       print("maemo 5: wrong fitting touch selector index", e)
 
   def _getFittingPickerButton(self, title=None, arangement=hildon.BUTTON_ARRANGEMENT_HORIZONTAL):
-    """get a pciker button with an asociated touch selector,
+    """get a picker button with an associated touch selector,
     also load the last used value on startup"""
-    fittPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,arangement)
+    fitPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,arangement)
     if title:
-      fittPickerButton.set_title(title)
+      fitPickerButton.set_title(title)
     selector = self._getFittingSelector()
-    fittPickerButton.set_selector(selector)
-    fittPickerButton.connect('value-changed', self._applyFittingModeCB)
-    return fittPickerButton
+    fitPickerButton.set_selector(selector)
+    fitPickerButton.connect('value-changed', self._applyFittingModeCB)
+    return fitPickerButton
 
   def getSelector(self, modes, lastUsedValue=None):
     """get a selector"""
@@ -159,7 +159,7 @@ class Maemo5(BasePlatform):
       if lastUsedValue == mode:
         lastUsedValueId = id
       id+=1
-    if lastUsedValue != None:
+    if lastUsedValue is not None:
       touchSelector.set_active(0,lastUsedValueId)
     return touchSelector
 
@@ -174,7 +174,7 @@ class Maemo5(BasePlatform):
     return pb
 
   def _getRotationPickerButton(self, title=None):
-    """get a picker button with an asociated touch selector,
+    """get a picker button with an associated touch selector,
     also load the last used value on startup"""
     pb = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,hildon.BUTTON_ARRANGEMENT_HORIZONTAL)
     if title:
@@ -194,7 +194,7 @@ class Maemo5(BasePlatform):
     self._setRotationModeNumber(index)
 
   def _getRIFHPickerButton(self):
-    """get a picker button with an asociated touch selector,
+    """get a picker button with an associated touch selector,
     connect it with the history selector and connect the remove item callback"""
     pb = self.getVerticalPickerButton("Erase an item from history")
     selector = self._getHistorySelector()
@@ -203,7 +203,7 @@ class Maemo5(BasePlatform):
     selector.connect('changed', self._deleteItemFromHistoryCB)
     return pb
 
-  def _deleteItemFromHistoryCB(self, selector, collumn):
+  def _deleteItemFromHistoryCB(self, selector, column):
     """show a confirmation dialog when user select an item from history for
     removal"""
     if not self.historyLocked:
@@ -237,9 +237,9 @@ class Maemo5(BasePlatform):
 
     # page fitting
     pLabel = gtk.Label("Page")
-    fittPickerButton = self._getFittingPickerButton("Page fitting")
+    fitPickerButton = self._getFittingPickerButton("Page fitting")
     vbox.pack_start(pLabel, False, False, padding*2)
-    vbox.pack_start(fittPickerButton, False, False, 0)
+    vbox.pack_start(fitPickerButton, False, False, 0)
 
     # GUI rotation
     rLabel = gtk.Label("GUI Rotation")
@@ -247,9 +247,9 @@ class Maemo5(BasePlatform):
     vbox.pack_start(rLabel, False, False, padding*2)
     vbox.pack_start(rPickerButton, False, False, 0)
 
-    # kinnetic scrolling
+    # kinetic scrolling
     ksLabel = gtk.Label("Scrolling")
-    ksButton = self.CheckButton("Kinnetic scrolling")
+    ksButton = self.CheckButton("Kinetic scrolling")
     ksButton.set_active(self.mieru.get('kineticScrolling', True))
     ksButton.connect('toggled', self._toggleOptionCB, 'kineticScrolling', False)
     self.mieru.watch('kineticScrolling', self._updateKSCB, ksButton)
@@ -276,10 +276,10 @@ class Maemo5(BasePlatform):
     vbox.pack_start(debug1Button, False, False, 0)
 
     # as options are too long, add a pannable area
-    pann = hildon.PannableArea()
-    pann.add_with_viewport(vbox)
+    pan = hildon.PannableArea()
+    pan.add_with_viewport(vbox)
 
-    win.add(pann)
+    win.add(pan)
 
     win.show_all()
 
@@ -377,7 +377,7 @@ class Maemo5(BasePlatform):
       for item in sortedHistory:
         state = item['state']
         path = state['path']
-        if state['pageNumber'] == None: # some states can have unknown last open page
+        if state['pageNumber'] is None: # some states can have unknown last open page
           state['pageNumber'] = 0
         pageNumber = state['pageNumber']+1
         pageCount = state['pageCount']+1
@@ -417,7 +417,7 @@ class Maemo5(BasePlatform):
       currentFolder = dialog.get_current_folder()
       selectedPath = dialog.get_filename()
     dialog.destroy()
-    if currentFolder != None:
+    if currentFolder is not None:
       self.mieru.set('lastChooserFolder', currentFolder)
     if selectedPath:
       self.mieru.openManga(selectedPath)
@@ -473,7 +473,7 @@ class Maemo5(BasePlatform):
     return ["auto", "landscape", "portrait"]
 
   def areYouSureButtonCB(self, button, text, okCB=None, cancelCB=None):
-    """this is used from callback comming from buttons"""
+    """this is used from callback coming from buttons"""
     self.areYouSure(text, okCB, cancelCB)
 
   def areYouSure(self, text, okCB=None, cancelCB=None):
@@ -481,18 +481,18 @@ class Maemo5(BasePlatform):
     
     note = hildon.Note("confirmation", self.mieru.getWindow(), text)
 
-    retcode = gtk.Dialog.run(note)
+    returnCode = gtk.Dialog.run(note)
     note.destroy()
 
-    if retcode == gtk.RESPONSE_OK:
+    if returnCode == gtk.RESPONSE_OK:
         print "User pressed 'OK' button'"
-        if okCB != None:
+        if okCB is not None:
           (cb1, args1) = okCB
           cb1(*args1)
         return True
     else:
         print "User pressed 'Cancel' button"
-        if cancelCB != None:
+        if cancelCB is not None:
           (cb2, args2) = cancelCB
           cb2(*args2)
         return False
