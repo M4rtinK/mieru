@@ -38,7 +38,7 @@ class PC(BasePlatform):
       currentFolder = dialog.get_current_folder()
       selectedPath = dialog.get_filename()
     dialog.destroy()
-    if currentFolder != None:
+    if currentFolder is not None:
       self.mieru.set('lastChooserFolder', currentFolder)
     if selectedPath:
       print "open"
@@ -51,7 +51,6 @@ class PC(BasePlatform):
     """add main menu"""
 
     if self.mieru.gui.getToolkit() == "GTK":
-      print "ADASDADASDASDASD"
       mvbox = self.mieru.gui.getVbox()
       window = self.mieru.gui.getWindow()
       mb = gtk.MenuBar()
