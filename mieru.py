@@ -65,9 +65,6 @@ class Mieru:
 
     self.continuousReading = True
 
-    initialSize = (800,480)
-
-
     # get the platform module
     self.platform = None
 
@@ -139,8 +136,6 @@ class Mieru:
     sucessfully loaded from a path provided by startup arguments"""
     if self.activeManga is None:
       self._restoreState()
-
-#    self.gui.toggleFullscreen()
 
     timer.elapsed(initTs, "Init")
     timer.elapsed(startTs, "Complete startup")
@@ -250,7 +245,6 @@ class Mieru:
 
   def openMangaFromState(self, state):
     print("opening manga from state")
-    #print state
     mangaInstance = manga.Manga(self,load=False)
     mangaInstance.setState(state)
     if mangaInstance.container is None:
