@@ -26,7 +26,7 @@ class QMLPage(page.Page):
 
   def getSize(self):
     """return image resolution"""
-    return(0,0)
+    return 0,0
 
   def free(self):
     """quickly release all resources"""
