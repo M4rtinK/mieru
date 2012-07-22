@@ -96,7 +96,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
 
   def getViewport(self):
     (w,h) = self.stage.get_size()
-    return (0,0,w,h)
+    return 0,0,w,h
 
   def getPage(self, flo, name="", fitOnStart=True):
     pb = self._flo2pixbuf(flo)
@@ -176,7 +176,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     if type == "previous":
       pBoxX = 0 - pBoxSide
       pBoxShownX = 0
-    return (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border)
+    return pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border
 
 
   def showPreview(self, thumbnail, type, pressedAction=None):
