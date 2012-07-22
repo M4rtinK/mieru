@@ -14,7 +14,7 @@ class GUI:
     pass
 
   def getViewport(self):
-    """return a (x,y,w,h) tupple"""
+    """return a (x,y,w,h) tuple"""
     pass
 
   def setWindowTitle(self, title):
@@ -69,7 +69,7 @@ class GUI:
   def clearStage(self):
     pass
 
-  def idleAdd(self, calllback, *args):
+  def idleAdd(self, callback, *args):
     pass
 
   def statusReport(self):
@@ -78,7 +78,7 @@ class GUI:
 
   def newActiveManga(self, manga):
     """this is a new manga instance reporting that it has been loaded
-    NOTE: this can be the first manga loaded at satartup or a new manga instance
+    NOTE: this can be the first manga loaded at startup or a new manga instance
     replacing a previous one"""
     pass
 
