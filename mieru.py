@@ -71,11 +71,21 @@ class Mieru:
     # get the platform module
     self.platform = None
 
-    if args.p:
-      if args.p == "maemo5":
+    # get the platform ID string
+    platformId = "pc" # safe fallback
+    if args.p is None:
+      import platform_detection
+      result = platform_detection.getBestPlatformModuleId()
+      if result:
+        platformId = result
+    else: # use the CLI provided value
+      platformId = args.p
+
+    if platformId:
+      if platformId == "maemo5":
         import maemo5
         self.platform = maemo5.Maemo5(self, GTK=False)
-      elif args.p == "harmattan":
+      elif platformId == "harmattan":
         import harmattan
         self.platform = harmattan.Harmattan(self)
       else:
@@ -98,20 +108,20 @@ class Mieru:
     # create the GUI
     startTs1 = timer.start()
 
-    if args.u == "hildon":
-      self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
-    if args.u == "harmattan" or args.u=='QML':
-      self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)
-    else:
-      self.gui = gui.getGui(self, 'GTK', accel=True, size=initialSize)
+    # use CLI provided GUI module ID
+    if args.u:
+      self._loadGUIModule(args.u)
+    else: # get GUI module id from the platform module
+      ids = self.platform.getSupportedGUIModuleIds()
+      if ids:
+        self._loadGUIModule(ids[0])
+      else:
+        print("platform module error: list of supported GUI IDs is empty")
 
     timer.elapsed(startTs1, "GUI module import")
 
 #    # resize the viewport when window size changes
 #    self.gui.resizeNotify(self._resizeViewport)
-
-
-
 
     self.activeManga = None
 
@@ -137,6 +147,16 @@ class Mieru:
 
     # start the main loop
     self.gui.startMainLoop()
+
+  def _loadGUIModule(self, id):
+    initialSize = self.platform.getScreenWH()
+    if id in ("QML","harmattan"):
+      self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)
+    elif id == "hildon":
+      self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
+    elif id == "GTK":
+      self.gui = gui.getGui(self, 'GTK', accel=True, size=initialSize)
+
 
   def getDict(self):
     return self.d

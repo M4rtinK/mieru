@@ -76,6 +76,12 @@ class Maemo5(BasePlatform):
   def getIDString(self):
     return "maemo5"
 
+  def getName(self):
+    return "Maemo 5 Fremantle"
+
+  def getDeviceName(self):
+    return "Nokia N900"
+
   """
   as the Fremantle toolbar is not shown if using Qt Components,
   Minimise and Quit buttons are needed
@@ -491,6 +497,8 @@ class Maemo5(BasePlatform):
           cb2(*args2)
         return False
 
+  def getScreenWH(self):
+    return 800, 480
 
   def Button(self, label=""):
     """return hildon button"""

@@ -13,6 +13,12 @@ class Harmattan(BasePlatform):
   def getIDString(self):
     return "harmattan"
 
+  def getName(self):
+    return "MeeGo 1.2 Harmattan"
+
+  def getDeviceName(self):
+    return "Nokia N9 or N950"
+
   def notify(self, message, icon=""):
     self.mieru.gui._notify(message, icon)
 
@@ -28,3 +34,9 @@ class Harmattan(BasePlatform):
   def showMinimiseButton(self):
     """Swype handles window switching"""
     return False
+
+  def getScreenWH(self):
+    return 854,480
+
+  def startInFullscreen(self):
+    return True
