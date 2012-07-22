@@ -9,4 +9,4 @@ class Point:
         return Point(self.x + other.x, self.y + other.y)
 
     def __str__(self):
-        print "(%d, %d)" % (self.x, self.y)
+        return "(%d, %d)" % (self.x, self.y)
