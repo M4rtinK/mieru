@@ -19,12 +19,12 @@ class PageCache:
       if id in self.items: # already present
         # move in history to most recent place
         self.items[id] = page
-        print "* radd %d" % id
+        print("* radd %d" % id)
       else: #add new item
         self.history.append(id)
         self.history.sort()
         self.items[id] = page
-        print "* add %d" % id
+        print("* add %d" % id)
       if len(self.items) > self.size:
         self.trimToSize(self.size, direction)
         
@@ -65,7 +65,7 @@ class PageCache:
     item = self.items.pop(id)
     self.destroyItem(item)
 
-    print "rm %d" % id
+    print("rm %d" % id)
 
   def destroyItem(self, item):
     # this is for pages
@@ -81,7 +81,7 @@ class PageCache:
       print(self.history)
 
   def flush(self):
-    print "flushing cache"
+    print("flushing cache")
     self.trimToSize(0,0)
 
 

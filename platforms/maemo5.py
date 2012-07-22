@@ -212,13 +212,13 @@ class Maemo5(BasePlatform):
         if id >= 0:
           state = self.currentHistory[id]['state']
           path = state['path']
-          print "path selected for removal: %s" % path
+          print("path selected for removal: %s" % path)
           (folderPath,name) = os.path.split(path)
           warning = "Erase %s from history ?" % name
           self.areYouSure(warning, (self._actuallyDeleteItemFromHistoryCB, [path]))
       except Exception, e:
-        print "error while removing manga from history"
-        print e
+        print("error while removing manga from history")
+        print(e)
 
   def _actuallyDeleteItemFromHistoryCB(self, path):
     """actually remove the item from history and update it"""
@@ -344,7 +344,7 @@ class Maemo5(BasePlatform):
                   window.connect("realize", self._enableZoomCB)
 
   def _updateHistoryCB(self, key=None, value=None, oldValue=None):
-    print "update history"
+    print("update history")
     self._updateHistory()
 
   def _historyRowSelected(self, selector, column):
@@ -354,15 +354,15 @@ class Maemo5(BasePlatform):
         if id >= 0:
           state = self.currentHistory[id]['state']
           path = state['path']
-          print "path selected: %s" % path
+          print("path selected: %s" % path)
           activeMangaPath = self.mieru.getActiveMangaPath()
           if path != activeMangaPath: # infinite loop defence
             self.mieru.openMangaFromState(state)
       except Exception, e:
-        print "error while restoring manga from history"
-        print e
+        print("error while restoring manga from history")
+        print(e)
 #      else:
-#        print "history locked"
+#        print("history locked")
 
   def _updateHistory(self):
     """
@@ -389,7 +389,7 @@ class Maemo5(BasePlatform):
     self.historyLocked = False
 
   def _clearHistory(self):
-    print "clearing history"
+    print("clearing history")
     self.mieru.clearHistory()
     self.historyLocked = True
     self.historyStore.clear()
@@ -424,7 +424,7 @@ class Maemo5(BasePlatform):
 
   def notify(self, message, icon=None):
     if self.GTK:
-      print message
+      print(message)
       hildon.hildon_banner_show_information_with_markup(self.mieru.gui.getWindow(), "icon_text", message)
     else:
       self.mieru.gui._notify(message, icon)
@@ -485,13 +485,13 @@ class Maemo5(BasePlatform):
     note.destroy()
 
     if returnCode == gtk.RESPONSE_OK:
-        print "User pressed 'OK' button'"
+        print("User pressed 'OK' button'")
         if okCB is not None:
           (cb1, args1) = okCB
           cb1(*args1)
         return True
     else:
-        print "User pressed 'Cancel' button"
+        print("User pressed 'Cancel' button")
         if cancelCB is not None:
           (cb2, args2) = cancelCB
           cb2(*args2)

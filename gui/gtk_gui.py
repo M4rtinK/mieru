@@ -67,7 +67,7 @@ class GTKGUI(gui.GUI):
       pl.write(flo.read())
       pl.close() # this  blocks until the image is completely loaded
     except Exception,e:
-      print "gtkgui: Loading page failed with this exception:\n%s\ngtkgui: loading placeholder image" % e
+      print("gtkgui: Loading page failed with this exception:\n%s\ngtkgui: loading placeholder image" % e)
       # load a "page unreadable image"  (@_@)
       file = open("icons/page_unreadable.png", 'r')
       # create a fresh pl

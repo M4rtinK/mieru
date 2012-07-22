@@ -41,7 +41,7 @@ class PC(BasePlatform):
     if currentFolder is not None:
       self.mieru.set('lastChooserFolder', currentFolder)
     if selectedPath:
-      print "open"
+      print("open")
       self.mieru.openManga(selectedPath)
 
   def startChooserCB(self, button, type):

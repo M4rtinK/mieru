@@ -202,7 +202,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     else:
       thumbnail.set_size(tw*hf, th*hf)
     (tw,th) = thumbnail.get_size()
-    print (tw,th)
+    print(tw,th)
     thumbnail.move_by(border+(pBoxInSide-tw)/2.0,border+(pBoxInSide-th)/2.0)
 
     # create a container for the thumbnail and background
@@ -233,7 +233,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
     """hide a displayed preview"""
     if self.previewBox:
       (x,y) = self.previewBoxStartingPoint
-      print "manga: hiding preview"
+      print("manga: hiding preview")
       animation = self.previewBox.animate(clutter.LINEAR,300,"x", x)
       animation.get_timeline().connect('completed', self._killPreviewCB, self.previewBox)
 

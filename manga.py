@@ -401,7 +401,7 @@ class Manga:
       containerModule.testPath(nextPath)
       return nextPath
     else:
-      print "manga: next path uses unsupported format:\n%s" % nextPath
+      print("manga: next path uses unsupported format:\n%s" % nextPath)
       return False
     return nextPath
 

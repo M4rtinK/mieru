@@ -46,7 +46,7 @@ class ClutterPage(page.Page, clutter.Texture):
     self._resetDecel()
 
 
-    """first number id for the horizontal and seccond for the vertical axis,
+    """first number id for the horizontal and second for the vertical axis,
     0 means movement in this axis is disabled, 1 means movement is enabled"""
     self.movementEnabled = (1,1) # the page is fit to screen so it should not be move
 
@@ -76,7 +76,7 @@ class ClutterPage(page.Page, clutter.Texture):
     self.lastDTDXDY = (0,0,0)
     page.lastMotionTimestamp = event.time
     
-    # stop any decelaration in progress
+    # stop any deceleration in progress
     self.decelTl.stop()
 
     self.stopDecel = True
@@ -111,10 +111,10 @@ class ClutterPage(page.Page, clutter.Texture):
           self._resetDecel()
           (dt, dx, dy) = self.lastDTDXDY
           """if a movement is disabled in some axis, the mex/mey variable
-          would be zero and will therefore effectivelly cancel scrolling in a given direction"""
+          would be zero and will therefore effectively cancel scrolling in a given direction"""
           (mex, mey) = self.movementEnabled
           if dt == 0:
-            print "clutter_page: dt was zero !"
+            print("clutter_page: dt was zero !")
             dt = 1
           (dxPMS, dyPMS) = (dx/dt,dy/dt)
           self.ppms = (dxPMS*mex, dyPMS*mey)
@@ -134,19 +134,19 @@ class ClutterPage(page.Page, clutter.Texture):
 #    pxDistance = math.hypot(dx,dy)
 #    buttons.wasDoubleclick(event.get_click_count(), pxDistance , event.time - self.fsButtonLastPressTimestamp)
 
-#      print event.time - self.lastMovementTimestamp
+#      print(event.time - self.lastMovementTimestamp)
 #      (x,y) = event.x,event.y
 #      if page.lastMotion:
 #        (lasX,lastY) = page.lastMotion
 #        (dx,dy) = (x-lasX,y-lastY)
-#        print (dx,dy)
-#        print page.lastMotion
-#        print event.x,event.y
+#        print((dx,dy))
+#        print(page.lastMotion)
+#        print(event.x,event.y)
 
 
   def on_page_motion(self, page, event):
-#    print page, event
-#    print dir(event)
+#    print(page, event)
+#    print(dir(event))
     (x,y) = event.x,event.y
     if page.lastMotion:
       (lasX,lastY) = page.lastMotion
@@ -162,7 +162,7 @@ class ClutterPage(page.Page, clutter.Texture):
     return False
 
   def movePage(self,page,dx,dy):
-    """move the page so that the voewport either stays inside it
+    """move the page so that the viewport either stays inside it
        or the page stays inside the viewport if it is smaller"""
     (x,y,w,h) = self.mieru.gui.getViewport()
     (pageX,pageY,pageW,pageH) = page.get_geometry()
@@ -202,26 +202,26 @@ class ClutterPage(page.Page, clutter.Texture):
 #    page.set_clip(newX*(-1), newY*(-1), w, h)
     page.move_by(newX - pageX,newY - pageY)
 
-    return (wCollision, hCollision)
+    return wCollision, hCollision
 
   def activate(self):
     self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
     self.set_reactive(True) # this enables receiving of motion events
 
     # only connect callbacks once
-    if self.motionCallbackId == None:
+    if self.motionCallbackId is None:
       self.motionCallbackId = self.connect('motion-event', self.on_page_motion)
-    if self.resizeCallbackId == None:
+    if self.resizeCallbackId is None:
       self.resizeCallbackId = self.mieru.gui.getStage().connect('allocation-changed', self._handleResize)
 
   def deactivate(self):
     self.set_reactive(False)
     # disconnect motion callback
-    if self.motionCallbackId != None:
+    if self.motionCallbackId is not None:
       self.disconnect(self.motionCallbackId)
       self.motionCallbackId = None
     # disconnect resize callback
-    if self.resizeCallbackId != None:
+    if self.resizeCallbackId is not None:
       self.mieru.gui.getStage().disconnect(self.resizeCallbackId)
       self.resizeCallbackId = None
 
@@ -241,19 +241,19 @@ class ClutterPage(page.Page, clutter.Texture):
       self.fitToScreen()
 
   def _fitAfterResetCB(self, timeline, mode):
-    # NOTE: always set resetPosition=False, it will couase an infinite loop otherwise
+    # NOTE: always set resetPosition=False, it will cause an infinite loop otherwise
     self.setFitMode(mode, resetPosition=False)
 
-  def _enableMovementCB(self, timeline, movementTupple=None):
+  def _enableMovementCB(self, timeline, movementTuple=None):
     """enable movement after an animation finishes"""
     (we,he) = self.movementEnabled
-    if movementTupple == None:
+    if movementTuple is None:
       self.movementEnabled = (1,1)
     else:
-      (we1,he1) = movementTupple
-      if we1 == None:
+      (we1,he1) = movementTuple
+      if we1 is None:
         we1 = we
-      if he1 == None:
+      if he1 is None:
         he1 = he
       self.movementEnabled = (we1,he1)
 
@@ -279,12 +279,12 @@ class ClutterPage(page.Page, clutter.Texture):
 
     # resolution independent check
     if abs(dxp) <= abs(dxPMS*0.20) and abs(dyp) <= abs(dyPMS*0.20):
-      print "under pms threshold stopping"
+      print("under pms threshold stopping")
       timeline.stop()
       return
 
     if self.stopDecel or self.movePage(self, dx, dy) == (True, True):
-      print "edge stopping"
+      print("edge stopping")
       timeline.stop()
       return
 
@@ -310,18 +310,18 @@ class ClutterPage(page.Page, clutter.Texture):
 #
 #    # resolution independent check
 #    if abs(dxPMS) <= abs(dxPMS1*0.20) and abs(dyPMS) <= abs(dyPMS1*0.20):
-#      print "under pms treshold stopping"
+#      print("under pms treshold stopping")
 #      timeline.stop()
 #      return
 #
 #    # resolution dependent sanity check
 #    elif abs(dx) < 2 and abs(dy) < 2:
-#      print "under treshold stopping"
+#      print("under treshold stopping")
 #      timeline.stop()
 #      return
 #
 #    if self.stopDecel or self.movePage(self, dx, dy) == (True, True):
-#      print "edge stopping"
+#      print("edge stopping")
 #      timeline.stop()
 #      return
     
@@ -335,15 +335,15 @@ class ClutterPage(page.Page, clutter.Texture):
 #    dy = dyPMS*n
 #
 #    if self.friction < 0:
-#      print "friction stopping"
+#      print("friction stopping")
 #      timeline.stop()
 #      return
 #    elif abs(dx) < 0.2 or abs(dy) < 0.2:
-#      print "under treshold stopping"
+#      print("under treshold stopping")
 #      timeline.stop()
 #      return
 #    elif self.stopDecel or self.movePage(self, dx, dy) == (True, True):
-#      print "edge stopping"
+#      print("edge stopping")
 #      timeline.stop()
 #      return
 
@@ -380,7 +380,7 @@ class ClutterPage(page.Page, clutter.Texture):
     self.animate(clutter.LINEAR,100, 'width', w, 'height', h)
 
   def fitToWidth(self):
-    print "to width"
+    print("to width")
     (x,y,width,height) = self.mieru.gui.getViewport()
     (cx,cy,cw,ch) = self.get_geometry()
     (w,h) = self.get_size()
@@ -397,7 +397,7 @@ class ClutterPage(page.Page, clutter.Texture):
       alignAnim = self.animate(clutter.LINEAR,100, 'y', y-newH+height) # align with left border
       alignAnim.connect("completed", self._enableMovementCB)
       
-    return(newW,newH)
+    return newW,newH
 
   def fitToHeight(self):
     (x,y,width,height) = self.mieru.gui.getViewport()
@@ -465,7 +465,7 @@ class ClutterPage(page.Page, clutter.Texture):
     return self.imagePath
 
   def _handleResize(self,widget,event,flags):
-    print "handle resize"
+    print("handle resize")
     # resize and refit the page when viewport size changes
     fitMode = self.setFitMode(self.mieru.get('fitMode', 'original')) # implement current fit mode
     self.setFitMode(fitMode)
@@ -503,7 +503,7 @@ class ClutterPage(page.Page, clutter.Texture):
 #    self.connect('enter-event', self.do_enter_event)
 #
 #  def do_enter_event(self,actor,event):
-#    print "enter"
+#    print("enter")
 #
 #  def do_leave_event (self, actor, event):
 #    if self._is_pressed == True:
@@ -514,14 +514,14 @@ class ClutterPage(page.Page, clutter.Texture):
 #      return False
 ##
 #  def do_clicked (self):
-#    print "clicked"
+#    print("clicked")
 
 #  def loadImage(self,path):
 #    try:
 #      self.set_from_file(path)
 #    except Exception, e:
-#      print "loading page from file failed"
-#      print e
+#      print("loading page from file failed")
+#      print(e)
 
 
 

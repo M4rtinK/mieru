@@ -109,8 +109,8 @@ def getVersionString():
       versionString = str(versionString)
 
     except Exception, e:
-      print "loading version info failed"
-      print e
+      print("loading version info failed")
+      print(e)
 
   return versionString
 

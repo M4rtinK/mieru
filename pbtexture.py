@@ -53,7 +53,7 @@ if __name__ == '__main__':
         stage.connect('destroy', clutter.main_quit)
         clutter.main()
     else:
-        print "Provide the full path to the image to load"
+        print("Provide the full path to the image to load")
 
 # execute the script providing the full path to the image to load
 # example:

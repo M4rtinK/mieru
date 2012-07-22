@@ -71,7 +71,7 @@ class ClutterButtons:
     gobject.timeout_add(3000,self._hideFSButton, self.fsButton)
 
 #    self.showButton = declutter.Opacity(self.fsButton,clutter.LINEAR, 1000, 255, 0)
-#    print self.showButton
+#    print(self.showButton)
 #    self.showButton.start()
 
 #    self.fsButton.set_opacity(0)
@@ -92,7 +92,7 @@ class ClutterButtons:
         else:
           self.fsButtonActive = True
           declutter.animate(self.fsButton,clutter.LINEAR,100,[('opacity',255)])
-          print "showing"
+          print("showing")
           timer = gobject.timeout_add(2000,self._hideFSButton, button)
       
   def _hideFSButton(self, button):
