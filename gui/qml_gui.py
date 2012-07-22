@@ -34,7 +34,7 @@ class QMLGUI(gui.GUI):
         self.gui = gui
         
       def closeEvent(self, event):
-        print "shutting down"
+        print("shutting down")
         self.gui.mieru.destroy()
 
     self.app = QApplication(sys.argv)
@@ -165,7 +165,7 @@ class QMLGUI(gui.GUI):
 
   def newActiveManga(self, manga):
     """update max page number in the QML GUI"""
-#    print "* new manga loaded *"
+#    print("* new manga loaded *")
     maxPageNumber = manga.getMaxPageNumber()
     pageNumber = manga.getActivePageNumber()
     # assure sane slider behaviour
@@ -185,21 +185,21 @@ class QMLGUI(gui.GUI):
   def getUpperLeftShift(self):
     #return (pf.contX(), pf.contY())
     mv = self.rootObject.findChild(QObject, "mainView")
-    return (mv.getXShift(), mv.getYShift())
+    return mv.getXShift(), mv.getYShift()
 
   def getWindow(self):
     return self.window
     
   def _nextCB(self):
-    print "turning page forward"
+    print("turning page forward")
     self.mieru.activeManga.next()
 
   def _prevCB(self):
-    print "turning page forward"
+    print("turning page forward")
     self.mieru.activeManga.previous()
 
   def _getPageByPathId(self, mangaPath, id):
-#    print "PAGE BY ID", mangaPath, id
+#    print("PAGE BY ID", mangaPath, id)
     """as QML automatically caches images by URL,
     using a url consisting from a filesystem path to the container and page id,
     we basically create a hash with very unlikely collisions (eq. same hash resulting in different images
@@ -243,28 +243,28 @@ class MangaPageImageProvider(QDeclarativeImageProvider):
       self.gui = gui
 
   def requestImage(self, pathId, size, requestedSize):
-#    print "IMAGE REQUESTED"
-#    print size
-#    print requestedSize
+#    print("IMAGE REQUESTED")
+#    print(size)
+#    print(requestedSize)
 
 
     (path,id) = pathId.split('|',1)
     id = int(id) # string -> integer
-#    print  "** IR:", path, id
+#    print("** IR:", path, id)
     (page, id) = self.gui._getPageByPathId(path, id)
     imageFileObject = page.popImage()
     img=QImage()
     img.loadFromData(imageFileObject.read())
 #    if size:
-#      print "size"
+#      print("size")
 #      size.setWidth(img.width())
 #      size.setHeight(img.height())
 #    if requestedSize:
-#      print "requestedSize"
+#      print("requestedSize")
 #      return img.scaled(requestedSize)
 #    else:svw
 #      return img
-#    print img.size()
+#    print(img.size())
     return img
 
 class IconImageProvider(QDeclarativeImageProvider):
@@ -353,7 +353,7 @@ class ReadingState(QObject):
 
   @QtCore.Slot(str)
   def openManga(self, path):
-    print "Open manga"
+    print("Open manga")
     # remove the "file:// part of the path"
     path = re.sub('file://', '', path, 1)
     folder = os.path.dirname(path)
@@ -368,7 +368,7 @@ class ReadingState(QObject):
 
   @QtCore.Slot()
   def updateHistoryListModel(self):
-    print "updating history list model"
+    print("updating history list model")
     """the history list model needs to be updated only before the list
     is actually shown, no need to update it dynamically every time a manga is added
     to history"""
@@ -378,7 +378,7 @@ class ReadingState(QObject):
 
   @QtCore.Slot()
   def eraseHistory(self):
-    print "erasing history"
+    print("erasing history")
     """the history list model needs to be updated only before the list
     is actually shown, no need to update it dynamically every time a manga is added
     to history"""
@@ -397,7 +397,6 @@ class ReadingState(QObject):
   def getActiveMangaShiftX(self):
     """return the saved X shift of the currently active manga"""
     activeManga = self.mieru.getActiveManga()
-    print self.mieru.getActiveManga()
     if activeManga:
       return activeManga.getShiftX()
     else:
@@ -434,7 +433,7 @@ class Stats(QtCore.QObject):
 
   @QtCore.Slot(result=str)
   def getStatsText(self):
-      print ""
+      pass
 
   def _get_statsText(self):
     text = newlines2brs(re.sub('\n', '<br>', self.stats.getStatsText(headline=False)))
@@ -521,8 +520,8 @@ class Options(QtCore.QObject):
   @QtCore.Slot(str, float, result=float)
   def get(self, key, default):
     """get a value from Mierus persistent options dictionary"""
-    print "GET"
-    print key, default, self.mieru.get(key, default)
+    print("GET")
+    print(key, default, self.mieru.get(key, default))
     return self.mieru.get(key, default)
 
 
@@ -532,8 +531,8 @@ class Options(QtCore.QObject):
   @QtCore.Slot(str, float)
   def set(self, key, value):
     """set a keys value in Mierus persistent options dictionary"""
-    print "SET"
-    print key, value
+    print("SET")
+    print(key, value)
     return self.mieru.set(key, value)
 
   # for old PySide versions that don't support multiple
@@ -541,50 +540,50 @@ class Options(QtCore.QObject):
 
   @QtCore.Slot(str, bool, result=bool)
   def getB(self, key, default):
-    print "GET"
-    print key, default, self.mieru.get(key, default)
+    print("GET")
+    print(key, default, self.mieru.get(key, default))
     return self.mieru.get(key, default)
 
   @QtCore.Slot(str, str, result=str)
   def getS(self, key, default):
-    print "GET"
-    print key, default, self.mieru.get(key, default)
+    print("GET")
+    print(key, default, self.mieru.get(key, default))
     return self.mieru.get(key, default)
 
   @QtCore.Slot(str, int, result=int)
   def getI(self, key, default):
-    print "GET"
-    print key, default, self.mieru.get(key, default)
+    print("GET")
+    print(key, default, self.mieru.get(key, default))
     return self.mieru.get(key, default)
 
   @QtCore.Slot(str, float, result=float)
   def getF(self, key, default):
-    print "GET"
-    print key, default, self.mieru.get(key, default)
+    print("GET")
+    print(key, default, self.mieru.get(key, default))
     return self.mieru.get(key, default)
 
   @QtCore.Slot(str, bool)
   def setB(self, key, value):
-    print "SET"
-    print key, value
+    print("SET")
+    print(key, value)
     return self.mieru.set(key, value)
 
   @QtCore.Slot(str, str)
   def setS(self, key, value):
-    print "SET"
-    print key, value
+    print("SET")
+    print(key, value)
     return self.mieru.set(key, value)
 
   @QtCore.Slot(str, int)
   def setI(self, key, value):
-    print "SET"
-    print key, value
+    print("SET")
+    print(key, value)
     return self.mieru.set(key, value)
 
   @QtCore.Slot(str, float)
   def setF(self, key, value):
-    print "SET"
-    print key, value
+    print("SET")
+    print(key, value)
     return self.mieru.set(key, value)
 
 
@@ -638,20 +637,20 @@ class HistoryListModel(QtCore.QAbstractListModel):
     self.setRoleNames(dict(enumerate(HistoryListModel.COLUMNS)))
 
   def setThings(self, things):
-    #print "SET THINGS"
+    #print("SET THINGS")
     self._things = things
 
   def rowCount(self, parent=QtCore.QModelIndex()):
-    #print "ROW"
-    #print self._things
+    #print("ROW")
+    #print(self._things)
     return len(self._things)
 
   def checked(self):
     return [x for x in self._things if x.checked]
 
   def data(self, index, role):
-    #print "DATA"
-    #print self._things
+    #print("DATA")
+    #print(self._things)
     return self._things[index.row()]
 #    if index.isValid() and role == HistoryListModel.COLUMNS.index('thing'):
 #      return self._things[index.row()]
@@ -664,7 +663,6 @@ class HistoryListModel(QtCore.QAbstractListModel):
     #count = len(self.checked())
     for state in checked:
       paths.append(state.path)
-    print paths
     self.mieru.removeMangasFromHistory(paths)
     # quick and dirty remove
     for state in checked:
