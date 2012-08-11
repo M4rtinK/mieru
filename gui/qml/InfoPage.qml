@@ -169,10 +169,10 @@ Page {
         Page {
             id: tab3
             anchors.fill : parent
-            anchors.topMargin : 20
-            anchors.bottomMargin : 30
-            anchors.leftMargin : 30
-            anchors.rightMargin : 30
+            anchors.topMargin : 8
+            anchors.bottomMargin : 8
+            anchors.leftMargin : 8
+            anchors.rightMargin : 8
 
             ScrollDecorator {
                  flickableItem : aboutFlickable
@@ -198,12 +198,44 @@ Page {
                             anchors.horizontalCenter : parent.horizontalCenter
                             source : "image://icons/mieru.svg"
                         }
-                        Label {
-                            anchors.horizontalCenter : parent.horizontalCenter
-                            width    : tab3.width
-                            wrapMode : Text.WordWrap
-                            text : qsTr("Mieru is a flexible Manga and comic book reader.")
+                    }
+                    Label {
+                        id : mieruDescription
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        //width    : tab3.width
+                        wrapMode : Text.WordWrap
+                        text : qsTr("Mieru is a flexible Manga and comic book reader.")
+                    }
+                    Label {
+                        id : donateLabel
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        text : "<h3>Dou you like modRana ? <b>Donate !</b></h3>"
+                    }
+                    Row {
+                        id : ppFlattrRow
+                        anchors.top : donateLabel.bottom
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        anchors.topMargin : 24
+                        spacing : 32
+                        PayPalButton {
+                            id : ppButton
+                            anchors.verticalCenter : parent.verticalCenter
+                            url : "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=martin%2ekolman%40gmail%2ecom&lc=GB&item_name=Mieru%20project&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
                         }
+
+                        FlattrButton {
+                            id : flattrButton
+                            anchors.verticalCenter : parent.verticalCenter
+                            url : "http://flattr.com/thing/830372/Mieru-flexible-manga-and-comic-book-reader"
+                        }
+                    }
+
+                    BitcoinButton {
+                        id : bitcoinButton
+                        anchors.top : ppFlattrRow.bottom
+                        anchors.topMargin : 24
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        url : "1PPnoD4SyeQYgvhJ6L5xkjZ4qE4WMMCe1k"
                     }
                     Column {
                         spacing : 5
@@ -222,14 +254,6 @@ Page {
                             width : tab3.width
                             text  : "<b>" + qsTr("discussion") + ":</b> " + "<a href='http://forum.meego.com/showthread.php?t=5405'>forum.meego.com</a>"
                             onLinkActivated : Qt.openUrlExternally(link)
-                        }
-                    }
-                    Button {
-                        text : qsTr("Donate")
-                        anchors.horizontalCenter : parent.horizontalCenter
-                        onClicked : {
-                            console.log('donation button clicked')
-                            Qt.openUrlExternally('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=martin%2ekolman%40gmail%2ecom&lc=GB&item_name=Mieru%20project&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted')
                         }
                     }
                 }
