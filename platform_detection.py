@@ -2,19 +2,16 @@
 import os
 
 DEFAULT_DEVICE_MODULE_ID = "pc"
-DEFAULT_GUI_MODULE_ID = "GTK"
+DEFAULT_GUI_MODULE_ID = "QML"
 
 def getBestPlatformModuleId():
   print("** detecting current device **")
-
   result = _check()
-
   if result is not None:
     deviceModuleId = result
   else:
     deviceModuleId = DEFAULT_DEVICE_MODULE_ID # use GTK GUI module as fallback
     print("* no known device detected")
-
   print('** selected "%s" as device module ID **' % deviceModuleId)
   return deviceModuleId
 
