@@ -88,7 +88,6 @@ def getAboutContent(versionString="unknown"):
 
   mieruIcon = gtk.image_new_from_file('icons/mieru_150x150.png')
 #  mieruIcon.set_pixel_size(200)
-
   about1 = gtk.Label()
   about1.set_markup(self.getAboutText())
   vbox.pack_start(about0)
@@ -104,7 +103,6 @@ def getVersionString():
   if current version is unknown, return None
   """
   versionString = None
-
   # try read the version file
   if os.path.exists(VERSION_FILE_PATH):
     try:
@@ -113,11 +111,9 @@ def getVersionString():
       f.close()
       # is it really string ?
       versionString = str(versionString)
-
     except Exception, e:
       print("loading version info failed")
       print(e)
-
   return versionString
 
 def getVersionNumber():
@@ -161,12 +157,14 @@ def getGitHash():
       return None
 
 def _getLabel(name, spacing=0):
+  import gtk
   vbox = gtk.VBox(False, spacing)
   vbox.pack_start(gtk.Label(name),padding=spacing)
   vbox.show_all()
   return vbox
 
 def getInfNotebook(mieru):
+  import gtk
   class InfoNotebook(gtk.Notebook):
     def __init__(self, mieru):
       gtk.Notebook.__init__(self)
