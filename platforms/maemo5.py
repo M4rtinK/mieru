@@ -302,6 +302,8 @@ class Maemo5(BasePlatform):
     to be more finger friendly"""
     enlargeTabs = 15
     versionString = info.getVersionString()
+    if versionString is None:
+      versionString = "unknown version"
     notebook = gtk.Notebook()
     
     # shortcuts need to be pannable

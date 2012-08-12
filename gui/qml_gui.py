@@ -345,7 +345,10 @@ class ReadingState(QObject):
 
   @QtCore.Slot(result=str)
   def getVersionString(self):
-    return newlines2brs(info.getVersionString())
+    versionString = info.getVersionString()
+    if versionString is None:
+      versionString = "unknown version"
+    return newlines2brs(versionString)
 
   @QtCore.Slot(result=str)
   def toggleFullscreen(self):

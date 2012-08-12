@@ -3,6 +3,8 @@
 
 import os
 
+VERSION_FILE_PATH = "version.txt"
+
 def getShortcutsContent():
   import gtk
   vbox = gtk.VBox()
@@ -96,13 +98,17 @@ def getAboutContent(versionString="unknown"):
   return vbox
 
 def getVersionString():
-  versionString = "unknown version"
-  versionFilePath = 'version.txt'
+  """Return current version string
+  EXAMPLE:
+  V2.3.1 git:c10f25d
+  if current version is unknown, return None
+  """
+  versionString = None
 
   # try read the version file
-  if os.path.exists(versionFilePath):
+  if os.path.exists(VERSION_FILE_PATH):
     try:
-      f = open(versionFilePath, 'r')
+      f = open(VERSION_FILE_PATH, 'r')
       versionString = f.read()
       f.close()
       # is it really string ?
@@ -113,6 +119,46 @@ def getVersionString():
       print(e)
 
   return versionString
+
+def getVersionNumber():
+  """return version as a (primary, secondary, build) tuple
+  EXAMPLE:
+  V2.3.1 git:c10f25d -> (2,3,1)
+  if current version is unknown, return None
+  """
+  versionString = getVersionString()
+  if versionString is None:
+    return None
+  else:
+    try: # version string example: V2.3.1 git:c10f25d
+      versionString = versionString[1:] # drop leading V
+      versionString = versionString.split(' ')[0] # drop git tag
+      c1, c2, c3 = versionString.split('.')
+      return int(c1), int(c2), int(c3)
+    except Exception, e:
+      print('info: parsing version number failed')
+      print(e)
+      return None
+
+def getGitHash():
+  """return Git hash for the current version
+  EXAMPLE:
+  V2.3.1 git:c10f25d -> c10f25d
+  if current version is unknown, return None
+  """
+
+  versionString = getVersionString()
+  if versionString is None:
+    return None
+  else:
+    try: # version string example: V2.3.1 git:c10f25d
+      versionString = versionString.split(' ')[1] # drop the version
+      gitHash = versionString.split(':')[1] # drop the git: prefix
+      return gitHash
+    except Exception, e:
+      print('info: parsing version number failed')
+      print(e)
+      return None
 
 def _getLabel(name, spacing=0):
   vbox = gtk.VBox(False, spacing)
@@ -134,6 +180,8 @@ def getInfNotebook(mieru):
       self.show_all()
       self.set_current_page(0)
   return InfoNotebook(mieru)
+
+
 
 
 
