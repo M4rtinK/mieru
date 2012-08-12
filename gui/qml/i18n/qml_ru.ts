@@ -2,11 +2,37 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru">
 <context>
+    <name>BitcoinButton</name>
+    <message>
+        <location filename="../BitcoinButton.qml" line="34"/>
+        <source>Bitcoin address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../BitcoinButton.qml" line="111"/>
+        <source>Copy address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../BitcoinButton.qml" line="116"/>
+        <source>Bitcoin address copied to clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FileSelector</name>
     <message>
         <location filename="../FileSelector.qml" line="14"/>
         <source>File Selector</source>
         <translation>Выберите файл</translation>
+    </message>
+</context>
+<context>
+    <name>FlattrButton</name>
+    <message>
+        <location filename="../FlattrButton.qml" line="25"/>
+        <source>Opening &lt;b&gt;Flattr&lt;/b&gt; donation page, &lt;b&gt;thanks&lt;/b&gt;!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -118,52 +144,51 @@
     </message>
     <message>
         <location filename="../InfoPage.qml" line="162"/>
-        <location filename="../InfoPage.qml" line="244"/>
+        <location filename="../InfoPage.qml" line="268"/>
         <source>Reset</source>
         <translation>Сбросить</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="205"/>
+        <location filename="../InfoPage.qml" line="207"/>
         <source>Mieru is a flexible Manga and comic book reader.</source>
         <translation>Mieru — комфортная читалка комиксов и манга.</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="211"/>
+        <location filename="../InfoPage.qml" line="243"/>
         <source>main developer</source>
         <translation>основной разработчик</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="214"/>
+        <location filename="../InfoPage.qml" line="246"/>
         <source>email</source>
         <translation>e-mail</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="218"/>
+        <location filename="../InfoPage.qml" line="250"/>
         <source>www</source>
         <translation>сайт</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="223"/>
+        <location filename="../InfoPage.qml" line="255"/>
         <source>discussion</source>
         <translation>поддержка</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="228"/>
         <source>Donate</source>
-        <translation>Пожертвовать</translation>
+        <translation type="obsolete">Пожертвовать</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="242"/>
+        <location filename="../InfoPage.qml" line="266"/>
         <source>Reset all usage statistics</source>
         <translation>Сбросить всю статистику использования</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="243"/>
+        <location filename="../InfoPage.qml" line="267"/>
         <source>Do you really want to reset all usage statistics?</source>
         <translation>Вы уверены, что хотите сбросить статистику?</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="245"/>
+        <location filename="../InfoPage.qml" line="269"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -370,6 +395,14 @@
         <location filename="../PageFitSelector.qml" line="24"/>
         <source>&lt;b&gt;show the most&lt;/b&gt;</source>
         <translation>&lt;b&gt;показывать максимум&lt;/b&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>PayPalButton</name>
+    <message>
+        <location filename="../PayPalButton.qml" line="24"/>
+        <source>Opening &lt;b&gt;PayPal&lt;/b&gt; donation page, &lt;b&gt;thanks&lt;/b&gt;!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
