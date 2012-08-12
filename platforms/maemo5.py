@@ -56,7 +56,7 @@ class Maemo5(BasePlatform):
       pagingButton = gtk.Button("Paging")
       pagingButton.connect('clicked',self.showPagingDialogCB)
 
-      fitPickerButton = self._getFittingPickerButton("Page fitting", arangement=hildon.BUTTON_ARRANGEMENT_VERTICAL)
+      fitPickerButton = self._getFittingPickerButton("Page fitting", arrangement=hildon.BUTTON_ARRANGEMENT_VERTICAL)
 
       menu.append(openFileButton)
       menu.append(openFolderButton)
@@ -136,10 +136,10 @@ class Maemo5(BasePlatform):
     except Exception, e:
       print("maemo 5: wrong fitting touch selector index", e)
 
-  def _getFittingPickerButton(self, title=None, arangement=hildon.BUTTON_ARRANGEMENT_HORIZONTAL):
+  def _getFittingPickerButton(self, title=None, arrangement=hildon.BUTTON_ARRANGEMENT_HORIZONTAL):
     """get a picker button with an associated touch selector,
     also load the last used value on startup"""
-    fitPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,arangement)
+    fitPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,arrangement)
     if title:
       fitPickerButton.set_title(title)
     selector = self._getFittingSelector()
@@ -316,7 +316,7 @@ class Maemo5(BasePlatform):
     # add about tab
     notebook.append_page(info.getAboutContent(versionString),self._getLabel("About", enlargeTabs))
 
-    # add the netebook to the new stackable window
+    # add the notebook to the new stackable window
     win.add(notebook)
 
     # show it
