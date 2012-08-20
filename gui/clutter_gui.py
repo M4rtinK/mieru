@@ -106,7 +106,7 @@ class ClutterGTKGUI(gtk_gui.GTKGUI):
   def getCurrentPage(self):
     return self.activePage
 
-  def showPage(self, page):
+  def showPage(self, page, mangaInstance, pageId):
     """show a page on the stage"""
 
     self._addToMangaLayer(page)

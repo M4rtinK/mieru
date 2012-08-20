@@ -18,60 +18,65 @@ class Maemo5(BasePlatform):
 
     self.mieru = mieru
     self.GTK = GTK
-    if GTK:
-      window = self.mieru.gui.getWindow()
 
-      # enable zoom/volume keys for usage by mieru
-      self.enableZoomKeys(window)
+  def guiModuleLoaded(self):
+    self._addAppMenu()
 
-      # enable rotation
-      self.rotationObject = self._startAutorotation()
+  def _addAppMenu(self):
+    """add application menu & enable zoom key paging"""
+    window = self.mieru.gui.getWindow()
 
-      # add application menu
-      menu = hildon.AppMenu()
-      openFolderButton = gtk.Button("Open folder")
-      openFolderButton.connect('clicked',self.startChooserCB, "folder")
-      openFileButton = gtk.Button("Open file")
-      openFileButton.connect('clicked',self.startChooserCB, "file")
-      fullscreenButton = gtk.Button("Fullscreen")
-      fullscreenButton.connect('clicked',self._toggleFullscreenCB)
+    # enable zoom/volume keys for usage by mieru
+    self.enableZoomKeys(window)
 
-      # last open mangas list
-      self.historyStore = gtk.ListStore(gobject.TYPE_STRING)
-      self.historyLocked = False
-      self._updateHistory()
-      selector = self._getHistorySelector()
-      selector.connect('changed', self._historyRowSelected)
-      historyPickerButton = self.getVerticalPickerButton("History")
-      historyPickerButton.set_selector(selector)
-      self.historyPickerButton = historyPickerButton
-      self.mieru.watch('openMangasHistory', self._updateHistoryCB)
+    # enable rotation
+    self.rotationObject = self._startAutorotation()
 
-      optionsButton = gtk.Button("Options")
-      optionsButton.connect('clicked',self._showOptionsCB)
+    # add application menu
+    menu = hildon.AppMenu()
+    openFolderButton = gtk.Button("Open folder")
+    openFolderButton.connect('clicked',self.startChooserCB, "folder")
+    openFileButton = gtk.Button("Open file")
+    openFileButton.connect('clicked',self.startChooserCB, "file")
+    fullscreenButton = gtk.Button("Fullscreen")
+    fullscreenButton.connect('clicked',self._toggleFullscreenCB)
 
-      infoButton = gtk.Button("Info")
-      infoButton.connect('clicked',self._showInfoCB)
+    # last open mangas list
+    self.historyStore = gtk.ListStore(gobject.TYPE_STRING)
+    self.historyLocked = False
+    self._updateHistory()
+    selector = self._getHistorySelector()
+    selector.connect('changed', self._historyRowSelected)
+    historyPickerButton = self.getVerticalPickerButton("History")
+    historyPickerButton.set_selector(selector)
+    self.historyPickerButton = historyPickerButton
+    self.mieru.watch('openMangasHistory', self._updateHistoryCB)
 
-      pagingButton = gtk.Button("Paging")
-      pagingButton.connect('clicked',self.showPagingDialogCB)
+    optionsButton = gtk.Button("Options")
+    optionsButton.connect('clicked',self._showOptionsCB)
 
-      fitPickerButton = self._getFittingPickerButton("Page fitting", arrangement=hildon.BUTTON_ARRANGEMENT_VERTICAL)
+    infoButton = gtk.Button("Info")
+    infoButton.connect('clicked',self._showInfoCB)
 
-      menu.append(openFileButton)
-      menu.append(openFolderButton)
-      menu.append(fullscreenButton)
-      menu.append(historyPickerButton)
-      menu.append(pagingButton)
-      menu.append(fitPickerButton)
-      menu.append(optionsButton)
-      menu.append(infoButton)
+    pagingButton = gtk.Button("Paging")
+    pagingButton.connect('clicked',self.showPagingDialogCB)
 
-      # Show all menu items
-      menu.show_all()
+    fitPickerButton = self._getFittingPickerButton("Page fitting", arrangement=hildon.BUTTON_ARRANGEMENT_VERTICAL)
 
-      # Add the menu to the window
-      window.set_app_menu(menu)
+    menu.append(openFileButton)
+    menu.append(openFolderButton)
+    menu.append(fullscreenButton)
+    menu.append(historyPickerButton)
+    menu.append(pagingButton)
+    menu.append(fitPickerButton)
+    menu.append(optionsButton)
+    menu.append(infoButton)
+
+    # Show all menu items
+    menu.show_all()
+
+    # Add the menu to the window
+    window.set_app_menu(menu)
 
   def getIDString(self):
     return "maemo5"

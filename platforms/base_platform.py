@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """this is a "abstract" class defining the API for platform modules
-   NOTE: this is not just API, some multiplatform implementations are there too
+   NOTE: this is not just API, some multi-platform implementations are there too
 """
 
 #import gtk
@@ -8,6 +8,11 @@
 
 class BasePlatform:
   def __init__(self):
+    pass
+
+  def guiModuleLoaded(self):
+    """notify the device module that the GUI module
+    has been loaded"""
     pass
 
   def getName(self):
@@ -43,7 +48,7 @@ class BasePlatform:
     pass
 
   def showPagingDialogCB(self, button):
-    """for showing paging diloag from button CB"""
+    """for showing paging dialog from button CB"""
     self.showPagingDialog()
 
   def showPagingDialog(self):

@@ -159,6 +159,9 @@ class Mieru:
     elif id == "GTK":
       self.gui = gui.getGui(self, 'GTK', accel=True, size=initialSize)
 
+    # notify the platform module
+    self.platform.guiModuleLoaded()
+
   def getDict(self):
     return self.d
 
