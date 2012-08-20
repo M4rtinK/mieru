@@ -111,7 +111,9 @@ class Mieru:
     else: # get GUI module id from the platform module
       ids = self.platform.getSupportedGUIModuleIds()
       if ids:
-        self._loadGUIModule(ids[0])
+        guiModuleId = ids[0]
+        print('preferred GUI ID from platform module: %s' % guiModuleId)
+        self._loadGUIModule(guiModuleId)
       else:
         print("platform module error: list of supported GUI IDs is empty")
 
@@ -151,7 +153,6 @@ class Mieru:
       self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
     elif id == "GTK":
       self.gui = gui.getGui(self, 'GTK', accel=True, size=initialSize)
-
 
   def getDict(self):
     return self.d
