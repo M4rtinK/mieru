@@ -81,7 +81,10 @@ class Mieru:
     if platformId:
       if platformId == "maemo5":
         import maemo5
-        self.platform = maemo5.Maemo5(self, GTK=False)
+        if args.u == "hildon": # enable app menu with Hildon gui
+          self.platform = maemo5.Maemo5(self, GTK=True)
+        else:
+          self.platform = maemo5.Maemo5(self, GTK=False)
       elif platformId == "harmattan":
         import harmattan
         self.platform = harmattan.Harmattan(self)
@@ -93,7 +96,7 @@ class Mieru:
       # no platform provided, decide based on selected GUI
       if args.u == "hildon":
         import maemo5
-        self.platform = maemo5.Maemo5(self)
+        self.platform = maemo5.Maemo5(self, GTK=True)
       elif args.u == "harmattan":
         import harmattan
         self.platform = harmattan.Harmattan(self)
@@ -150,7 +153,9 @@ class Mieru:
     if id in ("QML","harmattan"):
       self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)
     elif id == "hildon":
+      print "HILDON"
       self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
+      print self.gui
     elif id == "GTK":
       self.gui = gui.getGui(self, 'GTK', accel=True, size=initialSize)
 
