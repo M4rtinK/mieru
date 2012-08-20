@@ -14,10 +14,10 @@ CLICK_TRESHOLD = 2048 # anything more and its a drag
 def wasDoubleclick(clickCount, pxDistance, msDuration):
   """decide if an event was a click or a doubleclick"""
   # yeah, for some reason Clutter count a doubleclick as 3 clicks
-  return (clickCount >= 3 and pxDistance <= PX_DOBLECLICK_DISTANCE and msDuration <= MS_DOUBLECLICK_DURATION)
+  return clickCount >= 3 and pxDistance <= PX_DOBLECLICK_DISTANCE and msDuration <= MS_DOUBLECLICK_DURATION
 
 def wasClick(dx,dy):
-  """ check if a screen press event was adrag or just a click/tap"""
+  """ check if a screen press event was a drag or just a click/tap"""
   distSq = dx * dx + dy * dy
   return distSq <= CLICK_TRESHOLD
 
@@ -35,7 +35,7 @@ class ClutterButtons:
     self.gui.getStage().connect('allocation-changed', self._handleResize)
 
   def getLayer(self):
-    """return the current container, for abowe/below purposes"""
+    """return the current container, for above/below purposes"""
     return self.layer
 
   def _handleResize(self, actor, actorBox, flags):
@@ -46,7 +46,7 @@ class ClutterButtons:
     self.fsButton.animate(clutter.LINEAR,200, 'x', w, 'y', h)
 
   def _addButtons(self):
-    """initialize and add ons creen buttons"""
+    """initialize and add on screen buttons"""
     fsToggleButton = clutter.Texture('icons/view-fullscreen.png')
     (w,h) = fsToggleButton.get_size()
     fsToggleButton.set_size(2*w,2*h)
