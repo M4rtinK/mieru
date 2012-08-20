@@ -96,9 +96,9 @@ class GUI:
     self.mieru.keyPressed(keyName)
 
 
-def getGui(mieru, type="gtk",accel=True, size=(800,480)):
+def getGui(mieru, type="QML",accel=True, size=(800,480)):
   """return a GUI object"""
-  if type=="gtk" and accel:
+  if type=="hildon" and accel:
     import cluttergtk
     import clutter_gui
     return clutter_gui.ClutterGTKGUI(mieru, type, size)
