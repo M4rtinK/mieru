@@ -149,7 +149,7 @@ Page {
     }
 
     function fitPage(mode) {
-        // translateable strings are marked up using QT_TR_NOOP()
+        // translatable strings are marked up using QT_TR_NOOP()
         // the actual translation is located in the paging dialog
     
         // fit the page according to the current fitting mode
