@@ -22,7 +22,7 @@ Rectangle {
         anchors.fill : parent
         onClicked : {
             console.log('Flattr button clicked')
-            rootWindow.notify(qsTr("Opening <b>Flattr</b> donation page, <b>thanks</b>!"), 5000)
+            rootWindow.notify(qsTr("Opening <b>Flattr</b> donation page, <b>thanks</b>!"))
             Qt.openUrlExternally(url)
         }
     }

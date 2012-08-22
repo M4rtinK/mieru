@@ -21,7 +21,7 @@ Rectangle {
         anchors.fill : parent
         onClicked : {
             console.log('PayPal button clicked')
-            rootWindow.notify(qsTr("Opening <b>PayPal</b> donation page, <b>thanks</b>!"), 3000)
+            rootWindow.notify(qsTr("Opening <b>PayPal</b> donation page, <b>thanks</b>!"))
             Qt.openUrlExternally(url)
         }
     }

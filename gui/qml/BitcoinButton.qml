@@ -113,7 +113,7 @@ Rectangle {
                 onClicked: {
                     urlField.selectAll()
                     urlField.copy()
-                    rootWindow.notify(qsTr("Bitcoin address copied to clipboard"), 3000)
+                    rootWindow.notify(qsTr("Bitcoin address copied to clipboard"))
                 }
             }
         }
