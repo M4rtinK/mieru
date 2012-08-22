@@ -26,6 +26,8 @@ class QMLGUI(gui.GUI):
     self.mieru = mieru
 
     self.activePage = None
+    self.releaseNotes = None
+    self.releaseNotesVersion = (0,0,2)
 
     # Create Qt application and the QDeclarative view
     class ModifiedQDeclarativeView(QDeclarativeView):
@@ -103,25 +105,37 @@ class QMLGUI(gui.GUI):
     if self.mieru.platform.startInFullscreen():
       self.toggleFullscreen()
 
-    # check if first start dialog has to be shown
+    # check if first start dialog should be shown
     if self.mieru.get("QMLShowFirstStartDialog", True):
       self.rootObject.openFirstStartDialog()
     else: # only show release notes if first start dialog is not shown
-      if self.mieru.get('showReleaseNotes', True):
-        numericVersionString = info.getNumericVersionString()
-        dontShowVersionString = self.mieru.get('readReleaseNotesNVersionString', "unknownVersion")
-        if numericVersionString != dontShowVersionString:
-          self.rootObject.openReleaseNotesDialog()
+      if self.mieru.get('showReleaseNotes', True): # are release notes enabled ?
+        # last version of release notes that was displayed
+        lastReleaseNotesVersion = self.mieru.get('lastReleaseNotesVersion', None)
+        # release notes version that was marked as read
+        dontShowVersion = self.mieru.get('readReleaseNotesNVersion', (0,0,1))
+        # at which mieru version were the release notes marked as read
+        markedAsReadMieruVersion = self.mieru.get('markedAsReadMieruVersion', (0,0,0))
+        # current version
+        currentMieruVersion = info.getVersionNumber()
+        if markedAsReadMieruVersion != currentMieruVersion:
+          # check release notes version
+          notesVersion, notes = info.getReleaseNotes()
+          if notesVersion != dontShowVersion: # were these release notes already read ?
+            # these release notes were not marked as read
+            if notes:
+              # release notes loaded successfully
 
-#  def resize(self, w, h):
-#    self.window.resize(w,h)
-#
-#  def getWindow(self):
-#    return self.window
-#
-#  def setWindowTitle(self, title):
-#    self.window.set_title(title)
-#
+              # log last displayed version
+              self.mieru.set('lastReleaseNotesVersion', notesVersion)
+              # strip leading empty line & convert newlines to <br>s
+              self.releaseNotes = notes
+              self.releaseNotesVersion = notesVersion
+              # trigger the release notes dialog
+              self.rootObject.openReleaseNotesDialog()
+            else:
+              print('qml_gui: release notes loading failed')
+
   def getToolkit(self):
     return "QML"
 
@@ -434,19 +448,15 @@ class ReadingState(QObject):
 
   @QtCore.Slot()
   def disableReleaseNotesForCurrentVersion(self):
-    numericVersionString = info.getNumericVersionString()
-    self.set('readReleaseNotesNVersionString', numericVersionString)
+    releaseNotesVersion = self.gui.releaseNotesVersion
+    mieruVersion = info.getVersionNumber()
+    self.mieru.set('markedAsReadMieruVersion', mieruVersion)
+    self.mieru.set('readReleaseNotesNVersion', releaseNotesVersion)
 
   @QtCore.Slot(result=str)
   def getReleaseNotes(self):
     print('qml_gui: returning release notes')
-    numericVersionString = info.getNumericVersionString()
-    notes = info.getReleaseNotes(numericVersionString)
-    if notes:
-      # strip leading empty line & convert newlines to <br>s
-      return newlines2brs(notes[1:])
-    else:
-      return "no release notes for this version"
+    return self.gui.releaseNotes
 
 class Stats(QtCore.QObject):
   """make stats available to QML and integrable as a property"""
