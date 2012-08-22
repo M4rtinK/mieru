@@ -258,6 +258,9 @@ Page {
                     }
                 }
             }
+            ScrollDecorator {
+                flickableItem: aboutFlickable
+            }
         }
     }
     
