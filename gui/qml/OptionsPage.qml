@@ -11,6 +11,8 @@ Page {
     anchors.leftMargin   : 15
     anchors.rightMargin  : 15
 
+    property bool showReleaseNotes : options.get("showReleaseNotes")
+
     Flickable {
         anchors.fill : parent
         contentWidth : optionsPage.width
@@ -169,6 +171,14 @@ Page {
                 onCheckedChanged : {
                     rootWindow.enableMangaMode = checked
                     options.set("QMLMangaMode", checked)
+                }
+            }
+            SwitchWithText {
+                text : "<b>" + qsTr("Manga reading mode") + "</b>"
+                checked : showReleaseNotes
+                onCheckedChanged : {
+                    showReleaseNotes = checked
+                    options.set("showReleaseNotes", checked)
                 }
             }
         }

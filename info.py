@@ -4,6 +4,7 @@
 import os
 
 VERSION_FILE_PATH = "version.txt"
+RELEASE_NOTES_FILE_PATH = "release_notes.txt"
 
 def getShortcutsContent():
   import gtk
@@ -89,7 +90,7 @@ def getAboutContent(versionString="unknown"):
   mieruIcon = gtk.image_new_from_file('icons/mieru_150x150.png')
 #  mieruIcon.set_pixel_size(200)
   about1 = gtk.Label()
-  about1.set_markup(self.getAboutText())
+  about1.set_markup(getAboutText())
   vbox.pack_start(about0)
   vbox.pack_start(mieruIcon)
   vbox.pack_start(about1)
@@ -135,6 +136,27 @@ def getVersionNumber():
       print('info: parsing version number failed')
       print(e)
       return None
+
+def getNumericVersionString():
+  m, n, b = getVersionNumber()
+  return "%d.%d.%d" % (m, n, b)
+
+def getReleaseNotes(numericVersionString):
+  """return release notes fir the given version string
+  (major.minor.build, EXAMPLE: "2.3.1")
+  if no release notes are found, return None
+  """
+
+  # release notes doesn't happen on each start
+  # (eq if the user marked the current notes as
+  # read or disabled release notes altogether)
+  # so import configobj only when needed
+  from configobj import ConfigObj
+  releaseNotes = ConfigObj(RELEASE_NOTES_FILE_PATH)
+  if numericVersionString in releaseNotes:
+    return releaseNotes[numericVersionString]['notes']
+  else:
+    return None
 
 def getGitHash():
   """return Git hash for the current version

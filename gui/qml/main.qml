@@ -47,10 +47,17 @@ PageStackWindow {
         mainView.shutdown()
     }
 
-    // open dialog with information about how to turn pages
+    // Open a dialog with information about how to turn pages
     function openFirstStartDialog() {
         firstStartDialog.open()
     }
+
+    // Open a dialog with information about what's new
+    function openReleaseNotesDialog() {
+        whatsNewDialog.open()
+    }
+
+
 
     FileSelector {
         id : fileSelector;
@@ -77,6 +84,7 @@ PageStackWindow {
         notification.hide();
     }
 
+    // First start dialog
     QueryDialog {
         id : firstStartDialog
         icon : "image://icons/mieru.svg"
@@ -89,4 +97,10 @@ PageStackWindow {
             options.set("QMLShowFirstStartDialog", false)
         }
     }
+
+    // What's new dialog
+    WhatsNewDialog {
+        id : whatsNewDialog
+    }
+
 }
