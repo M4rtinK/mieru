@@ -11,7 +11,7 @@ Page {
     anchors.leftMargin   : 15
     anchors.rightMargin  : 15
 
-    property bool showReleaseNotes : options.get("showReleaseNotes")
+    property bool showReleaseNotes : options.get("showReleaseNotes", true)
 
     Flickable {
         anchors.fill : parent
@@ -174,7 +174,7 @@ Page {
                 }
             }
             SwitchWithText {
-                text : "<b>" + qsTr("Manga reading mode") + "</b>"
+                text : "<b>" + qsTr("Show release notes") + "</b>"
                 checked : showReleaseNotes
                 onCheckedChanged : {
                     showReleaseNotes = checked
