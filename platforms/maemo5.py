@@ -7,20 +7,40 @@ import gtk
 import gobject
 import hildon
 import maemo5_autorotation
-
 import info
+
+MINIMAL_QT_VERSION_FOR_QML_GUI = (4,7,4)
+
 
 from base_platform import BasePlatform
 
 class Maemo5(BasePlatform):
-  def __init__(self, mieru, GTK=True):
+  def __init__(self, mieru, GTK=False):
     BasePlatform.__init__(self)
 
     self.mieru = mieru
     self.GTK = GTK
 
   def guiModuleLoaded(self):
-    self._addAppMenu()
+    if self.GTK:
+      self._addAppMenu()
+
+  def getSupportedGUIModuleIds(self):
+    # check for Qt version, if < 4.7.4,
+    # suggest the hildon GUI,
+    # for >= 4.7.4, suggest QML GUI
+    import PySide
+    qtVersion = PySide.QtCore.__version_info__
+    print('maemo5: Qt version %s detected' % PySide.QtCore.__version__)
+    if qtVersion < MINIMAL_QT_VERSION_FOR_QML_GUI:
+      print('maemo5: insufficient Qt version for QML GUI (needs at least 4.7.4)')
+      print('maemo5: falling back to the Hildon GUI')
+      print('maemo5: (this means that you need CSSU for the QML GUI)')
+      return ['hildon']
+    else:
+      print('maemo5: sufficient Qt version for QML GUI (> 4.7.4)')
+      return ['QML']
+
 
   def _addAppMenu(self):
     """add application menu & enable zoom key paging"""
