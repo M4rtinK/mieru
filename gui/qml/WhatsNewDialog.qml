@@ -9,7 +9,7 @@ HeaderDialog {
     property string releaseNotesText : ""
     content:Item {
         id: dialogContent
-        height : rootWindow.inPortrait ? rootWindow.width * 0.8 : rootWindow.height * 0.8
+        height : rootWindow.inPortrait ? rootWindow.width * 0.85 : rootWindow.height * 0.8
         anchors.left : parent.left
         anchors.right : parent.right
         Flickable {
@@ -51,7 +51,7 @@ HeaderDialog {
         Button {
             id : donationButton
             anchors.bottom : hideButton.top
-            anchors.bottomMargin : 16
+            anchors.bottomMargin : 24
             anchors.horizontalCenter : parent.horizontalCenter
             text : qsTr("How to donate ?")
             onClicked : {
