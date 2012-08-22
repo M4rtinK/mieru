@@ -172,9 +172,18 @@ def getReleaseNotes():
     maxVersion = max(map(lambda x: nvs2tuple(x), versionNumbers))
     # TODO: localized release notes ? (would be nice in Chinese)
     notesMarkdown = releaseNotes['release_notes_section'][tuple2nvs(maxVersion)]['notes']
-    import modules.markdown as markdown
-    notesHTML = markdown.markdown(notesMarkdown)
-    print notesHTML
+    try:
+      import modules.markdown as markdown
+      notesHTML = markdown.markdown(notesMarkdown)
+    except Exception, e:
+      print('info: parsing release notes failed')
+      #print(e)
+      import traceback
+      import sys
+      traceback.print_exc(file=sys.stdout)
+
+      return None, None
+
     return maxVersion, notesHTML
   else:
     return None, None
