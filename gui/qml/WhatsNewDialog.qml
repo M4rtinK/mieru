@@ -6,12 +6,12 @@ import com.nokia.meego 1.0
 HeaderDialog {
     id : whatsNewDialog
     titleText : "What's new in Mieru " + readingState.getNumericVersionString()
+    property string releaseNotesText : ""
     content:Item {
         id: dialogContent
         height : rootWindow.inPortrait ? rootWindow.width * 0.8 : rootWindow.height * 0.8
         anchors.left : parent.left
         anchors.right : parent.right
-
         Flickable {
             id : notesFlickable
             anchors.top : parent.top
@@ -20,13 +20,16 @@ HeaderDialog {
             anchors.bottom : donationLabel.top
             clip : true
             contentHeight : releaseNotes.height
-            contentWidth : releaseNotes.width
+            //contentWidth : releaseNotes.width
+            contentWidth : parent.width
             interactive : releaseNotes.height > height
             Label {
                 id : releaseNotes
                 anchors.left : parent.left
                 anchors.leftMargin : 16
-                text : readingState.getReleaseNotes()
+                width : parent.width
+                text : releaseNotesText
+                wrapMode : Text.WordWrap
                 color : "white"
                 onLinkActivated : {
                     rootWindow.notify(qsTr("Opening link"))
@@ -40,6 +43,7 @@ HeaderDialog {
         Label {
             id : donationLabel
             anchors.bottom : donationButton.top
+            anchors.bottomMargin : 16
             anchors.horizontalCenter : parent.horizontalCenter
             text : qsTr("<b>Do you like Mieru ? Donate !</b>")
             color : "white"
@@ -47,6 +51,7 @@ HeaderDialog {
         Button {
             id : donationButton
             anchors.bottom : hideButton.top
+            anchors.bottomMargin : 16
             anchors.horizontalCenter : parent.horizontalCenter
             text : qsTr("How to donate ?")
             onClicked : {
