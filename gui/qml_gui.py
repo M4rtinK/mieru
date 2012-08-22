@@ -106,6 +106,12 @@ class QMLGUI(gui.GUI):
     # check if first start dialog has to be shown
     if self.mieru.get("QMLShowFirstStartDialog", True):
       self.rootObject.openFirstStartDialog()
+    else: # only show release notes if first start dialog is not shown
+      if self.mieru.get('showReleaseNotes', True):
+        numericVersionString = info.getNumericVersionString()
+        dontShowVersionString = self.mieru.get('readReleaseNotesNVersionString', "unknownVersion")
+        if numericVersionString != dontShowVersionString:
+          self.rootObject.openReleaseNotesDialog()
 
 #  def resize(self, w, h):
 #    self.window.resize(w,h)
@@ -170,7 +176,7 @@ class QMLGUI(gui.GUI):
     pageNumber = manga.getActivePageNumber()
     # assure sane slider behaviour
 
-    if maxPageNumber == None:
+    if maxPageNumber is None:
       maxPageNumber = 2
 
     self.rootObject.setPageNumber(pageNumber)
@@ -351,6 +357,13 @@ class ReadingState(QObject):
     return newlines2brs(versionString)
 
   @QtCore.Slot(result=str)
+  def getNumericVersionString(self):
+    versionString = info.getNumericVersionString()
+    if versionString is None:
+      versionString = "unknown version"
+    return newlines2brs(versionString)
+
+  @QtCore.Slot(result=str)
   def toggleFullscreen(self):
     self.gui.toggleFullscreen()
 
@@ -419,6 +432,21 @@ class ReadingState(QObject):
     """shut down mieru"""
     self.gui.mieru.destroy()
 
+  @QtCore.Slot()
+  def disableReleaseNotesForCurrentVersion(self):
+    numericVersionString = info.getNumericVersionString()
+    self.set('readReleaseNotesNVersionString', numericVersionString)
+
+  @QtCore.Slot(result=str)
+  def getReleaseNotes(self):
+    print('qml_gui: returning release notes')
+    numericVersionString = info.getNumericVersionString()
+    notes = info.getReleaseNotes(numericVersionString)
+    if notes:
+      # strip leading empty line & convert newlines to <br>s
+      return newlines2brs(notes[1:])
+    else:
+      return "no release notes for this version"
 
 class Stats(QtCore.QObject):
   """make stats available to QML and integrable as a property"""
@@ -473,7 +501,7 @@ class Platform(QtCore.QObject):
 
   @QtCore.Slot()
   def minimise(self):
-    return self.mieru.platform.minimize()
+    self.mieru.platform.minimize()
 
   @QtCore.Slot(result=bool)
   def showMinimiseButton(self):
