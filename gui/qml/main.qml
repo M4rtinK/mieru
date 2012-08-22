@@ -54,6 +54,9 @@ PageStackWindow {
 
     // Open a dialog with information about what's new
     function openReleaseNotesDialog() {
+        // load release notes text
+        whatsNewDialog.releaseNotesText = readingState.getReleaseNotes()
+        // open the dialog
         whatsNewDialog.open()
     }
 
