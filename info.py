@@ -141,22 +141,43 @@ def getNumericVersionString():
   m, n, b = getVersionNumber()
   return "%d.%d.%d" % (m, n, b)
 
-def getReleaseNotes(numericVersionString):
+
+def nvs2tuple(nvString):
+  """numeric version string to version tuple"""
+  a, b, c = nvString.split('.')
+  return int(a), int(b), int(c)
+
+def tuple2nvs(versionTuple):
+  """numeric version tuple to numeric version string"""
+  return "%d.%d.%d" % versionTuple
+
+def getReleaseNotes():
   """return release notes fir the given version string
   (major.minor.build, EXAMPLE: "2.3.1")
   if no release notes are found, return None
   """
-
-  # release notes doesn't happen on each start
+  # release notes aren't displayed on each start
   # (eq if the user marked the current notes as
   # read or disabled release notes altogether)
   # so import configobj only when needed
-  from configobj import ConfigObj
-  releaseNotes = ConfigObj(RELEASE_NOTES_FILE_PATH)
-  if numericVersionString in releaseNotes:
-    return releaseNotes[numericVersionString]['notes']
+  versionNumbers = None
+  try:
+    from modules.configobj import ConfigObj
+    releaseNotes = ConfigObj(RELEASE_NOTES_FILE_PATH)
+    versionNumbers = releaseNotes['release_notes_section'].keys()
+  except Exception, e:
+    print('info: loading release notes failed')
+    print(e)
+  if versionNumbers:
+    maxVersion = max(map(lambda x: nvs2tuple(x), versionNumbers))
+    # TODO: localized release notes ? (would be nice in Chinese)
+    notesMarkdown = releaseNotes['release_notes_section'][tuple2nvs(maxVersion)]['notes']
+    import modules.markdown as markdown
+    notesHTML = markdown.markdown(notesMarkdown)
+    print notesHTML
+    return maxVersion, notesHTML
   else:
-    return None
+    return None, None
 
 def getGitHash():
   """return Git hash for the current version
