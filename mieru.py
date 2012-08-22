@@ -153,7 +153,6 @@ class Mieru:
     if id in ("QML","harmattan"):
       self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)
     elif id == "hildon":
-      print "HILDON"
       self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
       print self.gui
     elif id == "GTK":
