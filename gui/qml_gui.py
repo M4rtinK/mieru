@@ -110,14 +110,13 @@ class QMLGUI(gui.GUI):
       self.rootObject.openFirstStartDialog()
     else: # only show release notes if first start dialog is not shown
       if self.mieru.get('showReleaseNotes', True): # are release notes enabled ?
-        # last version of release notes that was displayed
-        lastReleaseNotesVersion = self.mieru.get('lastReleaseNotesVersion', None)
         # release notes version that was marked as read
         dontShowVersion = self.mieru.get('readReleaseNotesNVersion', (0,0,1))
         # at which mieru version were the release notes marked as read
         markedAsReadMieruVersion = self.mieru.get('markedAsReadMieruVersion', (0,0,0))
         # current version
         currentMieruVersion = info.getVersionNumber()
+        # did we check for new release notes on this version ?
         if markedAsReadMieruVersion != currentMieruVersion:
           # check release notes version
           notesVersion, notes = info.getReleaseNotes()
@@ -125,10 +124,6 @@ class QMLGUI(gui.GUI):
             # these release notes were not marked as read
             if notes:
               # release notes loaded successfully
-
-              # log last displayed version
-              self.mieru.set('lastReleaseNotesVersion', notesVersion)
-              # strip leading empty line & convert newlines to <br>s
               self.releaseNotes = notes
               self.releaseNotesVersion = notesVersion
               # trigger the release notes dialog
