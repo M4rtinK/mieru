@@ -26,8 +26,8 @@ class Maemo5(BasePlatform):
       self._addAppMenu()
 
   def getSupportedGUIModuleIds(self):
-    # check for Qt version, if < 4.7.4,
-    # suggest the hildon GUI,
+    # check for Qt version,
+    # if < 4.7.4, suggest the Hildon GUI,
     # for >= 4.7.4, suggest QML GUI
     import PySide
     qtVersion = PySide.QtCore.__version_info__
@@ -36,6 +36,8 @@ class Maemo5(BasePlatform):
       print('maemo5: insufficient Qt version for QML GUI (needs at least 4.7.4)')
       print('maemo5: falling back to the Hildon GUI')
       print('maemo5: (this means that you need CSSU for the QML GUI)')
+      # also enable GTK additions
+      self.GTK = True
       return ['hildon']
     else:
       print('maemo5: sufficient Qt version for QML GUI (> 4.7.4)')
@@ -451,7 +453,7 @@ class Maemo5(BasePlatform):
 
   def notify(self, message, icon=None):
     if self.GTK:
-      print(message)
+      print("Hildon notification: %s" % message)
       hildon.hildon_banner_show_information_with_markup(self.mieru.gui.getWindow(), "icon_text", message)
     else:
       self.mieru.gui._notify(message, icon)

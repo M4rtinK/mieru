@@ -23,11 +23,11 @@ PageStackWindow {
     }
 
     function setPageNumber(pageNumber) {
-        mainView.pageNumber = pageNumber;
+        mainView.pageNumber = pageNumber
     }
 
     function setMaxPageNumber(maxPageNumber) {
-        mainView.maxPageNumber = maxPageNumber;
+        mainView.maxPageNumber = maxPageNumber
     }
 
     // open a page and push it in the stack
@@ -39,7 +39,7 @@ PageStackWindow {
         if (component.status == Component.Ready)
             pageStack.push(component);
         else
-            console.log("Error loading: " + component.errorString());
+            console.log("Error loading: " + component.errorString())
     }
 
     // handle Mieru shutdown
@@ -60,31 +60,22 @@ PageStackWindow {
         whatsNewDialog.open()
     }
 
-
-
     FileSelector {
-        id : fileSelector;
-        onAccepted : readingState.openManga(selectedFile);
+        id : fileSelector
+        onAccepted : readingState.openManga(selectedFile)
     }
 
     PageFitSelector {
         id : pageFitSelector
         onAccepted : mainView.setPageFitMode(pageFitMode)
     }
-
-    InfoBanner {
-        id : notification
-        timerShowTime : 5000
-        height : rootWindow.height / 5.0
-        // add margin and prevent overlapping with status bar, if the bar is visible
-        y : rootWindow.showStatusBar ? rootWindow.statusBarHeight + 8 : 8
-    }
     function notify(text) {
+        console.log("notification: " % text)
         notification.text = text;
-        notification.show();
+        notification.show()
     }
     function abortnotify() {
-        notification.hide();
+        notification.hide()
     }
 
     // First start dialog
@@ -104,6 +95,14 @@ PageStackWindow {
     // What's new dialog
     WhatsNewDialog {
         id : whatsNewDialog
+    }
+
+    InfoBanner {
+        id : notification
+        timerShowTime : 5000
+        height : rootWindow.height / 5.0
+        // add margin and prevent overlapping with status bar, if the bar is visible
+        y : rootWindow.showStatusBar ? rootWindow.statusBarHeight + 8 : 8
     }
 
 }
