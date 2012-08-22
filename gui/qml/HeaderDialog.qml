@@ -4,13 +4,13 @@ import QtQuick 1.1
 import com.nokia.meego 1.0
 
 Dialog {
-    id : bitcoinDialog
+    id : headerDialog
     width : parent.width - 30
     property Style platformStyle: SelectionDialogStyle {}
     property string titleText: "Bitcoin address"
     title: Item {
         id: header
-        height: bitcoinDialog.platformStyle.titleBarHeight
+        height: headerDialog.platformStyle.titleBarHeight
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -23,16 +23,16 @@ Dialog {
                 anchors.left: parent.left
                 anchors.right: closeButton.left
                 anchors.bottom:  parent.bottom
-                anchors.bottomMargin: bitcoinDialog.platformStyle.titleBarLineMargin
+                anchors.bottomMargin: headerDialog.platformStyle.titleBarLineMargin
                 height: titleLabel.height
                 Label {
                     id: titleLabel
-                    x: bitcoinDialog.platformStyle.titleBarIndent
+                    x: headerDialog.platformStyle.titleBarIndent
                     width: parent.width - closeButton.width
-                    font: bitcoinDialog.platformStyle.titleBarFont
-                    color: bitcoinDialog.platformStyle.commonLabelColor
-                    elide: bitcoinDialog.platformStyle.titleElideMode
-                    text: bitcoinDialog.titleText
+                    font: headerDialog.platformStyle.titleBarFont
+                    color: headerDialog.platformStyle.commonLabelColor
+                    elide: headerDialog.platformStyle.titleElideMode
+                    text: headerDialog.titleText
                 }
             }
             Image {
@@ -44,7 +44,7 @@ Dialog {
                 MouseArea {
                     id: closeButtonArea
                     anchors.fill: parent
-                    onClicked:  {bitcoinDialog.reject();}
+                    onClicked:  {headerDialog.reject();}
                 }
             }
         }
@@ -56,10 +56,5 @@ Dialog {
             height: 1
             color: "#4D4D4D"
         }
-    }
-    content:Item {
-        id: dialogContent
-        width : parent.width
-        height : bitcoinQrCode.height + urlField.height + 32
     }
 }
