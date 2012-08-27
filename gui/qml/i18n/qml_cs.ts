@@ -144,7 +144,7 @@
     </message>
     <message>
         <location filename="../InfoPage.qml" line="162"/>
-        <location filename="../InfoPage.qml" line="268"/>
+        <location filename="../InfoPage.qml" line="271"/>
         <source>Reset</source>
         <translation>Vynulovat</translation>
     </message>
@@ -178,17 +178,17 @@
         <translation type="obsolete">Poslat dotaci</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="266"/>
+        <location filename="../InfoPage.qml" line="269"/>
         <source>Reset all usage statistics</source>
         <translation>Vynulovat statistiku použití Mieru</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="267"/>
+        <location filename="../InfoPage.qml" line="270"/>
         <source>Do you really want to reset all usage statistics?</source>
         <translation>Opravdu chcete vynulovat satistiku použití ?</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="269"/>
+        <location filename="../InfoPage.qml" line="272"/>
         <source>Cancel</source>
         <translation>Zrušit</translation>
     </message>
@@ -269,89 +269,94 @@
 <context>
     <name>OptionsPage</name>
     <message>
-        <location filename="../OptionsPage.qml" line="25"/>
+        <location filename="../OptionsPage.qml" line="27"/>
         <source>Page view</source>
         <translation>Zobrazení stránky</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="28"/>
+        <location filename="../OptionsPage.qml" line="30"/>
         <source>Rotation</source>
         <translation>Rotace</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="43"/>
+        <location filename="../OptionsPage.qml" line="45"/>
         <source>auto</source>
         <translation>auto</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="51"/>
+        <location filename="../OptionsPage.qml" line="53"/>
         <source>portrait</source>
         <translation>na výšku</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="59"/>
+        <location filename="../OptionsPage.qml" line="61"/>
         <source>landscape</source>
         <translation>na šířku</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="67"/>
+        <location filename="../OptionsPage.qml" line="69"/>
         <source>Show status bar</source>
         <translation>Zobrazit stavovou lištu</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="75"/>
+        <location filename="../OptionsPage.qml" line="77"/>
         <source>Remember toolbar state</source>
         <translation>Pamatovat stav nástrojové lišty</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="82"/>
+        <location filename="../OptionsPage.qml" line="84"/>
         <source>Fullscreen button opacity</source>
         <translation>Průhlednost tlačítka celé obrazovky</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="108"/>
+        <location filename="../OptionsPage.qml" line="110"/>
         <source>Paging options</source>
         <translation>Možnosti listování</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="111"/>
+        <location filename="../OptionsPage.qml" line="113"/>
         <source>Paging mode</source>
         <translation>Režim listování</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="126"/>
+        <location filename="../OptionsPage.qml" line="128"/>
         <source>Whole screen</source>
         <translation>celá obrazovka</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="134"/>
+        <location filename="../OptionsPage.qml" line="136"/>
         <source>On edges</source>
         <translation>pouze kraje</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="142"/>
+        <location filename="../OptionsPage.qml" line="144"/>
         <source>Show paging feedback</source>
         <translation>Zpětná vazba</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="152"/>
+        <location filename="../OptionsPage.qml" line="154"/>
         <source>Page scaling</source>
         <translation>Škálování stránky</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="155"/>
+        <location filename="../OptionsPage.qml" line="157"/>
         <source>Page fit mode</source>
         <translation>Zarovnání stránky</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="164"/>
+        <location filename="../OptionsPage.qml" line="166"/>
         <source>Miscellaneous</source>
         <translation>Ostatní</translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="167"/>
+        <location filename="../OptionsPage.qml" line="169"/>
         <source>Manga reading mode</source>
         <translation>Manga režim</translation>
+    </message>
+    <message>
+        <location filename="../OptionsPage.qml" line="177"/>
+        <source>Show release notes</source>
+        <translation>Poznámky k vydání</translation>
     </message>
 </context>
 <context>
@@ -406,29 +411,52 @@
     </message>
 </context>
 <context>
+    <name>WhatsNewDialog</name>
+    <message>
+        <location filename="../WhatsNewDialog.qml" line="35"/>
+        <source>Opening link</source>
+        <translation>Otevírám odkaz</translation>
+    </message>
+    <message>
+        <location filename="../WhatsNewDialog.qml" line="48"/>
+        <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Líbí se Vám Mieru ? Přízpějte!&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../WhatsNewDialog.qml" line="56"/>
+        <source>How to donate ?</source>
+        <translation>Jak přizpět ?</translation>
+    </message>
+    <message>
+        <location filename="../WhatsNewDialog.qml" line="67"/>
+        <source>Don&apos;t show again</source>
+        <translation>Příště neukazovat</translation>
+    </message>
+</context>
+<context>
     <name>main</name>
     <message>
-        <location filename="../main.qml" line="83"/>
+        <location filename="../main.qml" line="85"/>
         <source>How to turn pages</source>
         <translation>Jak v Mieru funguje listování</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="84"/>
+        <location filename="../main.qml" line="86"/>
         <source>Tap the &lt;b&gt;right half&lt;/b&gt; of the screen to go to the &lt;b&gt;next page&lt;/b&gt;.</source>
         <translation>Dotkněte se &lt;b&gt;levé poloviny obrazovky&lt;/b&gt; pro přechod na &lt;b&gt;další stránku&lt;/b&gt;.</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="85"/>
+        <location filename="../main.qml" line="87"/>
         <source>Tap the &lt;b&gt;left half&lt;/b&gt; to go to the &lt;b&gt;previous page&lt;/b&gt;.</source>
         <translation>Dotkněte se &lt;b&gt;levé poloviny&lt;/b&gt; pro přechod na &lt;b&gt;předchozí stránku&lt;/b&gt;.</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="86"/>
+        <location filename="../main.qml" line="88"/>
         <source>Don&apos;t show again</source>
         <translation>Příště neukazovat</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="87"/>
+        <location filename="../main.qml" line="89"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
