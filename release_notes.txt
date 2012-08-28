@@ -1,5 +1,9 @@
 # Mieru Markdown formatted release notes
 # syntax: http://en.wikipedia.org/wiki/Markdown
+#
+# NOTE: the version for the notes might not 100% correspond
+# to the version a feature was added, it basically means
+# what was added since & including version X
 ["metadata"]
 file_version = 1
 
@@ -11,11 +15,12 @@ notes='''
     * can be enabled in __Options__
 * improved paging feedback
 * localization support
-    * full __Czech__, __German__ and __Russian__ translations
+    * full __Czech__, __German__, __Russian__ and __Chinese__ translations
 * improved donation support
     * __Flattr__ and __Bitcoin__ were added
 * new packages for _Maemo@N900_
 * __many thanks__ to:
     * __Tempura-san__ (l18n support, German translation, manga mode, paging feedback)
     * __ZoG__ (Russian translation)
+    * __cjz__ (Chinese translation)
 '''
