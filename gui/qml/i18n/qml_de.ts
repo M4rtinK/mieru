@@ -50,13 +50,13 @@
     </message>
     <message>
         <location filename="../HistoryPage.qml" line="54"/>
-        <source>Delete items</source>
-        <translation>Einträge löschen</translation>
+        <source>Do not delete items</source>
+        <translation>keine Einträge löschen</translation>
     </message>
     <message>
         <location filename="../HistoryPage.qml" line="54"/>
-        <source>Do not delete items</source>
-        <translation>Keine Einträge löschen</translation>
+        <source>Delete items</source>
+        <translation>Einträge löschen</translation>
     </message>
     <message>
         <location filename="../HistoryPage.qml" line="57"/>
@@ -161,7 +161,7 @@
     <message>
         <location filename="../InfoPage.qml" line="246"/>
         <source>email</source>
-        <translation>e-Mail</translation>
+        <translation>E-Mail</translation>
     </message>
     <message>
         <location filename="../InfoPage.qml" line="250"/>
@@ -172,10 +172,6 @@
         <location filename="../InfoPage.qml" line="255"/>
         <source>discussion</source>
         <translation>Diskussion</translation>
-    </message>
-    <message>
-        <source>Donate</source>
-        <translation type="obsolete">Spenden</translation>
     </message>
     <message>
         <location filename="../InfoPage.qml" line="269"/>
@@ -263,7 +259,7 @@
     <message>
         <location filename="../MainView.qml" line="479"/>
         <source>No pages loaded</source>
-        <translation>keine Seite(n) geladen</translation>
+        <translation>Keine Seite(n) geladen</translation>
     </message>
 </context>
 <context>
@@ -356,7 +352,7 @@
     <message>
         <location filename="../OptionsPage.qml" line="177"/>
         <source>Show release notes</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;i&gt;Release Notes&lt;/i&gt; zeigen</translation>
     </message>
 </context>
 <context>
@@ -415,22 +411,22 @@
     <message>
         <location filename="../WhatsNewDialog.qml" line="35"/>
         <source>Opening link</source>
-        <translation type="unfinished"></translation>
+        <translation>Link wird geöffnet</translation>
     </message>
     <message>
         <location filename="../WhatsNewDialog.qml" line="48"/>
         <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Mögen Sie Mieru ? Spenden willkommen !&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../WhatsNewDialog.qml" line="56"/>
         <source>How to donate ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Wie kann man spenden ?</translation>
     </message>
     <message>
         <location filename="../WhatsNewDialog.qml" line="67"/>
         <source>Don&apos;t show again</source>
-        <translation type="unfinished">Nicht mehr zeigen</translation>
+        <translation>Nicht mehr zeigen</translation>
     </message>
 </context>
 <context>
