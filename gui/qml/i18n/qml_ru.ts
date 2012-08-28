@@ -50,13 +50,13 @@
     </message>
     <message>
         <location filename="../HistoryPage.qml" line="54"/>
-        <source>Delete items</source>
-        <translation>Удалить пункты</translation>
+        <source>Do not delete items</source>
+        <translation>Не удалять пункты</translation>
     </message>
     <message>
         <location filename="../HistoryPage.qml" line="54"/>
-        <source>Do not delete items</source>
-        <translation>Не удалять пункты</translation>
+        <source>Delete items</source>
+        <translation>Удалить пункты</translation>
     </message>
     <message>
         <location filename="../HistoryPage.qml" line="57"/>
@@ -172,10 +172,6 @@
         <location filename="../InfoPage.qml" line="255"/>
         <source>discussion</source>
         <translation>поддержка</translation>
-    </message>
-    <message>
-        <source>Donate</source>
-        <translation type="obsolete">Пожертвовать</translation>
     </message>
     <message>
         <location filename="../InfoPage.qml" line="269"/>

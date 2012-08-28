@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_ES">
+<TS version="2.0" language="en_US">
 <context>
     <name>BitcoinButton</name>
     <message>
@@ -90,7 +90,7 @@
     <message>
         <location filename="../InfoPage.qml" line="14"/>
         <source>Info</source>
-        <translation type="unfinished">Info</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../InfoPage.qml" line="18"/>
@@ -229,27 +229,27 @@
     <message>
         <location filename="../MainView.qml" line="238"/>
         <source>Open file</source>
-        <translation type="unfinished">Abrir</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../MainView.qml" line="245"/>
         <source>History</source>
-        <translation type="unfinished">Historia</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../MainView.qml" line="249"/>
         <source>Info</source>
-        <translation type="unfinished">Info</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../MainView.qml" line="253"/>
         <source>Options</source>
-        <translation type="unfinished">Configuratión</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../MainView.qml" line="260"/>
         <source>Quit</source>
-        <translation type="unfinished">Serar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../MainView.qml" line="459"/>

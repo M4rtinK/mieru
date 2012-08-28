@@ -420,7 +420,7 @@
     <message>
         <location filename="../WhatsNewDialog.qml" line="48"/>
         <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Líbí se Vám Mieru ? Přízpějte!&lt;/b&gt;</translation>
+        <translation type="unfinished">&lt;b&gt;Líbí se Vám Mieru ? Příspějte!&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../WhatsNewDialog.qml" line="56"/>

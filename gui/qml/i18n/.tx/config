@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.net
+type = QT
+
+[mieru.master]
+file_filter = qml_<lang>.ts
+source_file = qml_en.ts
+source_lang = en
+
