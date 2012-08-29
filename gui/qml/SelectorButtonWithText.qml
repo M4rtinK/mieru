@@ -12,6 +12,7 @@ Item {
     property alias text : label.text
     property alias buttonText : pfsButton.text
     property alias iconSource : pfsButton.iconSource
+    property alias enabled : pfsButton.enabled
     property Item selector
 
     Label {
