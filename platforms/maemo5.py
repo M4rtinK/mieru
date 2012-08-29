@@ -424,6 +424,17 @@ class Maemo5(BasePlatform):
     self.historyStore.clear()
     self.historyLocked = False
 
+  def showPagingDialog(self):
+    if self.GTK:
+      manga = self.mieru.getActiveManga()
+      if manga:
+        import paging_dialog
+        self.pagingDialogBeforeOpen()
+        paging_dialog.PagingDialog(manga)
+      else:
+        self.notify("nothing loaded - paging disabled")
+    else:
+      print('maemo5: paging dialog is currently supported only in the GTK GUI')
 
   def startChooserCB(self,button, type):
     self.startChooser(type)

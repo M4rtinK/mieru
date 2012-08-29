@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """provides paging dialog for Mieru"""
 import gtk
-import re
 
 class PagingDialog:
   def __init__(self, manga, viewport=None, info=None):

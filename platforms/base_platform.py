@@ -3,9 +3,6 @@
    NOTE: this is not just API, some multi-platform implementations are there too
 """
 
-#import gtk
-#import paging_dialog
-
 class BasePlatform:
   def __init__(self):
     pass
@@ -52,12 +49,7 @@ class BasePlatform:
     self.showPagingDialog()
 
   def showPagingDialog(self):
-    manga = self.mieru.getActiveManga()
-    if manga:
-      self.pagingDialogBeforeOpen()
-      paging_dialog.PagingDialog(manga)
-    else:
-      self.notify("nothing loaded - paging disabled")
+    pass
 
   def pagingDialogBeforeOpen(self):
     """do something before opening the paging dialog"""
@@ -106,13 +98,13 @@ class BasePlatform:
     """
     return ["QML"] # as default try GTK first and then QML
 
-  def Button(self, label=""):
-    """return classic GTK button"""
-    return gtk.Button(label)
-
-  def CheckButton(self, label=""):
-    """return classic GTK check button"""
-    return gtk.CheckButton(label)
+#  def Button(self, label=""):
+#    """return classic GTK button"""
+#    return gtk.Button(label)
+#
+#  def CheckButton(self, label=""):
+#    """return classic GTK check button"""
+#    return gtk.CheckButton(label)
 
 
 
