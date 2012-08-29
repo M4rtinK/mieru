@@ -138,8 +138,12 @@ def getVersionNumber():
       return None
 
 def getNumericVersionString():
-  m, n, b = getVersionNumber()
-  return "%d.%d.%d" % (m, n, b)
+  versionNumber = getVersionNumber()
+  if versionNumber:
+    m, n, b = getVersionNumber()
+    return "%d.%d.%d" % (m, n, b)
+  else:
+    return None
 
 
 def nvs2tuple(nvString):
