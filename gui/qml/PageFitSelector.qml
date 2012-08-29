@@ -7,6 +7,7 @@ SelectionDialog {
     id: pageFitSelector
     property Style platformStyle: SelectionDialogStyle {}
     property string pageFitMode : "original"
+    property bool addNop : false
     titleText : qsTr("Page fit mode")
     onSelectedIndexChanged : {
         pageFitMode = model.get(selectedIndex).key
@@ -15,6 +16,9 @@ SelectionDialog {
     model : ListModel {
         // append list items here in place of single ListElements in order to support translation
         Component.onCompleted : {
+            if (addNop) { // used for temporary page fit modes
+                append({"name" : qsTr("<b>no action</b> - original size"),     "key" : "nop"})
+            }
             append({"name" : qsTr("<b>1:1</b> - original size"),     "key" : "original"})
             append({"name" : qsTr("<b>fit to width</b>"),            "key" : "width"})
             append({"name" : qsTr("<b>fit to height</b>"),           "key" : "height"})

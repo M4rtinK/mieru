@@ -140,6 +140,28 @@ Page {
                     }
                 }
             }
+
+            SelectorButtonWithText {
+                enabled : mainView.pagingMode == "edges"
+                text : "<b>" + qsTr("Middle click") + "</b>"
+                buttonText : qsTranslate("MainView", mainView.pageFitModeClick)
+                // FIXME: incomplete theme on Fremantle
+                iconSource: platform.incompleteTheme() ?
+                "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-image-expand"
+                selector : tempPageFitSelectorClick
+            }
+
+            SelectorButtonWithText {
+                enabled : mainView.pagingMode == "edges"
+                text : "<b>" + qsTr("Middle doubleclick") + "</b>"
+                buttonText : qsTranslate("MainView", mainView.pageFitModeDoubleclick)
+                // FIXME: incomplete theme on Fremantle
+                iconSource: platform.incompleteTheme() ?
+                "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-image-expand"
+                selector : tempPageFitSelectorDoubleclick
+            }
+
+
             SwitchWithText {
                 text : "<b>" + qsTr("Show paging feedback") + "</b>"
                 checked : mainView.pagingFeedback

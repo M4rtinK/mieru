@@ -19,6 +19,9 @@ Page {
     property bool pagingFeedback : options.get("QMLPagingFeedback", true)
     property string pagingMode   : options.get("QMLPagingMode", "screen")
     property string pageFitMode  : options.get("fitMode", "original")
+    property string pageFitModeClick  : options.get("fitModeClick", "nop")
+    property string pageFitModeDoubleclick  : options.get("fitModeDoubleclick", "nop")
+    property bool middleClick : false
     property alias fullscreenButtonOpacity : fullscreenButton.opacity
 
     onMangaPathChanged  : reloadPage()
@@ -133,6 +136,16 @@ Page {
         options.set("QMLRememberScale", remember)
     }
 
+    function setPageFitModeTemp(fitMode, type) {
+        if (type == "click") {
+            options.set("fitModeClick", fitMode)
+            pageFitModeClick = fitMode
+        } else if (type == "doubleclick") {
+            options.set("fitModeDoubleclick", fitMode)
+            pageFitModeDoubleclick = fitMode
+        }
+    }
+
     onPageFitModeChanged : {
         // trigger page refit
         fitPage(pageFitMode)
@@ -216,8 +229,8 @@ Page {
         ToolButton {
             id : pageNumbers
             text : mainView.pageLoaded ? mainView.pageNumber + "/" + mainView.maxPageNumber : "-/-"
-            anchors.top : backTI.top
-            anchors.bottom : backTI.bottom
+            //anchors.top : backTI.top
+            //anchors.bottom : backTI.bottom
             flat : true
             onClicked : pagingDialog.open()
         }
@@ -330,7 +343,7 @@ Page {
         id: prevButton
         objectName: "prevButton"
         drag.filterChildren: true
-        onClicked: {
+        onClicked : {
             // default to screen paging mode
             var margin = width / 2;
 
@@ -341,27 +354,35 @@ Page {
                 // do not use the full screen area for page switching
                 if(rootWindow.inPortrait) {
                     // margin is bigger for portrait mode
-                    margin = width * 0.30;
+                    margin = width * 0.30
                 }
                 else {
-                    margin = width * 0.20;
+                    margin = width * 0.20
                 }
             }
 
+            var mouseAccepted = false
+
             if (mouseX < margin) {
+                middleClick = false
                 mainView.showPrevFeedback()
                 console.log("previous page");
-                readingState.previous();
-            }
-
-            if (mouseX > (width - margin)) {
+                readingState.previous()
+            } else if (mouseX > (width - margin)) {
+                middleClick = false
                 mainView.showNextFeedback()
                 console.log("next page");
                 readingState.next();
+            } else {
+                middleClick = true
             }
         }
 
+
+
+
         /** Main manga page flickable **/
+
 
         Flickable {
             id: pageFlickable
@@ -374,11 +395,11 @@ Page {
             contentWidth  : mangaPage.width
             contentHeight : mangaPage.height
             
-            /*
-            clipping seems to lead to performance degradation so it is only enabled
-            once the GUI-page transition starts to prevent the manga-page overlapping
-            the new GUI-page during transition
-            */
+
+            // clipping seems to lead to performance degradation so it is only enabled
+            // once the GUI-page transition starts to prevent the manga-page overlapping
+            // the new GUI-page during transition
+
             clip : rootWindow.pageStack.busy
 
             Image {
@@ -391,6 +412,31 @@ Page {
                 onSourceSizeChanged : {
                     if (mainView.pageFitMode != "custom") {
                         mainView.fitPage(mainView.pageFitMode)
+                    }
+                }
+            }
+
+            // middle click & doubleclick area
+            // -> only enabled for edge paging as
+            // clicks and doubleclicks would interfere
+            // with screen half paging
+            MouseArea {
+                anchors.fill : parent
+                enabled : mainView.pagingMode == "edges"
+                onClicked : {
+                    if (middleClick) {
+                        console.log('middle click')
+                        if (pageFitModeClick != "nop") {
+                            fitPage(pageFitModeClick)
+                        }
+                    }
+                }
+                onDoubleClicked : {
+                    if (middleClick) {
+                        console.log('middle doubleclick')
+                        if (pageFitModeDoubleclick != "nop") {
+                            fitPage(pageFitModeDoubleclick)
+                        }
                     }
                 }
             }
