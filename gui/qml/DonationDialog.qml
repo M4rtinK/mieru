@@ -5,7 +5,7 @@ import com.nokia.meego 1.0
 
 HeaderDialog {
     id : donationDialog
-    titleText : "Choose a donation method:"
+    titleText : qsTr("Choose a donation method:")
     content:Item {
         id: dialogContent
         width : parent.width
