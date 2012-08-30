@@ -20,6 +20,14 @@
     </message>
 </context>
 <context>
+    <name>DonationDialog</name>
+    <message>
+        <location filename="../DonationDialog.qml" line="8"/>
+        <source>Choose a donation method:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FileSelector</name>
     <message>
         <location filename="../FileSelector.qml" line="14"/>
@@ -192,72 +200,72 @@
 <context>
     <name>MainView</name>
     <message>
-        <location filename="../MainView.qml" line="156"/>
+        <location filename="../MainView.qml" line="169"/>
         <source>original</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="158"/>
+        <location filename="../MainView.qml" line="171"/>
         <source>width</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="160"/>
+        <location filename="../MainView.qml" line="173"/>
         <source>height</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="162"/>
+        <location filename="../MainView.qml" line="175"/>
         <source>screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="164"/>
+        <location filename="../MainView.qml" line="177"/>
         <source>orient</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="171"/>
+        <location filename="../MainView.qml" line="184"/>
         <source>most</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="179"/>
+        <location filename="../MainView.qml" line="192"/>
         <source>custom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="238"/>
+        <location filename="../MainView.qml" line="250"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="245"/>
+        <location filename="../MainView.qml" line="257"/>
         <source>History</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="249"/>
+        <location filename="../MainView.qml" line="261"/>
         <source>Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="253"/>
+        <location filename="../MainView.qml" line="265"/>
         <source>Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="260"/>
+        <location filename="../MainView.qml" line="272"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="459"/>
+        <location filename="../MainView.qml" line="504"/>
         <source>Rotation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainView.qml" line="479"/>
+        <location filename="../MainView.qml" line="524"/>
         <source>No pages loaded</source>
         <translation type="unfinished"></translation>
     </message>
@@ -265,92 +273,117 @@
 <context>
     <name>OptionsPage</name>
     <message>
-        <location filename="../OptionsPage.qml" line="27"/>
+        <location filename="../OptionsPage.qml" line="29"/>
         <source>Page view</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="30"/>
+        <location filename="../OptionsPage.qml" line="32"/>
         <source>Rotation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="45"/>
+        <location filename="../OptionsPage.qml" line="47"/>
         <source>auto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="53"/>
+        <location filename="../OptionsPage.qml" line="55"/>
         <source>portrait</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="61"/>
+        <location filename="../OptionsPage.qml" line="63"/>
         <source>landscape</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="69"/>
+        <location filename="../OptionsPage.qml" line="71"/>
         <source>Show status bar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="77"/>
+        <location filename="../OptionsPage.qml" line="79"/>
         <source>Remember toolbar state</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="84"/>
+        <location filename="../OptionsPage.qml" line="86"/>
         <source>Fullscreen button opacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="110"/>
+        <location filename="../OptionsPage.qml" line="112"/>
         <source>Paging options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="113"/>
+        <location filename="../OptionsPage.qml" line="115"/>
         <source>Paging mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="128"/>
+        <location filename="../OptionsPage.qml" line="130"/>
         <source>Whole screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="136"/>
+        <location filename="../OptionsPage.qml" line="138"/>
         <source>On edges</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="144"/>
+        <location filename="../OptionsPage.qml" line="148"/>
+        <source>Middle click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../OptionsPage.qml" line="158"/>
+        <source>Middle doubleclick</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../OptionsPage.qml" line="168"/>
         <source>Show paging feedback</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="154"/>
+        <location filename="../OptionsPage.qml" line="178"/>
         <source>Page scaling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="157"/>
+        <location filename="../OptionsPage.qml" line="181"/>
         <source>Page fit mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="166"/>
+        <location filename="../OptionsPage.qml" line="190"/>
+        <source>History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../OptionsPage.qml" line="193"/>
+        <source>history enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../OptionsPage.qml" line="201"/>
+        <source>use when opening files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../OptionsPage.qml" line="210"/>
         <source>Miscellaneous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="169"/>
+        <location filename="../OptionsPage.qml" line="213"/>
         <source>Manga reading mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../OptionsPage.qml" line="177"/>
+        <location filename="../OptionsPage.qml" line="221"/>
         <source>Show release notes</source>
         <translation type="unfinished"></translation>
     </message>
@@ -363,38 +396,43 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="18"/>
+        <location filename="../PageFitSelector.qml" line="19"/>
         <source>&lt;b&gt;1:1&lt;/b&gt; - original size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="19"/>
+        <location filename="../PageFitSelector.qml" line="20"/>
         <source>&lt;b&gt;fit to width&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="20"/>
+        <location filename="../PageFitSelector.qml" line="21"/>
         <source>&lt;b&gt;fit to height&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="21"/>
+        <location filename="../PageFitSelector.qml" line="22"/>
         <source>&lt;b&gt;fit to screen&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="22"/>
+        <location filename="../PageFitSelector.qml" line="23"/>
         <source>&lt;b&gt;custom&lt;/b&gt; - remember scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="23"/>
+        <location filename="../PageFitSelector.qml" line="24"/>
         <source>&lt;b&gt;orientation&lt;/b&gt; specific</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="24"/>
+        <location filename="../PageFitSelector.qml" line="25"/>
         <source>&lt;b&gt;show the most&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PageFitSelector.qml" line="30"/>
+        <source>&lt;b&gt;no action&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -432,27 +470,27 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../main.qml" line="85"/>
+        <location filename="../main.qml" line="96"/>
         <source>How to turn pages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.qml" line="86"/>
+        <location filename="../main.qml" line="97"/>
         <source>Tap the &lt;b&gt;right half&lt;/b&gt; of the screen to go to the &lt;b&gt;next page&lt;/b&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.qml" line="87"/>
+        <location filename="../main.qml" line="98"/>
         <source>Tap the &lt;b&gt;left half&lt;/b&gt; to go to the &lt;b&gt;previous page&lt;/b&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.qml" line="88"/>
+        <location filename="../main.qml" line="99"/>
         <source>Don&apos;t show again</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.qml" line="89"/>
+        <location filename="../main.qml" line="100"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
