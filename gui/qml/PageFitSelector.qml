@@ -27,6 +27,6 @@ SelectionDialog {
     }
 
     function addNop() {
-        modesModel.insert(0, {"name" : qsTr("<b>no action</b> - original size"),     "key" : "no action"})
+        modesModel.insert(0, {"name" : qsTr("<b>no action</b>"),     "key" : "no action"})
     }
 }
