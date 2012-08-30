@@ -149,7 +149,7 @@ class Maemo5(BasePlatform):
       if lastUsedValue == mode[0]:
         lastUsedValueId = id
       id+=1
-    if lastUsedValue is not None:
+    if lastUsedValueId is not None:
       touchSelector.set_active(0,lastUsedValueId)
     return touchSelector
 
