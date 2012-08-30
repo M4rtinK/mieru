@@ -72,13 +72,13 @@ PageStackWindow {
 
     PageFitSelector {
         id : tempPageFitSelectorClick
-        addNop : true
         onAccepted : mainView.setPageFitModeTemp(pageFitMode, "click")
+        Component.onCompleted : addNop()
     }
     PageFitSelector {
         id : tempPageFitSelectorDoubleclick
-        addNop : true
         onAccepted : mainView.setPageFitModeTemp(pageFitMode, "doubleclick")
+        Component.onCompleted : addNop()
     }
     function notify(text) {
         console.log("notification: " % text)

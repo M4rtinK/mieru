@@ -19,8 +19,8 @@ Page {
     property bool pagingFeedback : options.get("QMLPagingFeedback", true)
     property string pagingMode   : options.get("QMLPagingMode", "screen")
     property string pageFitMode  : options.get("fitMode", "original")
-    property string pageFitModeClick  : options.get("fitModeClick", "nop")
-    property string pageFitModeDoubleclick  : options.get("fitModeDoubleclick", "nop")
+    property string pageFitModeClick  : options.get("fitModeClick", "no action")
+    property string pageFitModeDoubleclick  : options.get("fitModeDoubleclick", "no action")
     property bool middleClick : false
     property alias fullscreenButtonOpacity : fullscreenButton.opacity
 
@@ -426,7 +426,7 @@ Page {
                 onClicked : {
                     if (middleClick) {
                         console.log('middle click')
-                        if (pageFitModeClick != "nop") {
+                        if (pageFitModeClick != "no action") {
                             fitPage(pageFitModeClick)
                         }
                     }
@@ -434,7 +434,7 @@ Page {
                 onDoubleClicked : {
                     if (middleClick) {
                         console.log('middle doubleclick')
-                        if (pageFitModeDoubleclick != "nop") {
+                        if (pageFitModeDoubleclick != "no action") {
                             fitPage(pageFitModeDoubleclick)
                         }
                     }
