@@ -25,7 +25,6 @@ SelectionDialog {
             append({"name" : qsTr("<b>show the most</b>"),           "key" : "most"})
         }
     }
-
     function addNop() {
         modesModel.insert(0, {"name" : qsTr("<b>no action</b>"),     "key" : "no action"})
     }
