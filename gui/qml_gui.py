@@ -383,7 +383,8 @@ class ReadingState(QObject):
     path = re.sub('file://', '', path, 1)
     folder = os.path.dirname(path)
     self.mieru.set('lastChooserFolder', folder)
-    self.mieru.openManga(path)
+    history = self.mieru.get("fileSelectorCheckHistory", True)
+    self.mieru.openManga(path, checkHistory=history)
 
   @QtCore.Slot(result=str)
   def getSavedFileSelectorPath(self):

@@ -236,18 +236,25 @@ class Mieru:
     print("notification: %s" % message)
     self.platform.notify(message,icon)
 
-  def openManga(self, path, startOnPage=0, replaceCurrent=True, loadNotify=True):
+  def openManga(self, path, startOnPage=0, replaceCurrent=True, loadNotify=True, checkHistory=True):
     if replaceCurrent:
-      print("opening %s on page %d" % (path,startOnPage))
-      mangaInstance = manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
-      # close and replace any current active manga
-      self.setActiveManga(mangaInstance)
+      mangaState = None
+      if checkHistory: # check for saved state for the path
+        mangaState = self.getMangaStateFromHistory(path)
+      if mangaState:
+        print('manga path found in history')
+        self.openMangaFromState(mangaState)
+      else:
+        print("opening %s on page %d" % (path, startOnPage))
+        mangaInstance = manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
+        # close and replace any current active manga
+        self.setActiveManga(mangaInstance)
 
-      # increment manga count
-      self.stats.incrementUnitCount()
+        # increment manga count
+        self.stats.incrementUnitCount()
 
-      # return the newly created manga instance
-      return mangaInstance
+        # return the newly created manga instance
+        return mangaInstance
     else:
       return manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
 
@@ -314,6 +321,15 @@ class Mieru:
     if state:
       self.addToHistory(state)
 
+  def getMangaStateFromHistory(self, path):
+    history = self.getHistory()
+    entry = history.get(path, None)
+    if entry:
+      return entry['state'] # manga path was in history
+    else: # manga path was not in history
+      return None
+
+
   def removeMangasFromHistory(self, paths):
     """a function for batch removing mangas from history"""
     print("removing %d mangas from history" % len(paths))
@@ -334,8 +350,12 @@ class Mieru:
         del openMangasHistory[path]
     self.set('openMangasHistory', openMangasHistory)
 
+  def getHistory(self):
+    """return history of open mangas, without sorting it"""
+    return self.get('openMangasHistory',[])
+
   def getSortedHistory(self):
-    openMangasHistory = self.get('openMangasHistory',None)
+    openMangasHistory = self.get('openMangasHistory',[])
     if openMangasHistory:
       sortedList = []
       for path in sorted(openMangasHistory, key=lambda path: openMangasHistory[path]['timestamp'], reverse=True):
