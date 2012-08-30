@@ -76,7 +76,6 @@ class Manga:
         #print('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
       else:
         if loadNotify:
-          self.mieru.gui.newMangaLoaded(self) # notify the GUI
           self.mieru.notify('<b>%s</b> loading failed' % self.getPrettyName())
 
   def getName(self):
