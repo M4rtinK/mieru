@@ -147,7 +147,7 @@ Page {
                 buttonText : qsTranslate("MainView", mainView.pageFitModeClick)
                 // FIXME: incomplete theme on Fremantle
                 iconSource: platform.incompleteTheme() ?
-                "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-image-expand"
+                "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-common-combobox-arrow"
                 selector : tempPageFitSelectorClick
             }
 
@@ -157,7 +157,7 @@ Page {
                 buttonText : qsTranslate("MainView", mainView.pageFitModeDoubleclick)
                 // FIXME: incomplete theme on Fremantle
                 iconSource: platform.incompleteTheme() ?
-                "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-image-expand"
+                "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-common-combobox-arrow"
                 selector : tempPageFitSelectorDoubleclick
             }
 
@@ -180,7 +180,7 @@ Page {
                 buttonText : qsTranslate("MainView", mainView.pageFitMode)
                 // FIXME: incomplete theme on Fremantle
                 iconSource: platform.incompleteTheme() ?
-                "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-image-expand"
+                "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-common-combobox-arrow"
                 selector : pageFitSelector
             }
             LineText {

@@ -28,7 +28,7 @@ Item {
 
     Button {
         id : pfsButton
-        iconSource : "image://theme/icon-m-common-expand"
+        iconSource : "image://theme/icon-m-common-combobox-arrow"
         width : 200
         anchors {
             right: parent.right
