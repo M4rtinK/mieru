@@ -229,13 +229,12 @@ Page {
         ToolButton {
             id : pageNumbers
             text : mainView.pageLoaded ? mainView.pageNumber + "/" + mainView.maxPageNumber : "-/-"
-            //anchors.top : backTI.top
-            //anchors.bottom : backTI.bottom
+            height : menuTI.height
             flat : true
             onClicked : pagingDialog.open()
         }
         ToolIcon {
-            id : backTI
+            id : menuTI
             iconId: "toolbar-view-menu"
             onClicked: mainViewMenu.open()
         }
