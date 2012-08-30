@@ -12,6 +12,8 @@ Page {
     anchors.rightMargin  : 15
 
     property bool showReleaseNotes : options.get("showReleaseNotes", true)
+    property bool fileSelectorCheckHistory  : options.get("fileSelectorCheckHistory", true)
+    property bool historyEnabled  : options.get("historyEnabled", true)
 
     Flickable {
         anchors.fill : parent
@@ -182,6 +184,26 @@ Page {
                 iconSource: platform.incompleteTheme() ?
                 "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-common-combobox-arrow"
                 selector : pageFitSelector
+            }
+            LineText {
+                width : optionsPage.width
+                text : qsTr("History")
+            }
+            SwitchWithText {
+                text : "<b>" + qsTr("history enabled") + "</b>"
+                checked : historyEnabled
+                onCheckedChanged : {
+                    historyEnabled = checked
+                    options.set("historyEnabled", checked)
+                }
+            }
+            SwitchWithText {
+                text : "<b>" + qsTr("use when opening files") + "</b>"
+                checked : fileSelectorCheckHistory
+                onCheckedChanged : {
+                    fileSelectorCheckHistory = checked
+                    options.set("fileSelectorCheckHistory", checked)
+                }
             }
             LineText {
                 width : optionsPage.width

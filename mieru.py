@@ -297,23 +297,24 @@ class Mieru:
 
   def addToHistory(self,mangaState):
     """add a saved manga state to the history"""
-    openMangasHistory = self.get('openMangasHistory',{})
-    try:
-      if mangaState['path'] is not None:
-        path = mangaState['path']
-        print("adding to history: %s, on page %d" % (path, mangaState.get('pageNumber',0)))
-        openMangasHistory[path] = {"state":mangaState,"timestamp":time.time()}
-        """the states are saved under their path to store only unique mangas,
-           when the same manga is opened again, its state is replaced by the new one
-           the timestamp is used for chronological sorting of the list
-        """
-      # save the history back to the persistent store
-      # TODO: limit the size of the history + clearing of history
-    except Exception, e:
-      print("saving manga to history failed with exception:\n", e)
-      print("manga state was:", mangaState)
-    self.set('openMangasHistory', openMangasHistory)
-    self.options.save()
+    if self.get('historyEnabled', True):
+      openMangasHistory = self.get('openMangasHistory',{})
+      try:
+        if mangaState['path'] is not None:
+          path = mangaState['path']
+          print("adding to history: %s, on page %d" % (path, mangaState.get('pageNumber',0)))
+          openMangasHistory[path] = {"state":mangaState,"timestamp":time.time()}
+          """the states are saved under their path to store only unique mangas,
+             when the same manga is opened again, its state is replaced by the new one
+             the timestamp is used for chronological sorting of the list
+          """
+        # save the history back to the persistent store
+        # TODO: limit the size of the history + clearing of history
+      except Exception, e:
+        print("saving manga to history failed with exception:\n", e)
+        print("manga state was:", mangaState)
+      self.set('openMangasHistory', openMangasHistory)
+      self.options.save()
 
   def addMangaToHistory(self, manga):
     """add a manga instance to history"""
