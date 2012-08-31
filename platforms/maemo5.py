@@ -3,13 +3,6 @@
 Mieru hildon UI (for Maemo 5@N900)
 """
 import os
-import gs
-
-if gs.GUIString in ("hildon", "gtk"):
-  import gtk
-  import gobject
-  import hildon
-  import maemo5_autorotation
 import info
 
 MINIMAL_QT_VERSION_FOR_QML_GUI = (4,7,4)
@@ -49,6 +42,9 @@ class Maemo5(BasePlatform):
 
   def _addAppMenu(self):
     """add application menu & enable zoom key paging"""
+    import gtk
+    import gobject
+    import hildon
     window = self.mieru.gui.getWindow()
 
     # enable zoom/volume keys for usage by mieru
@@ -126,6 +122,7 @@ class Maemo5(BasePlatform):
     self.mieru.gui.toggleFullscreen()
     
   def _getHistorySelector(self):
+    import hildon
     selector = hildon.TouchSelector()
     selector.set_column_selection_mode(hildon.TOUCH_SELECTOR_SELECTION_MODE_SINGLE)
     selector.append_text_column(self.historyStore, False)
@@ -141,6 +138,7 @@ class Maemo5(BasePlatform):
   def _getFittingSelector(self):
     """load fitting modes to the touch selector,
     also make active the last used fitting mode"""
+    import hildon
     touchSelector = hildon.TouchSelector(text=True)
     touchSelector.set_column_selection_mode(hildon.TOUCH_SELECTOR_SELECTION_MODE_SINGLE)
     modes = self.mieru.getFittingModes()
@@ -169,6 +167,8 @@ class Maemo5(BasePlatform):
   def _getFittingPickerButton(self, title=None, arrangement=None):
     """get a picker button with an associated touch selector,
     also load the last used value on startup"""
+    import gtk
+    import hildon
     if arrangement is None:
       arrangement = hildon.BUTTON_ARRANGEMENT_HORIZONTAL
 
@@ -182,6 +182,7 @@ class Maemo5(BasePlatform):
 
   def getSelector(self, modes, lastUsedValue=None):
     """get a selector"""
+    import hildon
     touchSelector = hildon.TouchSelector(text=True)
     touchSelector.set_column_selection_mode(hildon.TOUCH_SELECTOR_SELECTION_MODE_SINGLE)
 
@@ -197,11 +198,15 @@ class Maemo5(BasePlatform):
     return touchSelector
 
   def getVerticalPickerButton(self, title=""):
+    import gtk
+    import hildon
     pb = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,hildon.BUTTON_ARRANGEMENT_VERTICAL)
     pb.set_title(title)
     return pb
 
   def getHorizontalPickerButton(self, title=""):
+    import gtk
+    import hildon
     pb = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,hildon.BUTTON_ARRANGEMENT_HORIZONTAL)
     pb.set_title(title)
     return pb
@@ -209,6 +214,8 @@ class Maemo5(BasePlatform):
   def _getRotationPickerButton(self, title=None):
     """get a picker button with an associated touch selector,
     also load the last used value on startup"""
+    import gtk
+    import hildon
     pb = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,hildon.BUTTON_ARRANGEMENT_HORIZONTAL)
     if title:
       pb.set_title(title)
@@ -262,6 +269,8 @@ class Maemo5(BasePlatform):
     self.showOptions()
 
   def showOptions(self):
+    import gtk
+    import hildon
     win = hildon.StackableWindow()
     win.set_title("Options")
 
@@ -328,6 +337,8 @@ class Maemo5(BasePlatform):
     self.showInfo()
 
   def showInfo(self):
+    import gtk
+    import hildon
     win = hildon.StackableWindow()
     win.set_title("Info")
 
@@ -361,22 +372,26 @@ class Maemo5(BasePlatform):
 
   def _getLabel(self, name, spacing=0):
     """get a label fort notebook with adjustable spacing"""
+    import gtk
     vbox = gtk.VBox(False, spacing)
     vbox.pack_start(gtk.Label(name),padding=spacing)
     vbox.show_all()
     return vbox
 
   def _enableZoomCB(self, window):
+    import gtk
     window.window.property_change(gtk.gdk.atom_intern("_HILDON_ZOOM_KEY_ATOM"), gtk.gdk.atom_intern("INTEGER"), 32, gtk.gdk.PROP_MODE_REPLACE, [1]);
 
   def disableZoomKeys(self):
+    import gtk
     self.window.property_change(gtk.gdk.atom_intern("_HILDON_ZOOM_KEY_ATOM"), gtk.gdk.atom_intern("INTEGER"), 32, gtk.gdk.PROP_MODE_REPLACE, [0]);
 
   def enableZoomKeys(self,window):
-          if window.flags() & gtk.REALIZED:
-                  self._enableZoomCB(window)
-          else:
-                  window.connect("realize", self._enableZoomCB)
+    import gtk
+    if window.flags() & gtk.REALIZED:
+            self._enableZoomCB(window)
+    else:
+            window.connect("realize", self._enableZoomCB)
 
   def _updateHistoryCB(self, key=None, value=None, oldValue=None):
     print("update history")
@@ -446,6 +461,8 @@ class Maemo5(BasePlatform):
     self.startChooser(type)
 
   def startChooser(self, type):
+    import gtk
+    import hildon
     if type == "folder":
       t = gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER
     else: # type == "file"
@@ -470,6 +487,7 @@ class Maemo5(BasePlatform):
 
   def notify(self, message, icon=None):
     if self.GTK:
+      import hildon
       print("Hildon notification: %s" % message)
       hildon.hildon_banner_show_information_with_markup(self.mieru.gui.getWindow(), "icon_text", message)
     else:
@@ -496,6 +514,7 @@ class Maemo5(BasePlatform):
     rotationMode = self.mieru.get('rotationMode', self._getDefaultRotationMode()) # get last used mode
     lastModeNumber = self._getRotationModeNumber(rotationMode) # get last used mode number
     applicationName = "mieru"
+    import maemo5_autorotation
     rObject = maemo5_autorotation.FremantleRotation(applicationName, main_window=self.mieru.gui.getWindow(), mode=lastModeNumber)
     return rObject
 
@@ -524,7 +543,10 @@ class Maemo5(BasePlatform):
 
   def areYouSure(self, text, okCB=None, cancelCB=None):
     """create a confirmation dialog with optional callbacks"""
-    
+    import gtk
+    import hildon
+
+
     note = hildon.Note("confirmation", self.mieru.getWindow(), text)
 
     returnCode = gtk.Dialog.run(note)
@@ -548,6 +570,8 @@ class Maemo5(BasePlatform):
 
   def Button(self, label=""):
     """return hildon button"""
+    import gtk
+    import hildon
 #    b = hildon.Button(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT, hildon.BUTTON_ARRANGEMENT_VERTICAL)
     b = hildon.Button(gtk.HILDON_SIZE_FINGER_HEIGHT, hildon.BUTTON_ARRANGEMENT_VERTICAL)
     b.set_title(label)
@@ -555,6 +579,8 @@ class Maemo5(BasePlatform):
 
   def CheckButton(self, label=""):
     """return hildon check button"""
+    import gtk
+    import hildon
     c = hildon.CheckButton(gtk.HILDON_SIZE_FINGER_HEIGHT)
     c.set_label(label)
     return c
