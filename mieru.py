@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement # for python 2.5
 from gui import gui
+import gs
 
 import timer
 import time
@@ -148,7 +149,14 @@ class Mieru:
     # start the main loop
     self.gui.startMainLoop()
 
+#    print "loaded modules"
+#    print list(sys.modules.keys())
+
+
   def _loadGUIModule(self, id):
+    # report GUI string
+    gs.GUIString = id
+
     initialSize = self.platform.getScreenWH()
     if id in ("QML","harmattan"):
       self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)

@@ -3,10 +3,13 @@
 Mieru hildon UI (for Maemo 5@N900)
 """
 import os
-import gtk
-import gobject
-import hildon
-import maemo5_autorotation
+import gs
+
+if gs.GUIString in ("hildon", "gtk"):
+  import gtk
+  import gobject
+  import hildon
+  import maemo5_autorotation
 import info
 
 MINIMAL_QT_VERSION_FOR_QML_GUI = (4,7,4)
@@ -163,9 +166,12 @@ class Maemo5(BasePlatform):
     except Exception, e:
       print("maemo 5: wrong fitting touch selector index", e)
 
-  def _getFittingPickerButton(self, title=None, arrangement=hildon.BUTTON_ARRANGEMENT_HORIZONTAL):
+  def _getFittingPickerButton(self, title=None, arrangement=None):
     """get a picker button with an associated touch selector,
     also load the last used value on startup"""
+    if arrangement is None:
+      arrangement = hildon.BUTTON_ARRANGEMENT_HORIZONTAL
+
     fitPickerButton = hildon.PickerButton(gtk.HILDON_SIZE_AUTO_WIDTH | gtk.HILDON_SIZE_FINGER_HEIGHT,arrangement)
     if title:
       fitPickerButton.set_title(title)

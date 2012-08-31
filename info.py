@@ -2,12 +2,14 @@
 """a Mieru module for displaying info menu content"""
 
 import os
+import gs
+if gs.GUIString in ("hildon", "gtk"):
+  import gtk
 
 VERSION_FILE_PATH = "version.txt"
 RELEASE_NOTES_FILE_PATH = "release_notes.txt"
 
 def getShortcutsContent():
-  import gtk
   vbox = gtk.VBox()
   shortcuts = gtk.Label()
   text = "<b><u>Keyboard shortcuts</u></b>\n"
@@ -48,7 +50,6 @@ def _setStatsOnCB(button, stats, label):
 
 def getStatsContent(mieru):
   """get content for the statistics monitoring tab"""
-  import gtk
   vbox = gtk.VBox(False,0)
   statsText = mieru.stats.getStatsText()
   statsLabel = gtk.Label()
@@ -81,7 +82,6 @@ def getAboutText(forum="meego"):
   return text
 
 def getAboutContent(versionString="unknown"):
-  import gtk
   vbox = gtk.VBox(False,0)
   textVersion = "<b>Mieru</b>, version: <b>%s</b>" % versionString
   about0 = gtk.Label()
@@ -213,14 +213,12 @@ def getGitHash():
       return None
 
 def _getLabel(name, spacing=0):
-  import gtk
   vbox = gtk.VBox(False, spacing)
   vbox.pack_start(gtk.Label(name),padding=spacing)
   vbox.show_all()
   return vbox
 
 def getInfNotebook(mieru):
-  import gtk
   class InfoNotebook(gtk.Notebook):
     def __init__(self, mieru):
       gtk.Notebook.__init__(self)
