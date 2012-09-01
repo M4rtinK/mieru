@@ -25,7 +25,7 @@ class Maemo5(BasePlatform):
     # check for Qt version,
     # if < 4.7.4, suggest the Hildon GUI,
     # for >= 4.7.4, suggest QML GUI
-    import PySide
+    import PySide.QtCore
     qtVersion = PySide.QtCore.__version_info__
     print('maemo5: Qt version %s detected' % PySide.QtCore.__version__)
     if qtVersion < MINIMAL_QT_VERSION_FOR_QML_GUI:
