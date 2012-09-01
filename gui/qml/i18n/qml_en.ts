@@ -431,7 +431,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="30"/>
+        <location filename="../PageFitSelector.qml" line="29"/>
         <source>&lt;b&gt;no action&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>

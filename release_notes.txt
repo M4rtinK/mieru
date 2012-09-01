@@ -15,7 +15,7 @@ notes='''
     * can be enabled in __Options__
 * improved paging feedback
 * localization support
-    * full __Czech__, __German__, __Russian__ and __Chinese__ translations
+    * full __Czech__, __German__, __Russian__, __Chinese__, __Finnish__ and __Vietnamese__ translations
 * improved donation support
     * __Flattr__ and __Bitcoin__ were added
 * new packages for _Maemo@N900_
@@ -30,4 +30,6 @@ notes='''
     * __Tempura-san__ (l18n support, German translation, manga mode, paging feedback)
     * __ZoG__ (Russian translation)
     * __cjz__ (Chinese translation)
+    * __mve__ (Finnish translation)
+    * __hispaf__ (Vietnamese translation)
 '''

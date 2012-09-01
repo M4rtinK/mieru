@@ -24,7 +24,7 @@
     <message>
         <location filename="../DonationDialog.qml" line="8"/>
         <source>Choose a donation method:</source>
-        <translation type="unfinished"></translation>
+        <translation>选择捐赠方式：</translation>
     </message>
 </context>
 <context>
@@ -335,12 +335,12 @@
     <message>
         <location filename="../OptionsPage.qml" line="148"/>
         <source>Middle click</source>
-        <translation type="unfinished"></translation>
+        <translation>中间单击</translation>
     </message>
     <message>
         <location filename="../OptionsPage.qml" line="158"/>
         <source>Middle doubleclick</source>
-        <translation type="unfinished"></translation>
+        <translation>中间双击</translation>
     </message>
     <message>
         <location filename="../OptionsPage.qml" line="168"/>
@@ -360,17 +360,17 @@
     <message>
         <location filename="../OptionsPage.qml" line="190"/>
         <source>History</source>
-        <translation type="unfinished">历史记录</translation>
+        <translation>历史记录</translation>
     </message>
     <message>
         <location filename="../OptionsPage.qml" line="193"/>
         <source>history enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>启用历史记录</translation>
     </message>
     <message>
         <location filename="../OptionsPage.qml" line="201"/>
         <source>use when opening files</source>
-        <translation type="unfinished"></translation>
+        <translation>打开文件时使用</translation>
     </message>
     <message>
         <location filename="../OptionsPage.qml" line="210"/>
@@ -385,7 +385,7 @@
     <message>
         <location filename="../OptionsPage.qml" line="221"/>
         <source>Show release notes</source>
-        <translation type="unfinished"></translation>
+        <translation>版本发布说明</translation>
     </message>
 </context>
 <context>
@@ -431,9 +431,9 @@
         <translation>&lt;b&gt;尽量显示&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="30"/>
+        <location filename="../PageFitSelector.qml" line="29"/>
         <source>&lt;b&gt;no action&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;无操作&lt;/b&gt;</translation>
     </message>
 </context>
 <context>
@@ -449,17 +449,17 @@
     <message>
         <location filename="../WhatsNewDialog.qml" line="35"/>
         <source>Opening link</source>
-        <translation type="unfinished"></translation>
+        <translation>打开链接</translation>
     </message>
     <message>
         <location filename="../WhatsNewDialog.qml" line="48"/>
         <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;喜欢Mieru么？那就来捐赠吧！&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../WhatsNewDialog.qml" line="56"/>
         <source>How to donate ?</source>
-        <translation type="unfinished"></translation>
+        <translation>如何捐赠？</translation>
     </message>
     <message>
         <location filename="../WhatsNewDialog.qml" line="67"/>

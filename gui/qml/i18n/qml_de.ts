@@ -431,7 +431,7 @@
         <translation>&lt;b&gt;das Meiste zeigen&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../PageFitSelector.qml" line="30"/>
+        <location filename="../PageFitSelector.qml" line="29"/>
         <source>&lt;b&gt;no action&lt;/b&gt;</source>
         <translation>&lt;b&gt;keine Aktion&lt;/b&gt;</translation>
     </message>
