@@ -15,7 +15,7 @@ notes='''
     * can be enabled in __Options__
 * improved paging feedback
 * localization support
-    * full __Czech__, __German__, __Russian__, __Chinese__, __Finnish__ and __Vietnamese__ translations
+    * full __Czech__, __German__, __Russian__, __Chinese__, __Finnish__, __Vietnamese__, __Dutch__ and __French__ translations
 * improved donation support
     * __Flattr__ and __Bitcoin__ were added
 * new packages for _Maemo@N900_
@@ -32,4 +32,6 @@ notes='''
     * __cjz__ (Chinese translation)
     * __mve__ (Finnish translation)
     * __hispaf__ (Vietnamese translation)
+    * __Ade__ (Dutch translation)
+    * __darodi__(French translation)
 '''
