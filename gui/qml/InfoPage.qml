@@ -184,31 +184,42 @@ Page {
                 contentHeight : aboutColumn.height + 30
                 flickableDirection : Flickable.VerticalFlick
                 
-                Column {
+                Item {
+                    //anchors.horizontalCenter : parent.horizontalCenter
+                    width : tab3.width
+                    height : childrenRect.height
                     id : aboutColumn
-                    spacing : 25
-                    Column {
+                    Label {
+                        id : versionLabel
+                        anchors.top : parent.top
                         anchors.horizontalCenter : parent.horizontalCenter
-                        spacing : 5
-                        Label {
-                            anchors.horizontalCenter : parent.horizontalCenter
-                            text : "<h2>Mieru " + readingState.getVersionString() + "</h2>"
-                        }
-                        Image {
-                            anchors.horizontalCenter : parent.horizontalCenter
-                            source : "image://icons/mieru.svg"
-                        }
+                        text : "<h2>Mieru " + readingState.getVersionString() + "</h2>"
+                    }
+                    Image {
+                        id : mieruIcon
+                        anchors.top : versionLabel.bottom
+                        anchors.topMargin : 5
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        source : "image://icons/mieru.svg"
                     }
                     Label {
                         id : mieruDescription
+                        anchors.top : mieruIcon.bottom
+                        anchors.topMargin : 8
                         anchors.horizontalCenter : parent.horizontalCenter
-                        //width    : tab3.width
+                        horizontalAlignment: Text.AlignHCenter
+                        width : parent.width
                         wrapMode : Text.WordWrap
                         text : qsTr("Mieru is a flexible Manga and comic book reader.")
                     }
                     Label {
                         id : donateLabel
+                        anchors.top : mieruDescription.bottom
+                        anchors.topMargin : 25
                         anchors.horizontalCenter : parent.horizontalCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        width : parent.width
+                        wrapMode : Text.WordWrap
                         text : qsTr("<b>Do you like Mieru ? Donate !</b>")
                     }
                     Row {
@@ -238,6 +249,8 @@ Page {
                         url : "1PPnoD4SyeQYgvhJ6L5xkjZ4qE4WMMCe1k"
                     }
                     Column {
+                        anchors.top : bitcoinButton.bottom
+                        anchors.topMargin : 25
                         spacing : 5
                         Label {
                             text : "<b>" + qsTr("main developer") + ":</b> Martin Kolman"
