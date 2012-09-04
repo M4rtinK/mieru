@@ -209,7 +209,7 @@ Page {
                     Label {
                         id : donateLabel
                         anchors.horizontalCenter : parent.horizontalCenter
-                        text : "<h3>Dou you like modRana ? <b>Donate !</b></h3>"
+                        text : qsTr("<b>Do you like Mieru ? Donate !</b>")
                     }
                     Row {
                         id : ppFlattrRow
