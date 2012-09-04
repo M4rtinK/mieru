@@ -6,17 +6,17 @@
     <message>
         <location filename="../BitcoinButton.qml" line="34"/>
         <source>Bitcoin address</source>
-        <translation type="unfinished"></translation>
+        <translation>Адресс Bitcoin</translation>
     </message>
     <message>
         <location filename="../BitcoinButton.qml" line="111"/>
         <source>Copy address</source>
-        <translation type="unfinished"></translation>
+        <translation>Скопировать адресс</translation>
     </message>
     <message>
         <location filename="../BitcoinButton.qml" line="116"/>
         <source>Bitcoin address copied to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Адресс Bitcoin скопирован в буфер</translation>
     </message>
 </context>
 <context>
@@ -24,7 +24,7 @@
     <message>
         <location filename="../DonationDialog.qml" line="8"/>
         <source>Choose a donation method:</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбрать метод пожертвования:</translation>
     </message>
 </context>
 <context>
@@ -40,7 +40,7 @@
     <message>
         <location filename="../FlattrButton.qml" line="25"/>
         <source>Opening &lt;b&gt;Flattr&lt;/b&gt; donation page, &lt;b&gt;thanks&lt;/b&gt;!</source>
-        <translation type="unfinished"></translation>
+        <translation>Открываем страницу пожертвований &lt;b&gt;Flattr&lt;/b&gt;, &lt;b&gt;спасибо&lt;/b&gt;!</translation>
     </message>
 </context>
 <context>
@@ -160,6 +160,11 @@
         <location filename="../InfoPage.qml" line="207"/>
         <source>Mieru is a flexible Manga and comic book reader.</source>
         <translation>Mieru — комфортная читалка комиксов и манга.</translation>
+    </message>
+    <message>
+        <location filename="../InfoPage.qml" line="212"/>
+        <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Вам нравится Mieru ? Donate !&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../InfoPage.qml" line="243"/>
@@ -335,12 +340,12 @@
     <message>
         <location filename="../OptionsPage.qml" line="148"/>
         <source>Middle click</source>
-        <translation type="unfinished"></translation>
+        <translation>Средняя кнопка</translation>
     </message>
     <message>
         <location filename="../OptionsPage.qml" line="158"/>
         <source>Middle doubleclick</source>
-        <translation type="unfinished"></translation>
+        <translation>Двойное нажатие на средную кнопку</translation>
     </message>
     <message>
         <location filename="../OptionsPage.qml" line="168"/>
@@ -360,17 +365,17 @@
     <message>
         <location filename="../OptionsPage.qml" line="190"/>
         <source>History</source>
-        <translation type="unfinished">История</translation>
+        <translation>История</translation>
     </message>
     <message>
         <location filename="../OptionsPage.qml" line="193"/>
         <source>history enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>история включена</translation>
     </message>
     <message>
         <location filename="../OptionsPage.qml" line="201"/>
         <source>use when opening files</source>
-        <translation type="unfinished"></translation>
+        <translation>используйте, когда есть открытые файлы</translation>
     </message>
     <message>
         <location filename="../OptionsPage.qml" line="210"/>
@@ -385,7 +390,7 @@
     <message>
         <location filename="../OptionsPage.qml" line="221"/>
         <source>Show release notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Показать заметки релиза</translation>
     </message>
 </context>
 <context>
@@ -433,7 +438,7 @@
     <message>
         <location filename="../PageFitSelector.qml" line="29"/>
         <source>&lt;b&gt;no action&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;не установлено&lt;/b&gt;</translation>
     </message>
 </context>
 <context>
@@ -441,7 +446,7 @@
     <message>
         <location filename="../PayPalButton.qml" line="24"/>
         <source>Opening &lt;b&gt;PayPal&lt;/b&gt; donation page, &lt;b&gt;thanks&lt;/b&gt;!</source>
-        <translation type="unfinished"></translation>
+        <translation>Открываем страницу пожертвований &lt;b&gt;PayPal&lt;/b&gt;, &lt;b&gt;спасибо&lt;/b&gt;!</translation>
     </message>
 </context>
 <context>
@@ -449,22 +454,22 @@
     <message>
         <location filename="../WhatsNewDialog.qml" line="35"/>
         <source>Opening link</source>
-        <translation type="unfinished"></translation>
+        <translation>Открываем ссылку</translation>
     </message>
     <message>
         <location filename="../WhatsNewDialog.qml" line="48"/>
         <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Вам нравится Mieru ? Donate !&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../WhatsNewDialog.qml" line="56"/>
         <source>How to donate ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Как пожертвовать ?</translation>
     </message>
     <message>
         <location filename="../WhatsNewDialog.qml" line="67"/>
         <source>Don&apos;t show again</source>
-        <translation type="unfinished">Не показывать больше</translation>
+        <translation>Не показывать больше</translation>
     </message>
 </context>
 <context>

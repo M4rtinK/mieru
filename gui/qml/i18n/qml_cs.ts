@@ -162,6 +162,11 @@
         <translation>Mieru je flexibilní čtečka mangy a komiksu.</translation>
     </message>
     <message>
+        <location filename="../InfoPage.qml" line="212"/>
+        <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Líbí se Vám Mieru ? Příspějte!&lt;/b&gt;</translation>
+    </message>
+    <message>
         <location filename="../InfoPage.qml" line="243"/>
         <source>main developer</source>
         <translation>hlavní vývojář</translation>

@@ -162,6 +162,11 @@
         <translation>Mieru is een flexibele Manga en stripboek lezer.</translation>
     </message>
     <message>
+        <location filename="../InfoPage.qml" line="212"/>
+        <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Tevreden over Mieru ? Doneer !&lt;/b&gt;</translation>
+    </message>
+    <message>
         <location filename="../InfoPage.qml" line="243"/>
         <source>main developer</source>
         <translation>hoofd ontwikkelaar</translation>

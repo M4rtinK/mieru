@@ -162,6 +162,11 @@
         <translation>Mieru是一款优秀的漫画阅读软件。</translation>
     </message>
     <message>
+        <location filename="../InfoPage.qml" line="212"/>
+        <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
+        <translation>&lt;b&gt;喜欢Mieru么？那就来捐赠吧！&lt;/b&gt;</translation>
+    </message>
+    <message>
         <location filename="../InfoPage.qml" line="243"/>
         <source>main developer</source>
         <translation>主开发者</translation>

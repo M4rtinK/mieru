@@ -162,6 +162,11 @@
         <translation>Mieru est un lecteur de Manga et comics flexible.</translation>
     </message>
     <message>
+        <location filename="../InfoPage.qml" line="212"/>
+        <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Aimez-vous Mieru ? Faites un don!&lt;/b&gt;</translation>
+    </message>
+    <message>
         <location filename="../InfoPage.qml" line="243"/>
         <source>main developer</source>
         <translation>développeur principal </translation>

@@ -162,6 +162,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../InfoPage.qml" line="212"/>
+        <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../InfoPage.qml" line="243"/>
         <source>main developer</source>
         <translation type="unfinished"></translation>
