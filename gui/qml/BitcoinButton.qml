@@ -6,10 +6,15 @@ import com.nokia.meego 1.0
 Rectangle {
     id : bitcoinButton
     color : bitcoinMA.pressed ? "silver" : "black"
+    border.width : showBorder ? 2 : 0
+    border.color : "white"
+    smooth : true
     radius : 25
     width : 210
-    height : 45
+    height : 50
     property string url : ""
+    property bool showBorder : false
+
 
     Label {
         anchors.horizontalCenter : parent.horizontalCenter

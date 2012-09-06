@@ -6,6 +6,7 @@ import com.nokia.meego 1.0
 Rectangle {
     id : ppButton
     color : ppMA.pressed ? "yellow" : "gold"
+    smooth : true
     radius : 30
     width : 210
     height : 60

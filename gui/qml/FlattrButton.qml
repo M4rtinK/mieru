@@ -6,6 +6,7 @@ import com.nokia.meego 1.0
 Rectangle {
     id : flattrButton
     color : flattrMA.pressed ? "limegreen" : "green"
+    smooth : true
     radius : 5
     width : 210
     height : 45

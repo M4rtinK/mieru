@@ -32,6 +32,7 @@ HeaderDialog {
             anchors.topMargin : 24
             anchors.horizontalCenter : parent.horizontalCenter
             url : "1PPnoD4SyeQYgvhJ6L5xkjZ4qE4WMMCe1k"
+            showBorder : true
         }
     }
 }
