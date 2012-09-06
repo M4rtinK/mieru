@@ -4,17 +4,17 @@
 <context>
     <name>BitcoinButton</name>
     <message>
-        <location filename="../BitcoinButton.qml" line="34"/>
+        <location filename="../BitcoinButton.qml" line="39"/>
         <source>Bitcoin address</source>
         <translation>Adresse bitcoin</translation>
     </message>
     <message>
-        <location filename="../BitcoinButton.qml" line="111"/>
+        <location filename="../BitcoinButton.qml" line="116"/>
         <source>Copy address</source>
         <translation>Copier l&apos;adresse</translation>
     </message>
     <message>
-        <location filename="../BitcoinButton.qml" line="116"/>
+        <location filename="../BitcoinButton.qml" line="121"/>
         <source>Bitcoin address copied to clipboard</source>
         <translation>Adresse bitcoin copiée dans le presse-papier</translation>
     </message>
@@ -38,7 +38,7 @@
 <context>
     <name>FlattrButton</name>
     <message>
-        <location filename="../FlattrButton.qml" line="25"/>
+        <location filename="../FlattrButton.qml" line="26"/>
         <source>Opening &lt;b&gt;Flattr&lt;/b&gt; donation page, &lt;b&gt;thanks&lt;/b&gt;!</source>
         <translation>ouverture de la page de dons &lt;b&gt;Flattr&lt;/b&gt;, &lt;b&gt;merci&lt;/b&gt;!</translation>
     </message>
@@ -152,52 +152,52 @@
     </message>
     <message>
         <location filename="../InfoPage.qml" line="162"/>
-        <location filename="../InfoPage.qml" line="271"/>
+        <location filename="../InfoPage.qml" line="284"/>
         <source>Reset</source>
         <translation>Reset</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="207"/>
+        <location filename="../InfoPage.qml" line="213"/>
         <source>Mieru is a flexible Manga and comic book reader.</source>
         <translation>Mieru est un lecteur de Manga et comics flexible.</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="212"/>
+        <location filename="../InfoPage.qml" line="223"/>
         <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
         <translation>&lt;b&gt;Aimez-vous Mieru ? Faites un don!&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="243"/>
+        <location filename="../InfoPage.qml" line="256"/>
         <source>main developer</source>
         <translation>développeur principal </translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="246"/>
+        <location filename="../InfoPage.qml" line="259"/>
         <source>email</source>
         <translation>e-mail</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="250"/>
+        <location filename="../InfoPage.qml" line="263"/>
         <source>www</source>
         <translation>www</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="255"/>
+        <location filename="../InfoPage.qml" line="268"/>
         <source>discussion</source>
         <translation>discussion</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="269"/>
+        <location filename="../InfoPage.qml" line="282"/>
         <source>Reset all usage statistics</source>
         <translation>remise à zéro de tous les statistiques d&apos;utilisation</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="270"/>
+        <location filename="../InfoPage.qml" line="283"/>
         <source>Do you really want to reset all usage statistics?</source>
         <translation>Voulez-vous réellement mettre à zéro toutes les statistiques d&apos;utilisation?</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="272"/>
+        <location filename="../InfoPage.qml" line="285"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -444,7 +444,7 @@
 <context>
     <name>PayPalButton</name>
     <message>
-        <location filename="../PayPalButton.qml" line="24"/>
+        <location filename="../PayPalButton.qml" line="25"/>
         <source>Opening &lt;b&gt;PayPal&lt;/b&gt; donation page, &lt;b&gt;thanks&lt;/b&gt;!</source>
         <translation>Ouverture page de don &lt;b&gt;PayPal&lt;/b&gt;, &lt;b&gt;merci&lt;/b&gt;!</translation>
     </message>
@@ -457,17 +457,17 @@
         <translation>Ouverture du lien</translation>
     </message>
     <message>
-        <location filename="../WhatsNewDialog.qml" line="48"/>
+        <location filename="../WhatsNewDialog.qml" line="66"/>
         <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
         <translation>&lt;b&gt;Aimez-vous Mieru ? Faites un don!&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../WhatsNewDialog.qml" line="56"/>
+        <location filename="../WhatsNewDialog.qml" line="74"/>
         <source>How to donate ?</source>
         <translation>Comment faire un don?</translation>
     </message>
     <message>
-        <location filename="../WhatsNewDialog.qml" line="67"/>
+        <location filename="../WhatsNewDialog.qml" line="85"/>
         <source>Don&apos;t show again</source>
         <translation>Ne plus montrer à nouveau</translation>
     </message>

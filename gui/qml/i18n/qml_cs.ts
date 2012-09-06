@@ -4,17 +4,17 @@
 <context>
     <name>BitcoinButton</name>
     <message>
-        <location filename="../BitcoinButton.qml" line="34"/>
+        <location filename="../BitcoinButton.qml" line="39"/>
         <source>Bitcoin address</source>
         <translation>Bitcoin adresa</translation>
     </message>
     <message>
-        <location filename="../BitcoinButton.qml" line="111"/>
+        <location filename="../BitcoinButton.qml" line="116"/>
         <source>Copy address</source>
         <translation>Kopírovat adresu</translation>
     </message>
     <message>
-        <location filename="../BitcoinButton.qml" line="116"/>
+        <location filename="../BitcoinButton.qml" line="121"/>
         <source>Bitcoin address copied to clipboard</source>
         <translation>Bitcoin adresa byla skopírována do schránky</translation>
     </message>
@@ -24,7 +24,7 @@
     <message>
         <location filename="../DonationDialog.qml" line="8"/>
         <source>Choose a donation method:</source>
-        <translation>Zvolte.způsob.přispění:</translation>
+        <translation>Zvolte způsob přispění:</translation>
     </message>
 </context>
 <context>
@@ -38,7 +38,7 @@
 <context>
     <name>FlattrButton</name>
     <message>
-        <location filename="../FlattrButton.qml" line="25"/>
+        <location filename="../FlattrButton.qml" line="26"/>
         <source>Opening &lt;b&gt;Flattr&lt;/b&gt; donation page, &lt;b&gt;thanks&lt;/b&gt;!</source>
         <translation>Otevírá se stránka pro &lt;b&gt;Flattr&lt;/b&gt; dotace, &lt;b&gt;díky&lt;/b&gt;!</translation>
     </message>
@@ -152,52 +152,52 @@
     </message>
     <message>
         <location filename="../InfoPage.qml" line="162"/>
-        <location filename="../InfoPage.qml" line="271"/>
+        <location filename="../InfoPage.qml" line="284"/>
         <source>Reset</source>
         <translation>Vynulovat</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="207"/>
+        <location filename="../InfoPage.qml" line="213"/>
         <source>Mieru is a flexible Manga and comic book reader.</source>
         <translation>Mieru je flexibilní čtečka mangy a komiksu.</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="212"/>
+        <location filename="../InfoPage.qml" line="223"/>
         <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
         <translation>&lt;b&gt;Líbí se Vám Mieru ? Příspějte!&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="243"/>
+        <location filename="../InfoPage.qml" line="256"/>
         <source>main developer</source>
         <translation>hlavní vývojář</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="246"/>
+        <location filename="../InfoPage.qml" line="259"/>
         <source>email</source>
         <translation>email</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="250"/>
+        <location filename="../InfoPage.qml" line="263"/>
         <source>www</source>
         <translation>www</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="255"/>
+        <location filename="../InfoPage.qml" line="268"/>
         <source>discussion</source>
         <translation>diskuzní vlákno</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="269"/>
+        <location filename="../InfoPage.qml" line="282"/>
         <source>Reset all usage statistics</source>
         <translation>Vynulovat statistiku použití Mieru</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="270"/>
+        <location filename="../InfoPage.qml" line="283"/>
         <source>Do you really want to reset all usage statistics?</source>
         <translation>Opravdu chcete vynulovat satistiku použití ?</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="272"/>
+        <location filename="../InfoPage.qml" line="285"/>
         <source>Cancel</source>
         <translation>Zrušit</translation>
     </message>
@@ -444,7 +444,7 @@
 <context>
     <name>PayPalButton</name>
     <message>
-        <location filename="../PayPalButton.qml" line="24"/>
+        <location filename="../PayPalButton.qml" line="25"/>
         <source>Opening &lt;b&gt;PayPal&lt;/b&gt; donation page, &lt;b&gt;thanks&lt;/b&gt;!</source>
         <translation>Otevírá se stránka pro &lt;b&gt;PayPal&lt;/b&gt; dotace, &lt;b&gt;díky&lt;/b&gt;!</translation>
     </message>
@@ -457,17 +457,17 @@
         <translation>Otevírám odkaz</translation>
     </message>
     <message>
-        <location filename="../WhatsNewDialog.qml" line="48"/>
+        <location filename="../WhatsNewDialog.qml" line="66"/>
         <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
         <translation>&lt;b&gt;Líbí se Vám Mieru ? Příspějte!&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../WhatsNewDialog.qml" line="56"/>
+        <location filename="../WhatsNewDialog.qml" line="74"/>
         <source>How to donate ?</source>
         <translation>Jak přispět ?</translation>
     </message>
     <message>
-        <location filename="../WhatsNewDialog.qml" line="67"/>
+        <location filename="../WhatsNewDialog.qml" line="85"/>
         <source>Don&apos;t show again</source>
         <translation>Příště neukazovat</translation>
     </message>

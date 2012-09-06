@@ -4,17 +4,17 @@
 <context>
     <name>BitcoinButton</name>
     <message>
-        <location filename="../BitcoinButton.qml" line="34"/>
+        <location filename="../BitcoinButton.qml" line="39"/>
         <source>Bitcoin address</source>
         <translation>Bitcoin地址</translation>
     </message>
     <message>
-        <location filename="../BitcoinButton.qml" line="111"/>
+        <location filename="../BitcoinButton.qml" line="116"/>
         <source>Copy address</source>
         <translation>复制地址</translation>
     </message>
     <message>
-        <location filename="../BitcoinButton.qml" line="116"/>
+        <location filename="../BitcoinButton.qml" line="121"/>
         <source>Bitcoin address copied to clipboard</source>
         <translation>Bitcoin 地址已经复制到剪切板</translation>
     </message>
@@ -38,7 +38,7 @@
 <context>
     <name>FlattrButton</name>
     <message>
-        <location filename="../FlattrButton.qml" line="25"/>
+        <location filename="../FlattrButton.qml" line="26"/>
         <source>Opening &lt;b&gt;Flattr&lt;/b&gt; donation page, &lt;b&gt;thanks&lt;/b&gt;!</source>
         <translation>打开 &lt;b&gt;Flattr&lt;/b&gt; 捐赠页面 &lt;b&gt;谢谢&lt;/b&gt;！</translation>
     </message>
@@ -152,52 +152,52 @@
     </message>
     <message>
         <location filename="../InfoPage.qml" line="162"/>
-        <location filename="../InfoPage.qml" line="271"/>
+        <location filename="../InfoPage.qml" line="284"/>
         <source>Reset</source>
         <translation>重置</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="207"/>
+        <location filename="../InfoPage.qml" line="213"/>
         <source>Mieru is a flexible Manga and comic book reader.</source>
         <translation>Mieru是一款优秀的漫画阅读软件。</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="212"/>
+        <location filename="../InfoPage.qml" line="223"/>
         <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
         <translation>&lt;b&gt;喜欢Mieru么？那就来捐赠吧！&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="243"/>
+        <location filename="../InfoPage.qml" line="256"/>
         <source>main developer</source>
         <translation>主开发者</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="246"/>
+        <location filename="../InfoPage.qml" line="259"/>
         <source>email</source>
         <translation>邮箱</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="250"/>
+        <location filename="../InfoPage.qml" line="263"/>
         <source>www</source>
         <translation>网址</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="255"/>
+        <location filename="../InfoPage.qml" line="268"/>
         <source>discussion</source>
         <translation>讨论</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="269"/>
+        <location filename="../InfoPage.qml" line="282"/>
         <source>Reset all usage statistics</source>
         <translation>清空统计记录</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="270"/>
+        <location filename="../InfoPage.qml" line="283"/>
         <source>Do you really want to reset all usage statistics?</source>
         <translation>你确定要删除所有的使用统计记录么？</translation>
     </message>
     <message>
-        <location filename="../InfoPage.qml" line="272"/>
+        <location filename="../InfoPage.qml" line="285"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -444,7 +444,7 @@
 <context>
     <name>PayPalButton</name>
     <message>
-        <location filename="../PayPalButton.qml" line="24"/>
+        <location filename="../PayPalButton.qml" line="25"/>
         <source>Opening &lt;b&gt;PayPal&lt;/b&gt; donation page, &lt;b&gt;thanks&lt;/b&gt;!</source>
         <translation>打开&lt;b&gt;PayPal&lt;/b&gt;捐赠页面 &lt;b&gt;谢谢&lt;/b&gt;！</translation>
     </message>
@@ -457,17 +457,17 @@
         <translation>打开链接</translation>
     </message>
     <message>
-        <location filename="../WhatsNewDialog.qml" line="48"/>
+        <location filename="../WhatsNewDialog.qml" line="66"/>
         <source>&lt;b&gt;Do you like Mieru ? Donate !&lt;/b&gt;</source>
         <translation>&lt;b&gt;喜欢Mieru么？那就来捐赠吧！&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../WhatsNewDialog.qml" line="56"/>
+        <location filename="../WhatsNewDialog.qml" line="74"/>
         <source>How to donate ?</source>
         <translation>如何捐赠？</translation>
     </message>
     <message>
-        <location filename="../WhatsNewDialog.qml" line="67"/>
+        <location filename="../WhatsNewDialog.qml" line="85"/>
         <source>Don&apos;t show again</source>
         <translation>不再显示</translation>
     </message>
