@@ -30,9 +30,11 @@ def name2PrettyName(name, path=None):
 
   return name
 
+
 def path2prettyName(path):
-  (path,name) = os.path.split(path)
+  (path, name) = os.path.split(path)
   return name2PrettyName(name)
+
 
 class Manga:
   def __init__(self, mieru, path=None, startOnPage=0, load=True, loadNotify=True, pageShownNotify=False):
@@ -47,7 +49,7 @@ class Manga:
     self.nextArmed = False
     self.previousArmed = False
     self.previewBox = None
-    self.previewBoxStartingPoint = (0,0)
+    self.previewBoxStartingPoint = (0, 0)
     self.loadNotify = loadNotify
     self.scale = 1.0
     self.shiftX = 0.0
@@ -70,10 +72,11 @@ class Manga:
       if self.load(path,startOnPage):
       the following code gets executed 2-4 times
       """
-      if self.load(path,startOnPage):
+      if self.load(path, startOnPage):
         if loadNotify:
-          self.mieru.notify('<b>%s</b> loaded on page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(startOnPage)))
-        #print('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
+          self.mieru.notify(
+            '<b>%s</b> loaded on page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(startOnPage)))
+          #print('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
       else:
         if loadNotify:
           self.mieru.notify('<b>%s</b> loading failed' % self.getPrettyName())
@@ -92,7 +95,7 @@ class Manga:
 
   def getShiftX(self):
     return self.shiftX
-  
+
   def getShiftY(self):
     return self.shiftY
 
@@ -110,18 +113,19 @@ class Manga:
 
   def setState(self, state):
     """restore from the state dictionary"""
-    pageNumber = state.get('pageNumber',0)
+    pageNumber = state.get('pageNumber', 0)
     if pageNumber is None:
       pageNumber = 0
-    self.scale = state.get('scale',1.0)
+    self.scale = state.get('scale', 1.0)
 
-    (self.shiftX, self.shiftY) = state.get('upperLeftShift',(0.0,0.0))
+    (self.shiftX, self.shiftY) = state.get('upperLeftShift', (0.0, 0.0))
 
-    path = state.get('path',None)
+    path = state.get('path', None)
     if path:
       self.name = self._nameFromPath(path)
       if self.load(path, pageNumber):
-        self.mieru.notify('<b>%s</b> restored to page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(self.activePageId)))
+        self.mieru.notify(
+          '<b>%s</b> restored to page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(self.activePageId)))
       else:
         self.mieru.notify('<b>%s</b> restore failed' % self.getPrettyName())
 
@@ -170,11 +174,11 @@ class Manga:
     if pageNumber <= 0 or pageNumber > self.getMaxPageNumber():
       return None
     else:
-      return pageNumber-1
+      return pageNumber - 1
 
   def idExists(self, id):
     if self.pages:
-      if id < 0 or id > (len(self.pages)-1) or id is None: # None indicates initial active id state
+      if id < 0 or id > (len(self.pages) - 1) or id is None: # None indicates initial active id state
         print("page id out of range:", id)
         return False
       else:
@@ -187,18 +191,18 @@ class Manga:
     t2 = time.clock()
     if result:
       # correct id is returned for negative addressing (id=-1, etc.)
-      (file,id) = result 
+      (file, id) = result
       page = self.mieru.gui.getPage(file, self.mieru, fitOnStart=fitOnStart)
       t3 = time.clock()
       # TODO: reimplement this
       if self.mieru.get('debugPageLoading', False):
-        (w,h) = page.getSize()
+        (w, h) = page.getSize()
         now = time.clock()
         print("Page completely loaded in %1.2f ms" % (1000 * (now - t1)))
         print("* loading from container: %1.2f ms" % (1000 * (t2 - t1)))
         print("* loading to pixbuf & to page & cleanup: %1.2f ms" % (1000 * (t3 - t2)))
-#        print("* initializing page object with pixbuf: %1.2f ms" % (1000 * (t4 - t3)))
-#        print("* closing file and deleting pixbuf: %1.2f ms" % (1000 * (t5 - t4)))
+        #        print("* initializing page object with pixbuf: %1.2f ms" % (1000 * (t4 - t3)))
+        #        print("* closing file and deleting pixbuf: %1.2f ms" % (1000 * (t5 - t4)))
         print("- image resolution: %d x %d" % (w, h))
         print("- image filename: %s" % self.container.getImageFilenameById(id))
 
@@ -222,7 +226,7 @@ class Manga:
 
   def getMaxId(self):
     if self.pages:
-      return len(self.pages)-1
+      return len(self.pages) - 1
     else:
       return None
 
@@ -259,9 +263,9 @@ class Manga:
       newPageQuery = self.getPageById(currentId)
       print("# page from storage")
       if newPageQuery:
-        (newPage,newPageId) = newPageQuery
+        (newPage, newPageId) = newPageQuery
         cacheThisPage = True
-      
+
     if newPage:
       # cache next/previous pages + this page (if needed)
       if cacheThisPage:
@@ -273,7 +277,7 @@ class Manga:
       newPage.activate()
       newPage.show()
       self.mieru.gui.showPage(newPage, self, currentId)
-      
+
       # increment page count
       self.mieru.stats.incrementPageCount()
 
@@ -290,12 +294,12 @@ class Manga:
     if self.nextArmed: # should we load next manga in folder after this press ?
       (isTrue, path) = self.nextArmed # get the path
       self._hidePreview()
-      self.mieru.openManga(path, 0) # open it on first page
+      self.mieru.openManga(path, 0, checkHistory=False) # open it on first page
       return False, "loadingNext" # done
 
     currentId = self.activePageId
     if currentId is None:
-      return False,"Error"
+      return False, "Error"
     nextId = currentId + 1
     # sanity check the id
     if nextId < len(self.pages):
@@ -325,16 +329,16 @@ class Manga:
     if self.previousArmed: # should we load next manga in folder after this press ?
       (isTrue, path) = self.previousArmed # get the path
       self._hidePreview()
-      self.mieru.openManga(path, -1) # open it on last page
+      self.mieru.openManga(path, -1, checkHistory=False) # open it on last page
       return False, "loadingPrev" # done
     currentId = self.activePageId
     if currentId is None:
-      return False,"Error"
+      return False, "Error"
     prevId = currentId - 1
     # sanity check the id
     if prevId >= 0:
       self.gotoPageId(prevId, -1)
-      return True,prevId
+      return True, prevId
     else:
       print("manga: start reached") # TODO: display a notification & go to next archive/folder (?)
       if self.mieru.continuousReading:
@@ -373,19 +377,19 @@ class Manga:
       (folderPath, tail) = os.path.split(path)
       folderContent = os.listdir(folderPath)
       folderContent.sort()
-      maxId = len(folderContent)-1
+      maxId = len(folderContent) - 1
       if tail in folderContent: # just to be sure
         id = folderContent.index(tail)
-        prevId = id-1
-        nextId = id+1
+        prevId = id - 1
+        nextId = id + 1
         if prevId >= 0:
-          prevPath = os.path.join(folderPath,folderContent[prevId])
+          prevPath = os.path.join(folderPath, folderContent[prevId])
         if nextId <= maxId:
-          nextPath = os.path.join(folderPath,folderContent[nextId])
+          nextPath = os.path.join(folderPath, folderContent[nextId])
     return prevPath, nextPath
 
   def getPrevMangaPath(self):
-    (prevPath,nextPath) = self.getNeighborPaths()
+    (prevPath, nextPath) = self.getNeighborPaths()
     if prevPath:
       containerModule.testPath(prevPath)
       return prevPath
@@ -393,9 +397,9 @@ class Manga:
       print("manga: previous path uses unsupported format:\n%s" % prevPath)
       return False
     return prevPath
-        
+
   def getNextMangaPath(self):
-    (prevPath,nextPath) = self.getNeighborPaths()
+    (prevPath, nextPath) = self.getNeighborPaths()
     if nextPath:
       containerModule.testPath(nextPath)
       return nextPath
@@ -410,8 +414,8 @@ class Manga:
   def getNextMangaStartID(self):
     return 0
 
-  def _nameFromPath(self,path):
-    (tail,name) = os.path.split(path)
+  def _nameFromPath(self, path):
+    (tail, name) = os.path.split(path)
     return name
 
   def _getTitleText(self):
@@ -429,7 +433,7 @@ class Manga:
 
       self.cacheUpdate = None
 
-#    self.mieru.gui.statusReport()
+    #    self.mieru.gui.statusReport()
 
   def _updateTitleText(self):
     """update the title text on the mieru window (and possibly elsewhere)"""
@@ -439,32 +443,32 @@ class Manga:
   def _showPreview(self, path, type):
     pass
 
-#  def _showPreview(self, path, type):
-#    # decide page number and direction
-#    if type == "previous":
-#      pageId = -1
-#      direction = type
-#      onPressAction = self.previous
-#    else: # type == "next"
-#      pageId = 0
-#      direction = type
-#      onPressAction = self.next
-#
-#    # get the page
-#    manga = mangaModule.Manga(self.mieru, path, load=True, loadNotify=False, startOnPage=None, pageShownNotify=False)
-#    if manga: # only continue if the next manga was successfully loaded
-#      query = manga.getPageById(pageId, fitOnStart=False)
-#      if query:
-#        (page, id) = query
-#        self.mieru.gui.showPreview(page, direction, onPressAction)
+  #  def _showPreview(self, path, type):
+  #    # decide page number and direction
+  #    if type == "previous":
+  #      pageId = -1
+  #      direction = type
+  #      onPressAction = self.previous
+  #    else: # type == "next"
+  #      pageId = 0
+  #      direction = type
+  #      onPressAction = self.next
+  #
+  #    # get the page
+  #    manga = mangaModule.Manga(self.mieru, path, load=True, loadNotify=False, startOnPage=None, pageShownNotify=False)
+  #    if manga: # only continue if the next manga was successfully loaded
+  #      query = manga.getPageById(pageId, fitOnStart=False)
+  #      if query:
+  #        (page, id) = query
+  #        self.mieru.gui.showPreview(page, direction, onPressAction)
 
   def _hidePreview(self):
     self.mieru.gui.hidePreview()
 
-  def _disarm(self,type):
+  def _disarm(self, type):
     """a next/previous button is armed when it loads next/previous manga after pressing
        calling this method disarms the button"""
-       
+
     # hide any previews
     self._hidePreview()
 
@@ -485,7 +489,7 @@ class Manga:
     # cache previous (if available)
     if pId >= 0:
       self._cachePageById(pId, direction)
-      
+
     # cache current (if needed)
     if page:
       self._cachePage(page, id, direction)
@@ -510,47 +514,47 @@ class Manga:
     self.cache.add(page, id, direction)
 
 
-#  def _transition(self, direction):
-#    """replace the currently open manga with the previewed one"""
-#
-#    alpha = clutter.LINEAR
-#    transition = clutter.Score()
-#    minimizeTl = clutter.Timeline(duration=300)
-#    maximizeTl = clutter.Timeline(duration=300)
-#    bgInTl = clutter.Timeline(duration=300)
-#    bgOutTl = clutter.Timeline(duration=300)
-#
-#    # transform currently visible page to a preview
-#    self.activePage.deactivate()
-#
-#    (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
-#
-#    (tw,th) = self.activePage.get_size()
-#    wf = float(pBoxInSide)/tw
-#    hf = float(pBoxInSide)/th
-#    if tw >= th:
-#      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*wf, "height", th*wf)
-#    else:
-#      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*hf, "height", th*hf)
+  #  def _transition(self, direction):
+  #    """replace the currently open manga with the previewed one"""
+  #
+  #    alpha = clutter.LINEAR
+  #    transition = clutter.Score()
+  #    minimizeTl = clutter.Timeline(duration=300)
+  #    maximizeTl = clutter.Timeline(duration=300)
+  #    bgInTl = clutter.Timeline(duration=300)
+  #    bgOutTl = clutter.Timeline(duration=300)
+  #
+  #    # transform currently visible page to a preview
+  #    self.activePage.deactivate()
+  #
+  #    (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
+  #
+  #    (tw,th) = self.activePage.get_size()
+  #    wf = float(pBoxInSide)/tw
+  #    hf = float(pBoxInSide)/th
+  #    if tw >= th:
+  #      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*wf, "height", th*wf)
+  #    else:
+  #      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*hf, "height", th*hf)
 
-#    self.activePage.animate_with_timeline(minimizeTl, alpha, "x", ,"y", )
-
-
-#    (tw,th) = thumbnail.get_size()
-#    print(tw,th)
-#    thumbnail.move_by(border+(pBoxInSide-tw)/2.0,border+(pBoxInSide-th)/2.0)
+  #    self.activePage.animate_with_timeline(minimizeTl, alpha, "x", ,"y", )
 
 
+  #    (tw,th) = thumbnail.get_size()
+  #    print(tw,th)
+  #    thumbnail.move_by(border+(pBoxInSide-tw)/2.0,border+(pBoxInSide-th)/2.0)
 
 
-# possible eye candy manga to manga transition
 
-    # show a yellow background behind it
 
-    # hide both the preview and background
+  # possible eye candy manga to manga transition
 
-    # hide the background of the new page preview
+  # show a yellow background behind it
 
-    # maximize the new page
+  # hide both the preview and background
 
-    # replace this manga instance by the new one
+  # hide the background of the new page preview
+
+  # maximize the new page
+
+  # replace this manga instance by the new one

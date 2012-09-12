@@ -13,6 +13,7 @@ import manga
 import options
 import startup
 import stats
+
 timer.elapsed(startTs, "All modules combined")
 
 # set current directory to the directory
@@ -20,6 +21,7 @@ timer.elapsed(startTs, "All modules combined")
 # like this, Mieru can be run from absolute path
 # eq.: ./opt/mieru/mieru.py -p harmattan -u harmattan
 import os
+
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
@@ -27,10 +29,10 @@ os.chdir(dname)
 
 # append the platform modules folder to path
 import sys
+
 sys.path.append('platforms')
 
 class Mieru:
-
   def destroy(self):
     # log elapsed time
     sessionTime = time.time() - self.startupTimeStamp
@@ -72,6 +74,7 @@ class Mieru:
     platformId = "pc" # safe fallback
     if args.p is None:
       import platform_detection
+
       result = platform_detection.getBestPlatformModuleId()
       if result:
         platformId = result
@@ -81,27 +84,33 @@ class Mieru:
     if platformId:
       if platformId == "maemo5":
         import maemo5
+
         if args.u == "hildon": # enable app menu with Hildon gui
           self.platform = maemo5.Maemo5(self, GTK=True)
         else:
           self.platform = maemo5.Maemo5(self, GTK=False)
       elif platformId == "harmattan":
         import harmattan
+
         self.platform = harmattan.Harmattan(self)
       else:
         import pc
+
         self.platform = pc.PC(self)
 
     else:
       # no platform provided, decide based on selected GUI
       if args.u == "hildon":
         import maemo5
+
         self.platform = maemo5.Maemo5(self, GTK=True)
       elif args.u == "harmattan":
         import harmattan
+
         self.platform = harmattan.Harmattan(self)
       else:
         import pc
+
         self.platform = pc.PC(self)
 
 
@@ -122,8 +131,8 @@ class Mieru:
 
     timer.elapsed(startTs1, "GUI module import")
 
-#    # resize the viewport when window size changes
-#    self.gui.resizeNotify(self._resizeViewport)
+    #    # resize the viewport when window size changes
+    #    self.gui.resizeNotify(self._resizeViewport)
 
     self.activeManga = None
 
@@ -131,7 +140,7 @@ class Mieru:
     if args.o is not None:
       try:
         print("loading manga from: %s" % args.o)
-        self.setActiveManga(self.openManga(args.o))
+        self.setActiveManga(self.openManga(args.o, checkHistory=True))
         print('manga loaded')
       except Exception, e:
         print("loading manga from path: %s failed" % args.o)
@@ -148,15 +157,16 @@ class Mieru:
     # start the main loop
     self.gui.startMainLoop()
 
-#    print "loaded modules"
-#    print list(sys.modules.keys())
+  #    print "loaded modules"
+  #    print list(sys.modules.keys())
 
 
   def _loadGUIModule(self, id):
     # report GUI string
     import gui
+
     initialSize = self.platform.getScreenWH()
-    if id in ("QML","harmattan"):
+    if id in ("QML", "harmattan"):
       self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)
     elif id == "hildon":
       self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
@@ -187,13 +197,13 @@ class Mieru:
       self.gui.toggleFullscreen()
     elif keyName == 'o':
       self.notify('fit to <b>original size</b>')
-      self.set('fitMode',"original")
+      self.set('fitMode', "original")
     elif keyName == 'i':
       self.notify('fit to <b>width</b>')
-      self.set('fitMode',"width")
+      self.set('fitMode', "width")
     elif keyName == 'u':
       self.notify('fit to <b>height</b>')
-      self.set('fitMode',"height")
+      self.set('fitMode', "height")
     elif keyName == 'z':
       self.notify('fit to <b>screen</b>')
       self.set('fitMode', "screen")
@@ -240,7 +250,7 @@ class Mieru:
 
   def notify(self, message, icon=""):
     print("notification: %s" % message)
-    self.platform.notify(message,icon)
+    self.platform.notify(message, icon)
 
   def openManga(self, path, startOnPage=0, replaceCurrent=True, loadNotify=True, checkHistory=True):
     if replaceCurrent:
@@ -266,7 +276,7 @@ class Mieru:
 
   def openMangaFromState(self, state):
     print("opening manga from state")
-    mangaInstance = manga.Manga(self,load=False)
+    mangaInstance = manga.Manga(self, load=False)
     mangaInstance.setState(state)
     if mangaInstance.container is None:
       print("container creation failed")
@@ -286,7 +296,7 @@ class Mieru:
       self.addMangaToHistory(self.activeManga)
       # close it
       self.activeManga.close()
-    # replace it with the new one
+      # replace it with the new one
     self.activeManga = mangaInstance
     # notify the GUI there is a new active manga instance
     self.gui.newActiveManga(self.activeManga)
@@ -301,21 +311,21 @@ class Mieru:
       print("mieru: can't return manga path - there is no active manga")
       return None
 
-  def addToHistory(self,mangaState):
+  def addToHistory(self, mangaState):
     """add a saved manga state to the history"""
     if self.get('historyEnabled', True):
-      openMangasHistory = self.get('openMangasHistory',{})
+      openMangasHistory = self.get('openMangasHistory', {})
       try:
         if mangaState['path'] is not None:
           path = mangaState['path']
-          print("adding to history: %s, on page %d" % (path, mangaState.get('pageNumber',0)))
-          openMangasHistory[path] = {"state":mangaState,"timestamp":time.time()}
+          print("adding to history: %s, on page %d" % (path, mangaState.get('pageNumber', 0)))
+          openMangasHistory[path] = {"state": mangaState, "timestamp": time.time()}
           """the states are saved under their path to store only unique mangas,
              when the same manga is opened again, its state is replaced by the new one
              the timestamp is used for chronological sorting of the list
           """
-        # save the history back to the persistent store
-        # TODO: limit the size of the history + clearing of history
+          # save the history back to the persistent store
+          # TODO: limit the size of the history + clearing of history
       except Exception, e:
         print("saving manga to history failed with exception:\n", e)
         print("manga state was:", mangaState)
@@ -340,7 +350,7 @@ class Mieru:
   def removeMangasFromHistory(self, paths):
     """a function for batch removing mangas from history"""
     print("removing %d mangas from history" % len(paths))
-    openMangasHistory = self.get('openMangasHistory',None)
+    openMangasHistory = self.get('openMangasHistory', None)
     if openMangasHistory:
       for path in paths:
         if path in openMangasHistory:
@@ -349,9 +359,9 @@ class Mieru:
     self.set('openMangasHistory', openMangasHistory)
     print("removing done")
 
-  def removeMangaFromHistory(self,path):
+  def removeMangaFromHistory(self, path):
     """delete manga described by path from history"""
-    openMangasHistory = self.get('openMangasHistory',None)
+    openMangasHistory = self.get('openMangasHistory', None)
     if openMangasHistory:
       if path in openMangasHistory:
         del openMangasHistory[path]
@@ -359,10 +369,10 @@ class Mieru:
 
   def getHistory(self):
     """return history of open mangas, without sorting it"""
-    return self.get('openMangasHistory',[])
+    return self.get('openMangasHistory', [])
 
   def getSortedHistory(self):
-    openMangasHistory = self.get('openMangasHistory',[])
+    openMangasHistory = self.get('openMangasHistory', [])
     if openMangasHistory:
       sortedList = []
       for path in sorted(openMangasHistory, key=lambda path: openMangasHistory[path]['timestamp'], reverse=True):
@@ -381,7 +391,7 @@ class Mieru:
     self.maxWatchId = id # TODO: recycle ids ? (alla PID)
     if key not in self.watches:
       self.watches[key] = [] # create the initial list
-    self.watches[key].append((id,callback,args))
+    self.watches[key].append((id, callback, args))
     return id
 
   def _notifyWatcher(self, key, value):
@@ -389,10 +399,10 @@ class Mieru:
     callbacks = self.watches.get(key, None)
     if callbacks:
       for item in callbacks:
-        (id,callback,args) = item
+        (id, callback, args) = item
         oldValue = self.get(key, None)
         if callback:
-          callback(key,value,oldValue, *args)
+          callback(key, value, oldValue, *args)
         else:
           print("invalid watcher callback :", callback)
 
@@ -416,10 +426,11 @@ class Mieru:
       self._notifyWatcher(key, value)
 
   def saveActiveMangaState(self):
-    print("saving active manga state state")
+    print("saving active manga state")
     if self.activeManga: # is some manga actually loaded ?
       state = self.activeManga.getState()
       self.addToHistory(state)
+      print('state saved')
 
   def _restoreState(self):
     openMangasHistory = self.getSortedHistory()
@@ -433,17 +444,17 @@ class Mieru:
     else:
       print("no history found")
 
-  def _resizeViewport(self,allocation):
+  def _resizeViewport(self, allocation):
     self.viewport = allocation
 
   def getFittingModes(self):
     """return list of fitting mode with key and description"""
     modes = [
-            ("original", "fit to original size"),
-            ("width", "fit to width"),
-            ("height", "fit to height"),
-            ("screen", "fit to screen")
-            ]
+      ("original", "fit to original size"),
+      ("width", "fit to width"),
+      ("height", "fit to height"),
+      ("screen", "fit to screen")
+    ]
     return modes
 
 if __name__ == "__main__":
