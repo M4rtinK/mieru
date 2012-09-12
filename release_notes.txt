@@ -34,4 +34,6 @@ notes='''
     * __hispaf__ (Vietnamese translation)
     * __Ade__ (Dutch translation)
     * __darodi__(French translation)
+* fixes:
+    * fix previous/next chapters opening on wrong page
 '''
