@@ -232,7 +232,7 @@ class QMLGUI(gui.GUI):
     else:
       manga = self.mieru.openManga(mangaPath, None, replaceCurrent=False, loadNotify=False)
       """for the cached manga instance, we don't want any pages to be set as active,
-         we don't want loafing notifications and we don't want it to replace the current manga"""
+         we don't want loading notifications and we don't want it to replace the current manga"""
       self.lastTimeRequestedOtherManga = manga
       return manga.getPageById(id)
 
