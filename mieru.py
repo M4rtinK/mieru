@@ -60,7 +60,7 @@ class Mieru:
     self.maxWatchId = 0
     self.watches = {}
     # history lock
-    self.historyLock = RLock()
+    self.historyLock = RLock() # NOTE: not yet used
 
     # enable stats
     self.stats = stats.Stats(self)
@@ -315,6 +315,7 @@ class Mieru:
     """add a saved manga state to the history"""
     if self.get('historyEnabled', True):
       openMangasHistory = self.getHistory()
+      status = None
       try:
         if mangaState['path'] is not None:
           path = mangaState['path']
@@ -326,11 +327,16 @@ class Mieru:
           """
           # save the history back to the persistent store
           # TODO: limit the size of the history + clearing of history
+          status = True
       except Exception, e:
         print("saving manga to history failed with exception:\n", e)
         print("manga state was:", mangaState)
       self.set('openMangasHistory', openMangasHistory)
       self.options.save()
+      return status
+    else:
+      print('history: not added -> history is disabled')
+      return False
 
   def addMangaToHistory(self, manga):
     """add a manga instance to history"""
@@ -342,9 +348,9 @@ class Mieru:
     history = self.getHistory()
     entry = history.get(path, None)
     if entry:
-      return entry['state'] # manga path was in history
-    else: # manga path was not in history
-      return None
+      return entry['state'] # manga path was stored in history
+    else:
+      return None # this manga path has no known history
 
 
   def removeMangasFromHistory(self, paths):
@@ -369,14 +375,17 @@ class Mieru:
 
   def getHistory(self):
     """return history of open mangas, without sorting it"""
-    history = self.get('openMangasHistory', [])
+    history = self.get('openMangasHistory', {})
     # check if the data retrieved from history is really a list
-    if isinstance(history, list):
+    print "CHECK"
+    print history
+    print isinstance(history, dict)
+    if isinstance(history, dict):
       return history
     else:
-      return []
-      # looks like some other object type than a list got stored in the history,
-      # so we return an empty list (no list -> no valid history -> empty history)
+      return {}
+      # looks like some other object type than a dict got stored in the history,
+      # so we return an empty list (no dict -> no valid history -> empty history)
 
   def getSortedHistory(self):
     openMangasHistory = self.getHistory()
@@ -436,8 +445,8 @@ class Mieru:
     print("saving active manga state")
     if self.activeManga: # is some manga actually loaded ?
       state = self.activeManga.getState()
-      self.addToHistory(state)
-      print('state saved')
+      if self.addToHistory(state):
+        print('state saved')
 
   def _restoreState(self):
     openMangasHistory = self.getSortedHistory()
