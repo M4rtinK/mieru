@@ -314,7 +314,7 @@ class Mieru:
   def addToHistory(self, mangaState):
     """add a saved manga state to the history"""
     if self.get('historyEnabled', True):
-      openMangasHistory = self.get('openMangasHistory', {})
+      openMangasHistory = self.getHistory()
       try:
         if mangaState['path'] is not None:
           path = mangaState['path']
@@ -350,7 +350,7 @@ class Mieru:
   def removeMangasFromHistory(self, paths):
     """a function for batch removing mangas from history"""
     print("removing %d mangas from history" % len(paths))
-    openMangasHistory = self.get('openMangasHistory', None)
+    openMangasHistory = self.getHistory()
     if openMangasHistory:
       for path in paths:
         if path in openMangasHistory:
@@ -361,7 +361,7 @@ class Mieru:
 
   def removeMangaFromHistory(self, path):
     """delete manga described by path from history"""
-    openMangasHistory = self.get('openMangasHistory', None)
+    openMangasHistory = self.getHistory()
     if openMangasHistory:
       if path in openMangasHistory:
         del openMangasHistory[path]
@@ -369,10 +369,17 @@ class Mieru:
 
   def getHistory(self):
     """return history of open mangas, without sorting it"""
-    return self.get('openMangasHistory', [])
+    history = self.get('openMangasHistory', [])
+    # check if the data retrieved from history is really a list
+    if isinstance(history, list):
+      return history
+    else:
+      return []
+      # looks like some other object type than a list got stored in the history,
+      # so we return an empty list (no list -> no valid history -> empty history)
 
   def getSortedHistory(self):
-    openMangasHistory = self.get('openMangasHistory', [])
+    openMangasHistory = self.getHistory()
     if openMangasHistory:
       sortedList = []
       for path in sorted(openMangasHistory, key=lambda path: openMangasHistory[path]['timestamp'], reverse=True):
