@@ -36,4 +36,5 @@ notes='''
     * __darodi__(French translation)
 * fixes:
     * fix previous/next chapters opening on wrong page
+    * fix a history related crash at startup
 '''
