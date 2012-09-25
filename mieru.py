@@ -157,9 +157,8 @@ class Mieru:
     # start the main loop
     self.gui.startMainLoop()
 
-  #    print "loaded modules"
-  #    print list(sys.modules.keys())
-
+  #    print("loaded modules")
+  #    print(list(sys.modules.keys()))
 
   def _loadGUIModule(self, id):
     # report GUI string
@@ -170,7 +169,6 @@ class Mieru:
       self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)
     elif id == "hildon":
       self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
-      print self.gui
     elif id == "GTK":
       self.gui = gui.getGui(self, 'GTK', accel=True, size=initialSize)
 
@@ -377,9 +375,6 @@ class Mieru:
     """return history of open mangas, without sorting it"""
     history = self.get('openMangasHistory', {})
     # check if the data retrieved from history is really a list
-    print "CHECK"
-    print history
-    print isinstance(history, dict)
     if isinstance(history, dict):
       return history
     else:
