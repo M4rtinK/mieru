@@ -74,7 +74,7 @@ class Mieru:
     platformId = "pc" # safe fallback
     if args.p is None:
       import platform_detection
-
+      # platform detection
       result = platform_detection.getBestPlatformModuleId()
       if result:
         platformId = result
