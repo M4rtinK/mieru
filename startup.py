@@ -11,7 +11,7 @@ class Startup():
       help="specify user interface type", default=None,
       action="store", choices=["pc", "hildon", "harmattan", "QML"])
     parser.add_argument('-p',
-      help="specify user interface type", default=None,
+      help="specify current platform", default=None,
       action="store", choices=["maemo5", "harmattan", "pc"])
     parser.add_argument('-o',
       help="specify path to a manga or comic book to open", default=None,
