@@ -12,6 +12,11 @@ PageStackWindow {
     property bool enableMangaMode : options.get("QMLMangaMode", false)
     property string statsText : ""
 
+    // disable switch & close buttons on Fremantle
+    // -> has no effect on other platforms
+    property bool allowSwitch : false
+    property bool allowClose : false
+
     // TODO: replace hardcoded value with actual status bar height
     property int statusBarHeight : 36
 	
