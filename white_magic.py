@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 magic is a wrapper around the libmagic file identification library.
 
@@ -18,15 +17,16 @@ Usage:
 
 """
 
-#Mieru note - d5fba52 from github, ahupp/python-magic, 29.12.2011
-
+import sys
 import os.path
 import ctypes
 import ctypes.util
 
 from ctypes import c_char_p, c_int, c_size_t, c_void_p
 
+
 class MagicException(Exception): pass
+
 
 class Magic:
   """
@@ -72,12 +72,15 @@ class Magic:
     return magic_file(self.cookie, filename)
 
   def __del__(self):
-    if self.cookie:
+    # during shutdown magic_close may have been cleared already
+    if self.cookie and magic_close:
       magic_close(self.cookie)
       self.cookie = None
 
+
 _magic_mime = None
 _magic = None
+
 
 def _get_magic_mime():
   global _magic_mime
@@ -85,11 +88,13 @@ def _get_magic_mime():
     _magic_mime = Magic(mime=True)
   return _magic_mime
 
+
 def _get_magic():
   global _magic
   if not _magic:
     _magic = Magic()
   return _magic
+
 
 def _get_magic_type(mime):
   if mime:
@@ -97,15 +102,15 @@ def _get_magic_type(mime):
   else:
     return _get_magic()
 
+
 def from_file(filename, mime=False):
   m = _get_magic_type(mime)
   return m.from_file(filename)
 
+
 def from_buffer(buffer, mime=False):
   m = _get_magic_type(mime)
   return m.from_buffer(buffer)
-
-
 
 
 libmagic = None
@@ -118,11 +123,16 @@ if dll:
 
 if not libmagic or not libmagic._name:
   import sys
-  platform_to_lib = {'darwin': '/opt/local/lib/libmagic.dylib',
-                     'win32': 'magic1.dll'}
-  if sys.platform in platform_to_lib:
+
+  platform_to_lib = {'darwin': ['/opt/local/lib/libmagic.dylib',
+                                '/usr/local/lib/libmagic.dylib',
+                                '/usr/local/Cellar/libmagic/5.10/lib/libmagic.dylib'],
+                     'win32': ['magic1.dll'],
+                     'qnx6': ['libmagic.so.1']
+  }
+  for dll in platform_to_lib.get(sys.platform, []):
     try:
-      libmagic = ctypes.CDLL(platform_to_lib[sys.platform])
+      libmagic = ctypes.CDLL(dll)
     except OSError:
       pass
 
@@ -132,12 +142,20 @@ if not libmagic or not libmagic._name:
 
 magic_t = ctypes.c_void_p
 
+
 def errorcheck(result, func, args):
   err = magic_error(args[0])
   if err is not None:
     raise MagicException(err)
   else:
     return result
+
+
+def coerce_filename(filename):
+  if filename is None:
+    return None
+  return filename.encode(sys.getfilesystemencoding())
+
 
 magic_open = libmagic.magic_open
 magic_open.restype = magic_t
@@ -155,10 +173,14 @@ magic_errno = libmagic.magic_errno
 magic_errno.restype = c_int
 magic_errno.argtypes = [magic_t]
 
-magic_file = libmagic.magic_file
-magic_file.restype = c_char_p
-magic_file.argtypes = [magic_t, c_char_p]
-magic_file.errcheck = errorcheck
+_magic_file = libmagic.magic_file
+_magic_file.restype = c_char_p
+_magic_file.argtypes = [magic_t, c_char_p]
+_magic_file.errcheck = errorcheck
+
+
+def magic_file(cookie, filename):
+  return _magic_file(cookie, coerce_filename(filename))
 
 
 _magic_buffer = libmagic.magic_buffer
@@ -171,10 +193,15 @@ def magic_buffer(cookie, buf):
   return _magic_buffer(cookie, buf, len(buf))
 
 
-magic_load = libmagic.magic_load
-magic_load.restype = c_int
-magic_load.argtypes = [magic_t, c_char_p]
-magic_load.errcheck = errorcheck
+_magic_load = libmagic.magic_load
+_magic_load.restype = c_int
+_magic_load.argtypes = [magic_t, c_char_p]
+_magic_load.errcheck = errorcheck
+
+
+def magic_load(cookie, filename):
+  return _magic_load(cookie, coerce_filename(filename))
+
 
 magic_setflags = libmagic.magic_setflags
 magic_setflags.restype = c_int
@@ -187,8 +214,6 @@ magic_check.argtypes = [magic_t, c_char_p]
 magic_compile = libmagic.magic_compile
 magic_compile.restype = c_int
 magic_compile.argtypes = [magic_t, c_char_p]
-
-
 
 MAGIC_NONE = 0x000000 # No flags
 
