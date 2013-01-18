@@ -3,6 +3,8 @@ import QtQuick 1.1
 import com.nokia.meego 1.1
 
 Page {
+    id : infoPage
+    anchors.fill : parent
     tools: ToolBarLayout {
         ToolIcon {
             iconId: "toolbar-back"
@@ -32,11 +34,11 @@ Page {
         Page {
             id : tab1
             anchors.fill : parent
-            anchors.topMargin    : 30
-            anchors.bottomMargin : 30
-            anchors.leftMargin   : 30
-            anchors.rightMargin  : 30
-
+            // background rectangle
+            Rectangle {
+                anchors.fill : infoPage
+                color : "black"
+            }
             ScrollDecorator {
                  flickableItem : infoFlickable
             }
@@ -44,11 +46,16 @@ Page {
                 id : infoFlickable
                 anchors.fill  : parent
                 contentWidth  : tab1.width
-                contentHeight : infoHeadline.height + infoFirstPage.height + infoColumn.height + 30
+                contentHeight : 32 + infoHeadline.height + infoFirstPage.height + infoColumn.height + 32
                 flickableDirection : Flickable.VerticalFlick
-
+                Item {
+                    id : anchorItem
+                    width : parent.width
+                }
                 Label {
                     id : infoHeadline
+                    anchors.top : anchorItem.bottom
+                    anchors.topMargin : 32
                     anchors.horizontalCenter : parent.horizontalCenter
                     text  : "<h1>" + readingState.getPrettyName() + "</h1>"
                     width : tab1.width
@@ -69,7 +76,7 @@ Page {
                 Column {
                     id : infoColumn
                     anchors.top : infoFirstPage.bottom
-                    anchors.topMargin : 20
+                    anchors.topMargin : 32
                     spacing : 20
 					
                     LineText {
@@ -122,20 +129,26 @@ Page {
         Page {
             id: tab2
             anchors.fill : parent
-            anchors.topMargin : 30
-            anchors.bottomMargin : 30
-            anchors.leftMargin : 30
-            anchors.rightMargin : 30
-            Text {
-               anchors.left : parent.left
-               id : statsHeadline
-               text : "<b>" + qsTr("Usage Statistics") + "</b>"
-               font.pointSize: 24
+            // background rectangle
+            Rectangle {
+                anchors.fill : parent
+                color : "black"
+            }
+            Label {
+                anchors.top : parent.top
+                anchors.topMargin : 64
+                anchors.left : parent.left
+                anchors.leftMargin : 32
+                id : statsHeadline
+                text : "<h2>" + qsTr("Usage Statistics") + "</h2>"
+                //font.pointSize: 24
             }
             Switch {
+                anchors.top : parent.top
+                anchors.topMargin : 64
                 id : statsSwitch
                 anchors.left : statsHeadline.right
-                anchors.leftMargin : 35
+                anchors.leftMargin : 64
                 
                 onCheckedChanged : {
                     // enable/disable stats and update statsText
@@ -148,17 +161,20 @@ Page {
                     checked = stats.enabled
                 }
             }
-            Text {
+            Label {
                 id : statsText
                 anchors.top : statsHeadline.bottom
                 anchors.topMargin : 10
+                anchors.left : parent.left
+                anchors.leftMargin : 32
                 text: stats.statsText
-                font.pointSize: 24
             }
 
             Button {
                 anchors.top : statsText.bottom
-                anchors.topMargin : 50
+                anchors.topMargin : 64
+                anchors.left : parent.left
+                anchors.leftMargin : 32
                 text : qsTr("Reset")
                 onClicked : {
                     resetStatsDialog.open()
@@ -169,17 +185,21 @@ Page {
         Page {
             id: tab3
             anchors.fill : parent
-            anchors.topMargin : 8
-            anchors.bottomMargin : 8
-            anchors.leftMargin : 8
-            anchors.rightMargin : 8
-
+            // background rectangle
+            Rectangle {
+                anchors.fill : parent
+                color : "black"
+            }
             ScrollDecorator {
                  flickableItem : aboutFlickable
             }
             Flickable {
                 id : aboutFlickable
                 anchors.fill  : parent
+                anchors.topMargin : 16
+                anchors.bottomMargin : 16
+                anchors.leftMargin : 16
+                anchors.rightMargin : 16
                 contentWidth  : tab3.width
                 contentHeight : aboutColumn.height + 30
                 flickableDirection : Flickable.VerticalFlick
@@ -198,14 +218,17 @@ Page {
                     Image {
                         id : mieruIcon
                         anchors.top : versionLabel.bottom
-                        anchors.topMargin : 5
+                        anchors.topMargin : 16
                         anchors.horizontalCenter : parent.horizontalCenter
+                        width : infoPage.width/4.0
+                        height : infoPage.width/4.0
+                        smooth : true
                         source : "image://icons/mieru.svg"
                     }
                     Label {
                         id : mieruDescription
                         anchors.top : mieruIcon.bottom
-                        anchors.topMargin : 8
+                        anchors.topMargin : 16
                         anchors.horizontalCenter : parent.horizontalCenter
                         horizontalAlignment: Text.AlignHCenter
                         width : parent.width
@@ -226,8 +249,8 @@ Page {
                         id : ppFlattrRow
                         anchors.top : donateLabel.bottom
                         anchors.horizontalCenter : parent.horizontalCenter
-                        anchors.topMargin : 24
-                        spacing : 32
+                        anchors.topMargin : 64
+                        spacing : 64
                         PayPalButton {
                             id : ppButton
                             anchors.verticalCenter : parent.verticalCenter
@@ -244,14 +267,14 @@ Page {
                     BitcoinButton {
                         id : bitcoinButton
                         anchors.top : ppFlattrRow.bottom
-                        anchors.topMargin : 24
+                        anchors.topMargin : 32
                         anchors.horizontalCenter : parent.horizontalCenter
                         url : "1PPnoD4SyeQYgvhJ6L5xkjZ4qE4WMMCe1k"
                     }
                     Column {
                         anchors.top : bitcoinButton.bottom
-                        anchors.topMargin : 25
-                        spacing : 5
+                        anchors.topMargin : 64
+                        spacing : 16
                         Label {
                             text : "<b>" + qsTr("main developer") + ":</b> Martin Kolman"
                         }
