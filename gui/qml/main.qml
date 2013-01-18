@@ -1,7 +1,7 @@
 //main.qml
 import QtQuick 1.1
-import com.nokia.meego 1.0
-import com.nokia.extras 1.0
+import com.nokia.meego 1.1
+import com.nokia.extras 1.1
 
 PageStackWindow {
     id : rootWindow
@@ -116,10 +116,10 @@ PageStackWindow {
 
     InfoBanner {
         id : notification
-        timerShowTime : 5000
+        //timerShowTime : 5000
+        timeout : 5000
         height : rootWindow.height / 5.0
         // add margin and prevent overlapping with status bar, if the bar is visible
         y : rootWindow.showStatusBar ? rootWindow.statusBarHeight + 8 : 8
     }
-
 }
