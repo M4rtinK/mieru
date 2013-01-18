@@ -11,24 +11,28 @@ Item {
 
     Rectangle {
         id: line
-        color : "black"
-        height : 2
+        color : "white"
+        height : 4
 
         anchors {
             left: parent.left
             right : label.left
+            rightMargin : 8
             verticalCenter: parent.verticalCenter
         }
     }
 
     Label {
         id: label
+        lineHeight : 1.5
+        font.pointSize : 20
 
         anchors {
             top: parent.top
             //left: parent.left
             right: parent.right
             leftMargin: 16
+            rightMargin: 16
         }
     }
 }
