@@ -36,7 +36,7 @@ Page {
             anchors.fill : parent
             // background rectangle
             Rectangle {
-                anchors.fill : infoPage
+                anchors.fill : parent
                 color : "black"
             }
             ScrollDecorator {
