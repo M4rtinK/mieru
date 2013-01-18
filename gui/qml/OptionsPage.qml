@@ -4,11 +4,12 @@ import com.nokia.meego 1.1
 
 Page {
     id : optionsPage
+    property int pageMargin : 32
     anchors.fill : parent
-    anchors.topMargin    : 15
-    anchors.bottomMargin : 15
-    anchors.leftMargin   : 15
-    anchors.rightMargin  : 15
+    anchors.topMargin    : pageMargin
+    anchors.bottomMargin : pageMargin
+    anchors.leftMargin   : pageMargin
+    anchors.rightMargin  : pageMargin
 
     property bool showReleaseNotes : options.get("showReleaseNotes", true)
     property bool fileSelectorCheckHistory  : options.get("fileSelectorCheckHistory", true)
@@ -20,7 +21,7 @@ Page {
         contentHeight: optionsColumn.height
         Column {
             id : optionsColumn
-            spacing : 30
+            spacing : 48
             width : optionsPage.width
 
             LineText {
@@ -31,6 +32,7 @@ Page {
                 text : "<b>" + qsTr("Rotation") + "</b>"
             }
             ButtonRow {
+                width : parent.width
                 // synchronise with current orientation lock
                 Component.onCompleted : {
                     if (mainView.orientationLock == PageOrientation.Automatic) {
@@ -85,6 +87,7 @@ Page {
                 text : "<b>" + qsTr("Fullscreen button opacity") + "</b>"
             }
             Slider {
+                width : parent.width
                 value : mainView.fullscreenButtonOpacity
                 minimumValue: 0.0
                 maximumValue: 1.0
@@ -114,6 +117,7 @@ Page {
                 text : "<b>" + qsTr("Paging mode") + "</b>"
             }
             ButtonRow {
+                width : parent.width
                 Component.onCompleted : {
                     var pm = options.get("QMLPagingMode", "screen")
                     if (pm == "screen") {
