@@ -42,7 +42,8 @@
 pragma
 library
 
-var FONT_FAMILY = "Nokia Pure Text";
+// var FONT_FAMILY = "Nokia Pure Text";
+var FONT_FAMILY = "Arial";
 var FONT_DEFAULT_SIZE = 24; // DEPRECATED
 
 var FONT_XLARGE = 30;
