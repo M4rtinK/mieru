@@ -12,7 +12,7 @@ Item {
     Rectangle {
         id: line
         color : "white"
-        height : 4
+        height : 2
 
         anchors {
             left: parent.left
