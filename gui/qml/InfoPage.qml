@@ -27,6 +27,7 @@ Page {
     TabGroup {
         id : tabGroup
         currentTab : tab1
+        anchors.fill : parent
 
         Page {
             id : tab1
