@@ -223,7 +223,7 @@ Page {
                         width : infoPage.width/4.0
                         height : infoPage.width/4.0
                         smooth : true
-                        source : "image://icons/mieru.svg"
+                        source : "image://icons/harmattan_icon.svg"
                     }
                     Label {
                         id : mieruDescription
