@@ -64,7 +64,7 @@ ImplicitSizeItem {
     property int value: 0
 
     implicitWidth: internal.getBubbleWidth()
-    implicitHeight: largeSized ? 32:24
+    implicitHeight: largeSized ? 64:48
 
     BorderImage {
         source: "image://icons/countbubble-background-large.png"
@@ -80,7 +80,7 @@ ImplicitSizeItem {
         font.family: C.FONT_FAMILY
         anchors.horizontalCenter: parent.horizontalCenter
         verticalAlignment: Text.AlignVCenter
-        font.pixelSize: largeSized ? 22:18
+        font.pixelSize: largeSized ? 44:36
         text: root.value
     }
 
@@ -90,22 +90,22 @@ ImplicitSizeItem {
         function getBubbleWidth() {
             if (largeSized) {
                 if (root.value < 10)
-                    return 32;
+                    return 64;
                 else if (root.value < 100)
-                    return 40;
+                    return 80;
                 else if (root.value < 1000)
-                    return 52;
+                    return 104;
                 else
-                    return text.paintedWidth+19
+                    return text.paintedWidth+38
             } else {
                 if (root.value < 10)
-                    return 24;
+                    return 48;
                 else if (root.value < 100)
-                    return 30;
+                    return 60;
                 else if (root.value < 1000)
-                    return 40;
+                    return 80;
                 else
-                    return text.paintedWidth+13
+                    return text.paintedWidth+26
             }
         }
     }
