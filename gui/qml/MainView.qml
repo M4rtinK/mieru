@@ -1,7 +1,7 @@
 //MainView.qml
 import QtQuick 1.1
-import com.nokia.meego 1.0
-import com.nokia.extras 1.0
+import com.nokia.meego 1.1
+import com.nokia.extras 1.1
 
 Page {
     id : mainView
@@ -220,10 +220,12 @@ Page {
         visible: false
         ToolIcon {
             // FIXME: incomplete theme on Fremantle
-            iconId: platform.incompleteTheme() ?
-            "icon-m-common-next" : "toolbar-down"
-            rotation : platform.incompleteTheme() ? 90 : 0
+            //iconId: platform.incompleteTheme() ? "icon-m-common-next" : "toolbar-down"
+            //rotation : platform.incompleteTheme() ? 90 : 0
+            rotation : 90
             onClicked: mainView.toggleFullscreen()
+            //iconSource : "toolbar-next"
+            iconId : "toolbar-next"
         }
         ToolButton {
             id : pageNumbers
@@ -235,6 +237,7 @@ Page {
         ToolIcon {
             id : menuTI
             iconId: "toolbar-view-menu"
+            //iconSource: "toolbar-view-menu"
             onClicked: mainViewMenu.open()
         }
     }
@@ -442,13 +445,12 @@ Page {
     }
 
     /** Fullscreen toggle button **/
-
-    ToolIcon {
+    ToolButton {
         id : fullscreenButton
         // FIXME: incomplete theme on Fremantle
-        iconId: platform.incompleteTheme() ?
-        "icon-m-common-next" : "toolbar-up"
-        rotation : platform.incompleteTheme() ? 270 : 0
+        //iconId: platform.incompleteTheme() ? "icon-m-common-next" : "toolbar-up"
+        iconSource: "toolbar-next"
+        rotation : 270
         anchors.left   : mainView.left
         anchors.bottom : mainView.bottom
         anchors.leftMargin : 10
