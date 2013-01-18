@@ -109,7 +109,7 @@ Dialog {
       // add "right" arrow to all directories
       Image {
         id: downArrow
-        source: "image://icon/icon-m-common-drilldown-arrow-inverse.png"
+        source: "image://icons/icon-m-common-drilldown-arrow-inverse.png"
         anchors.right: parent.right;
         anchors.verticalCenter: parent.verticalCenter
 	visible: folderModel.isFolder(index)
@@ -159,7 +159,7 @@ Dialog {
         anchors.right: labelField.right
 
         opacity: closeButtonArea.pressed ? 0.5 : 1.0
-        source: "image://icon/icon-m-common-dialog-close.png"
+        source: "image://icons/icon-m-common-dialog-close.png"
 
         MouseArea {
           id: closeButtonArea
@@ -221,9 +221,9 @@ Dialog {
       // add "left" arrow to go up one directory
       Image {
         id: backButton
-        source: "image://icon/icon-m-toolbar-back-white-selected.png"
+        source: "image://icons/icon-m-toolbar-back-white-selected.png"
         // fix Fremantle CSSU icon availability
-        //source: platform.incompleteTheme() ? "image://icon/icon-m-toolbar-back-white-selected" : "image://icon/icon-m-startup-back"
+        //source: platform.incompleteTheme() ? "image://icons/icon-m-toolbar-back-white-selected" : "image://icons/icon-m-startup-back"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
 	    opacity: parent.canGoUp?(backArea.pressed ? 0.5 : 1.0):0.4
