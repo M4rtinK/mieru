@@ -2,7 +2,8 @@
 """Mieru manga page container"""
 import tarfile
 
-import zipfile26 as zipfile # use backported zipfile from Python 2.6
+#import zipfile26 as zipfile # use backported zipfile from Python 2.6
+import zipfile # TODO: import on error
 import os
 import rarfile
 # make sure the built-in python-magic is used
@@ -12,20 +13,25 @@ import time
 import traceback
 import sys
 
+
 def getFilePathMime(path):
   mime = magic.Magic(mime=True)
   return mime.from_file(path.encode('utf-8'))
+
 
 def getFileMime(file):
   mime = magic.from_buffer(file.read(1024), mime=True)
   file.close() # properly close the file
   return mime
 
+
 def getBufferMime(path, buffer):
   return magic.from_buffer(buffer, mime=True)
 
+
 def getFileDescription(path):
   return magic.from_file(path.encode('utf-8'))
+
 
 def humanSort(l):
   """ Sort the given list in the way that humans expect.
@@ -33,9 +39,10 @@ def humanSort(l):
   http://www.codinghorror.com/blog/2007/12/sorting-for-humans-natural-sort-order.html
   """
   convert = lambda text: int(text) if text.isdigit() else text
-  alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
-  l.sort( key=alphanum_key )
+  alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+  l.sort(key=alphanum_key)
   return l
+
 
 def from_path(path):
   # does the path exist ?
@@ -55,6 +62,7 @@ def from_path(path):
   else:
     print("manga: loading failed, path does not exist or is inaccessible")
     return False
+
 
 def testPath(path):
   print("testing path: %s" % path)
@@ -83,13 +91,14 @@ def testPath(path):
       print("it has this mime: %s" % mime)
       print("and this description: %s" % desc)
       return False
-      
+
   elif os.path.isdir(path):
     print("manga: path is a directory")
     return "folder", path, None, "a folder"
   else:
     print("manga: loading failed, path is neither file nor directory")
     return False
+
 
 class Container:
   def __init__(self, path):
@@ -109,12 +118,12 @@ class Container:
     return self.files
 
   def getMaxId(self):
-    return len(self.files)-1
+    return len(self.files) - 1
 
   def getFileById(self, id):
     try:
       filename = self.files[id]
-      return self.getFile(filename),self.files.index(filename)
+      return self.getFile(filename), self.files.index(filename)
     except IndexError:
       print("no file with index:", id)
       return None
@@ -133,13 +142,13 @@ class Container:
 
 
   def getMaxImageId(self):
-    return len(self.imageFiles)-1
+    return len(self.imageFiles) - 1
 
   def getImageFileById(self, id):
     try:
       filename = self.imageFiles[id]
-      return self.getFile(filename),self.imageFiles.index(filename)
-    except IndexError, ValueError:
+      return self.getFile(filename), self.imageFiles.index(filename)
+    except IndexError as ValueError:
       print("no image file with index:", id)
       return None
 
@@ -147,7 +156,7 @@ class Container:
     try:
       filename = self.imageFiles[id]
       return filename
-    except IndexError, ValueError:
+    except IndexError as ValueError:
       print("no image file with index:", id)
       return "does not exist"
 
@@ -195,7 +204,7 @@ class Container:
       if extension:
         extension = extension.lower()[1:] # remove the leading dot and make lowercase
         if extension.lower() in self.imageFileExtensions:
-#          print("%s, extension: %s") % (filename, extension)
+        #          print("%s, extension: %s") % (filename, extension)
           return True
         else:
           return False # not a "supported" extension
@@ -217,31 +226,32 @@ class Container:
           return False
 
 
-
 class FolderContainer(Container):
   """This class represents a folder containing pictures."""
+
   def __init__(self, path):
     Container.__init__(self, path)
     if os.path.exists(path):
       folderContent = os.listdir(path)
       self._setFileList(folderContent)
     else:
-      print("FolderContainer: folder does not exist: %s" % filename)
+      print("FolderContainer: folder does not exist: %s" % path)
 
-    
+
   def getFile(self, filename):
     """just open the file and return a file object"""
     if filename not in self.files:
       print("FolderContainer: file not in file list: %s" % filename)
       return None
-    path = os.path.join(self.path,filename)
+    path = os.path.join(self.path, filename)
     if os.path.exists(path):
       if os.path.isfile(path):
         try:
           f = open(path, 'r')
           return f
-        except Exception, e:
+        except Exception as e:
           print("FolderContainer: loading file failed: %s" % path)
+          print(e)
           return False
 
       else:
@@ -252,16 +262,19 @@ class FolderContainer(Container):
       print("FolderContainer: path does not exist: %s" % path)
       return False
 
+
 class ZipContainer(Container):
   """This class represents a zip archive containing pictures."""
+
   def __init__(self, path):
     Container.__init__(self, path)
     self.zf = None
     if zipfile.is_zipfile(path):
       try:
-        self.zf = zipfile.ZipFile(path,'r')
-      except Exception, e:
-        "error, loading zip file failed: %s" % e
+        self.zf = zipfile.ZipFile(path, 'r')
+      except Exception as e:
+        print("error, loading zip file failed")
+        print(e)
     else:
       print("error, this is not a zip file - wrong mime ?")
       print("path: %s" % path)
@@ -271,21 +284,25 @@ class ZipContainer(Container):
   def getFile(self, filename):
     if self.zf:
       try:
-        return self.zf.open(filename,'r')
-      except Exception, e:
-        print("ZipContainer: reading file from archive failed: %s" % e)
+        return self.zf.open(filename, 'r')
+      except Exception as e:
+        print("ZipContainer: reading file from archive failed")
+        print(e)
         return None
+
 
 class RarContainer(Container):
   """This class represents a rar archive containing pictures."""
+
   def __init__(self, path):
     Container.__init__(self, path)
     self.rf = None
     if rarfile.is_rarfile(path):
       try:
-        self.rf = rarfile.RarFile(path,'r')
-      except Exception, e:
-        "error, loading rar file failed: %s" % e
+        self.rf = rarfile.RarFile(path, 'r')
+      except Exception as e:
+        print("error, loading rar file failed")
+        print(e)
     else:
       print("error, this is not a rar file - wrong mime ?")
       print("path: %s" % path)
@@ -295,22 +312,26 @@ class RarContainer(Container):
   def getFile(self, filename):
     if self.rf:
       try:
-        return self.rf.open(unicode(filename),'r')
-      except Exception, e:
-        print("RarContainer: reading file from archive failed: %s" % e)
+        return self.rf.open('%s' % filename, 'r')
+      except Exception as e:
+        print("RarContainer: reading file from archive failed")
+        print(e)
         traceback.print_exc(file=sys.stdout)
         return None
 
+
 class TarContainer(Container):
   """This class represents a tar archive containing pictures."""
+
   def __init__(self, path):
     Container.__init__(self, path)
     self.tf = None
     if rarfile.is_tarfile(path):
       try:
-        self.tf = tarfile.TarFile(path,'r')
-      except Exception, e:
-        "error, loading rar file failed: %s" % e
+        self.tf = tarfile.TarFile(path, 'r')
+      except Exception as e:
+        print("error, loading rar file failed")
+        print(e)
     else:
       print("error, this is not a tar file - wrong mime ?")
       print("path: %s" % path)
@@ -320,8 +341,9 @@ class TarContainer(Container):
   def getFile(self, filename):
     if self.tf:
       try:
-        return self.tf.open(filename,'r')
-      except Exception, e:
-        print("TarContainer: reading file from archive failed: %s" % e)
+        return self.tf.open(filename, 'r')
+      except Exception as e:
+        print("TarContainer: reading file from archive failed")
+        print(e)
         return None
 
