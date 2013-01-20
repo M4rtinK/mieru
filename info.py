@@ -196,16 +196,17 @@ def getReleaseNotes():
       import modules.markdown as markdown
 
       notesHTML = markdown.markdown(notesMarkdown)
+    except ImportError:
+      print("info: mardown module not available - can't process release notes")
+      return None, None
     except Exception as e:
       print('info: parsing release notes failed')
-      #print(e)
+      print(e)
       import traceback
       import sys
 
       traceback.print_exc(file=sys.stdout)
-
       return None, None
-
     return maxVersion, notesHTML
   else:
     return None, None
