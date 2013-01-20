@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """a GUI chooser"""
 
-class GUI:
+
+class GUI(object):
   def __init__(self, mieru):
     self.mieru = mieru
 
@@ -96,14 +97,16 @@ class GUI:
     self.mieru.keyPressed(keyName)
 
 
-def getGui(mieru, type="QML",accel=True, size=(800,480)):
+def getGui(mieru, type="QML", accel=True, size=(800, 480)):
   """return a GUI object"""
-  if type=="hildon" and accel:
+  if type == "hildon" and accel:
     import cluttergtk
     import clutter_gui
+
     return clutter_gui.ClutterGTKGUI(mieru, type, size)
-  elif type=="QML" and accel:
+  elif type == "QML" and accel:
     import qml_gui
+
     return qml_gui.QMLGUI(mieru, type, size)
 
 
