@@ -76,10 +76,11 @@ class Manga:
         if loadNotify:
           self.mieru.notify(
             '<b>%s</b> loaded on page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(startOnPage)))
-          #print('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
+          print('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
       else:
         if loadNotify:
           self.mieru.notify('<b>%s</b> loading failed' % self.getPrettyName())
+          print('<b>%s</b> loading failed' % self.getPrettyName())
 
   def getName(self):
     return self.name
@@ -396,7 +397,7 @@ class Manga:
     else:
       print("manga: previous path uses unsupported format:\n%s" % prevPath)
       return False
-    return prevPath
+      #return prevPath
 
   def getNextMangaPath(self):
     (prevPath, nextPath) = self.getNeighborPaths()
@@ -406,7 +407,7 @@ class Manga:
     else:
       print("manga: next path uses unsupported format:\n%s" % nextPath)
       return False
-    return nextPath
+      #return nextPath
 
   def getPreviousMangaStartID(self):
     return -1
@@ -433,7 +434,7 @@ class Manga:
 
       self.cacheUpdate = None
 
-    #    self.mieru.gui.statusReport()
+      #    self.mieru.gui.statusReport()
 
   def _updateTitleText(self):
     """update the title text on the mieru window (and possibly elsewhere)"""
@@ -514,47 +515,47 @@ class Manga:
     self.cache.add(page, id, direction)
 
 
-  #  def _transition(self, direction):
-  #    """replace the currently open manga with the previewed one"""
-  #
-  #    alpha = clutter.LINEAR
-  #    transition = clutter.Score()
-  #    minimizeTl = clutter.Timeline(duration=300)
-  #    maximizeTl = clutter.Timeline(duration=300)
-  #    bgInTl = clutter.Timeline(duration=300)
-  #    bgOutTl = clutter.Timeline(duration=300)
-  #
-  #    # transform currently visible page to a preview
-  #    self.activePage.deactivate()
-  #
-  #    (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
-  #
-  #    (tw,th) = self.activePage.get_size()
-  #    wf = float(pBoxInSide)/tw
-  #    hf = float(pBoxInSide)/th
-  #    if tw >= th:
-  #      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*wf, "height", th*wf)
-  #    else:
-  #      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*hf, "height", th*hf)
+    #  def _transition(self, direction):
+    #    """replace the currently open manga with the previewed one"""
+    #
+    #    alpha = clutter.LINEAR
+    #    transition = clutter.Score()
+    #    minimizeTl = clutter.Timeline(duration=300)
+    #    maximizeTl = clutter.Timeline(duration=300)
+    #    bgInTl = clutter.Timeline(duration=300)
+    #    bgOutTl = clutter.Timeline(duration=300)
+    #
+    #    # transform currently visible page to a preview
+    #    self.activePage.deactivate()
+    #
+    #    (pBoxY,pBoxX,pBoxShownX,pBoxSide,pBoxInSide,border) = self._getPBoxCoords(type)
+    #
+    #    (tw,th) = self.activePage.get_size()
+    #    wf = float(pBoxInSide)/tw
+    #    hf = float(pBoxInSide)/th
+    #    if tw >= th:
+    #      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*wf, "height", th*wf)
+    #    else:
+    #      self.activePage.animate_with_timeline(minimizeTl, alpha, "width", tw*hf, "height", th*hf)
 
-  #    self.activePage.animate_with_timeline(minimizeTl, alpha, "x", ,"y", )
-
-
-  #    (tw,th) = thumbnail.get_size()
-  #    print(tw,th)
-  #    thumbnail.move_by(border+(pBoxInSide-tw)/2.0,border+(pBoxInSide-th)/2.0)
+    #    self.activePage.animate_with_timeline(minimizeTl, alpha, "x", ,"y", )
 
 
+    #    (tw,th) = thumbnail.get_size()
+    #    print(tw,th)
+    #    thumbnail.move_by(border+(pBoxInSide-tw)/2.0,border+(pBoxInSide-th)/2.0)
 
 
-  # possible eye candy manga to manga transition
 
-  # show a yellow background behind it
 
-  # hide both the preview and background
+    # possible eye candy manga to manga transition
 
-  # hide the background of the new page preview
+    # show a yellow background behind it
 
-  # maximize the new page
+    # hide both the preview and background
 
-  # replace this manga instance by the new one
+    # hide the background of the new page preview
+
+    # maximize the new page
+
+    # replace this manga instance by the new one
