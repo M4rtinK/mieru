@@ -2,6 +2,9 @@
 """Mieru persistent options storage"""
 import marshal
 import os
+import traceback
+import sys
+
 
 class Options:
   def __init__(self, mieru):
@@ -24,28 +27,30 @@ class Options:
         os.makedirs(self.profileFolderPath)
         print("creating profile folder in: %s" % self.profileFolderPath)
         return True
-      except Exception, e:
+      except Exception as e:
         print("options:Creating profile folder failed:\n%s" % e)
         return False
 
   def save(self):
-#    print("options: saving options")
+  #    print("options: saving options")
     try:
-      f = open(self.optionsPath, "w")
+      f = open(self.optionsPath, "wb")
       marshal.dump(self.mieru.getDict(), f)
       f.close()
-#      print("options: successfully saved")
-    except Exception, e:
+    #      print("options: successfully saved")
+    except Exception as e:
       print("options: Exception while saving options:\n%s" % e)
+      traceback.print_exc(file=sys.stdout)
 
   def load(self):
     try:
-      f = open(self.optionsPath, "r")
+      f = open(self.optionsPath, "rb")
       loadedData = marshal.load(f)
       f.close()
       self.mieru.setDict(loadedData)
-    except Exception, e:
+    except Exception as e:
       self.mieru.setDict({})
       print("options: exception while loading saved options:\n%s" % e)
+      traceback.print_exc(file=sys.stdout)
 
 
