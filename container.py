@@ -13,24 +13,30 @@ import time
 import traceback
 import sys
 
+MAGIC_FILE = 'magic.mgc'
+
+
+def _magicFilePath():
+  return os.path.join(os.path.abspath('.'), MAGIC_FILE)
+
 
 def getFilePathMime(path):
-  mime = magic.Magic(mime=True)
-  return mime.from_file(path.encode('utf-8'))
+  mime = magic.Magic(mime=True, magic_file=_magicFilePath())
+  return mime.from_file(path)
 
 
 def getFileMime(file):
-  mime = magic.from_buffer(file.read(1024), mime=True)
+  mime = magic.Magic(magic_file=_magicFilePath(), mime=True).from_buffer(file.read(1024))
   file.close() # properly close the file
   return mime
 
 
 def getBufferMime(path, buffer):
-  return magic.from_buffer(buffer, mime=True)
+  return magic.Magic(magic_file=_magicFilePath(), mime=True).from_buffer(buffer)
 
 
 def getFileDescription(path):
-  return magic.from_file(path.encode('utf-8'))
+  return magic.Magic(magic_file=_magicFilePath()).from_file(path)
 
 
 def humanSort(l):
@@ -67,36 +73,42 @@ def from_path(path):
 def testPath(path):
   print("testing path: %s" % path)
   #is it file or folder ?
-  if os.path.isfile(path):
-    print("manga: path is a file")
-    desc = getFileDescription(path)
-    print("file type: %s" % desc)
-    mime = getFilePathMime(path)
-    print("file mime: %s" % mime)
-    mimeSplit = mime.split('/')
-    m1 = mimeSplit[0]
-    m2 = mimeSplit[1]
-    if m1 == 'image':
-      print("image file selected,\ncontaining folder could be loaded as a manga")
-      (folderPath, tail) = os.path.split(path)
-      return "folder", folderPath, desc, mime
-    elif mime == 'application/zip' or mime == 'application/x-zip' or zipfile.is_zipfile(path):
-      print("file is probably a zip file")
-      return "zip", path, desc, mime
-    elif mime == 'application/rar' or mime == 'application/x-rar' or rarfile.is_rarfile(path):
-      print("file is probably a rar file")
-      return 'rar', path, desc, mime
-    else:
-      print("the path: %s is an unsupported file")
-      print("it has this mime: %s" % mime)
-      print("and this description: %s" % desc)
-      return False
+  try:
+    if os.path.isfile(path):
+      desc = getFileDescription(path)
+      print("file type: %s" % desc)
+      mime = getFilePathMime(path)
+      mime = mime.decode("utf-8")
+      print("file mime: %s" % mime)
+      mimeSplit = mime.split('/')
+      m1 = mimeSplit[0]
+      m2 = mimeSplit[1]
+      if m1 == 'image':
+        print("image file selected,\ncontaining folder could be loaded as a manga")
+        (folderPath, tail) = os.path.split(path)
+        return "folder", folderPath, desc, mime
+      elif mime == 'application/zip' or mime == 'application/x-zip' or zipfile.is_zipfile(path):
+        print("file is probably a zip file")
+        return "zip", path, desc, mime
+      elif mime == 'application/rar' or mime == 'application/x-rar' or rarfile.is_rarfile(path):
+        print("file is probably a rar file")
+        return 'rar', path, desc, mime
+      else:
+        print("the path: %s is an unsupported file")
+        print("it has this mime: %s" % mime)
+        print("and this description: %s" % desc)
+        return False
 
-  elif os.path.isdir(path):
-    print("manga: path is a directory")
-    return "folder", path, None, "a folder"
-  else:
-    print("manga: loading failed, path is neither file nor directory")
+    elif os.path.isdir(path):
+      print("manga: path is a directory")
+      return "folder", path, None, "a folder"
+    else:
+      print("manga: loading failed, path is neither file nor directory")
+      return False
+  except Exception as e:
+    print('container: patch testing failed')
+    print(e)
+    traceback.print_exc(file=sys.stdout)
     return False
 
 
@@ -247,7 +259,7 @@ class FolderContainer(Container):
     if os.path.exists(path):
       if os.path.isfile(path):
         try:
-          f = open(path, 'r')
+          f = open(path, 'rb')
           return f
         except Exception as e:
           print("FolderContainer: loading file failed: %s" % path)
@@ -346,4 +358,3 @@ class TarContainer(Container):
         print("TarContainer: reading file from archive failed")
         print(e)
         return None
-
