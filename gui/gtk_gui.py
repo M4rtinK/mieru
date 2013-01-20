@@ -2,17 +2,20 @@
 """a GTK GUI module for Mieru"""
 
 import pygtk
+
 pygtk.require('2.0')
 import gtk
 import gobject
 
 import gui
 
+
 class GTKGUI(gui.GUI):
-  def __init__(self, mieru, type, size=(800,480)):
+  def __init__(self, mieru, type, size=(800, 480)):
     gui.GUI.__init__(self, mieru)
     if type == "hildon":
       import hildon
+
       self.window = hildon.StackableWindow()
     else:
       self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -28,7 +31,7 @@ class GTKGUI(gui.GUI):
     return self.vbox
 
   def resize(self, w, h):
-    self.window.resize(w,h)
+    self.window.resize(w, h)
 
   def getWindow(self):
     return self.window
@@ -66,7 +69,7 @@ class GTKGUI(gui.GUI):
     try:
       pl.write(flo.read())
       pl.close() # this  blocks until the image is completely loaded
-    except Exception,e:
+    except Exception as e:
       print("gtkgui: Loading page failed with this exception:\n%s\ngtkgui: loading placeholder image" % e)
       # load a "page unreadable image"  (@_@)
       file = open("icons/page_unreadable.png", 'r')
