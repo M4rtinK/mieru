@@ -15,6 +15,8 @@ Dialog {
   property variant view: view1
   property string selectedFile: "";
 
+  property int iconSize : 80
+
   // go down one view
   function down(path) {
     // slide current view out to the left
@@ -109,6 +111,9 @@ Dialog {
       // add "right" arrow to all directories
       Image {
         id: downArrow
+        width : iconSize
+        height : iconSize
+        smooth : true
         source: "image://icons/icon-m-common-drilldown-arrow-inverse.png"
         anchors.right: parent.right;
         anchors.verticalCenter: parent.verticalCenter
@@ -154,6 +159,9 @@ Dialog {
 
       Image {
         id: closeButton
+        width : iconSize
+        height : iconSize
+        smooth : true
         anchors.bottom:  parent.bottom
         anchors.bottomMargin: fileSelector.platformStyle.titleBarLineMargin-6
         anchors.right: labelField.right
@@ -221,6 +229,9 @@ Dialog {
       // add "left" arrow to go up one directory
       Image {
         id: backButton
+        width : iconSize
+        height : iconSize
+        smooth : true
         source: "image://icons/icon-m-toolbar-back-white-selected.png"
         // fix Fremantle CSSU icon availability
         //source: platform.incompleteTheme() ? "image://icons/icon-m-toolbar-back-white-selected" : "image://icons/icon-m-startup-back"
