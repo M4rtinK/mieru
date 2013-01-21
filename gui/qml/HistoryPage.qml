@@ -18,6 +18,7 @@ Page {
         ToolButton {
             text : qsTr("Delete")
             visible : deleteModeEnabled
+            width : 160
             // FIXME: buttons are not aligned vertically in toolbar
             anchors.verticalCenter : histBack.verticalCenter
             onClicked: {
@@ -29,6 +30,7 @@ Page {
         ToolButton {
             text: qsTr("Cancel")
             visible : deleteModeEnabled
+            width : 160
             // FIXME: buttons are not aligned vertically in toolbar
             anchors.verticalCenter : histBack.verticalCenter
             onClicked: {
