@@ -116,6 +116,7 @@ Dialog {
         smooth : true
         //source: "image://theme/icon-m-toolbar-next"
         source: "image://theme/icon-m-toolbar-back-white-selected"
+        rotation : 180
         anchors.right: parent.right;
         anchors.verticalCenter: parent.verticalCenter
 	visible: folderModel.isFolder(index)
