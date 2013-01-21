@@ -1,6 +1,6 @@
 //InfoPage.qml
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import com.nokia.meego 1.0
 
 Page {
     id : infoPage
@@ -11,6 +11,7 @@ Page {
             onClicked: pageStack.pop()
         }
         ButtonRow {
+            height : parent.height
             TabButton {
                 text: qsTr("Info")
                 tab: tab1
@@ -33,94 +34,107 @@ Page {
 
         Page {
             id : tab1
+            property int contentMargin : 16
             anchors.fill : parent
             // background rectangle
+            /*
             Rectangle {
                 anchors.fill : parent
                 color : "black"
-            }
+            }*/
             ScrollDecorator {
                  flickableItem : infoFlickable
             }
             Flickable {
                 id : infoFlickable
                 anchors.fill  : parent
-                contentWidth  : tab1.width
-                contentHeight : 32 + infoHeadline.height + infoFirstPage.height + infoColumn.height + 32
+                contentWidth  : tab1.width - tab1.contentMargin
+                contentHeight : infoContainer.height + 32
                 flickableDirection : Flickable.VerticalFlick
-                Item {
-                    id : anchorItem
-                    width : parent.width
-                }
-                Label {
-                    id : infoHeadline
-                    anchors.top : anchorItem.bottom
-                    anchors.topMargin : 32
-                    anchors.horizontalCenter : parent.horizontalCenter
-                    text  : "<h1>" + readingState.getPrettyName() + "</h1>"
-                    width : tab1.width
-                    wrapMode : Text.WordWrap
-                    horizontalAlignment : Text.AlignHCenter
-                }
-                Image {
-                    id : infoFirstPage
-                    anchors.horizontalCenter : parent.horizontalCenter
-                    anchors.top : infoHeadline.bottom
-                    anchors.topMargin : 10
-                    source : "image://page/" + mainView.mangaPath + "|0"
-                    fillMode : Image.PreserveAspectFit
-                    width  : tab1.width / 2.0
-                    height : tab1.width / 2.0
-                    smooth : true
-				}
-                Column {
-                    id : infoColumn
-                    anchors.top : infoFirstPage.bottom
-                    anchors.topMargin : 32
-                    spacing : 20
-					
-                    LineText {
-                        width : tab1.width
-                        text : qsTr("Properties")
-                    }
-                    Label {
-                        text : "<b>" + qsTr("Pages") + ":</b> " + (mainView.maxPageNumber - 1)
-                    }
-                    Label {
-                        text : "<b>" + qsTr("Path") + ":</b> " + mainView.mangaPath
-						
-                        // explicit width is needed for wrapping to work
-                        width    : tab1.width
-                        wrapMode : Text.WrapAnywhere
-                    }
-                    LineText {
-                        width : tab1.width
-                        text  : qsTr("Online search")
-                    }
-                    Button {
-                        text : "Google"
-                        anchors.horizontalCenter : parent.horizontalCenter
-                        onClicked : {
-                            rootWindow.notify(qsTr("Opening <b>Google</b> search"))
-                            Qt.openUrlExternally("http://www.google.com/search?as_q=" + readingState.getPrettyName())
-                        }
-                    }
-                    Button {
-                        // TODO: other language mutations
-                        text : "Wikipedia"
-                        anchors.horizontalCenter : parent.horizontalCenter
-                        onClicked : {
-                            rootWindow.notify(qsTr("Opening <b>Wikipedia</b> search"))
-                            Qt.openUrlExternally("http://en.wikipedia.org/w/index.php?search=" + readingState.getPrettyName() + "&go=Go")
-                        }
 
+                Item {
+                    //anchors.horizontalCenter : parent.horizontalCenter
+                    width : tab3.width-32
+                    height : childrenRect.height
+                    id : infoContainer
+                    Item {
+                        id : anchorItem
+                        width : parent.width
                     }
-                    Button {
-                        text : "Manga updates"
+                    Label {
+                        id : infoHeadline
+                        anchors.top : anchorItem.bottom
+                        anchors.topMargin : 32
                         anchors.horizontalCenter : parent.horizontalCenter
-                        onClicked : {
-                            rootWindow.notify(qsTr("Opening <b>Manga updates</b> search"))
-                            Qt.openUrlExternally("http://www.mangaupdates.com/search.html?search=" + readingState.getPrettyName())
+                        text  : "<h1>" + readingState.getPrettyName() + "</h1>"
+                        width : tab1.width - tab1.contentMargin
+                        wrapMode : Text.WordWrap
+                        horizontalAlignment : Text.AlignHCenter
+                    }
+                    Image {
+                        id : infoFirstPage
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        anchors.top : infoHeadline.bottom
+                        anchors.topMargin : 10
+                        source : "image://page/" + mainView.mangaPath + "|0"
+                        fillMode : Image.PreserveAspectFit
+                        width  : (tab1.width) / 2.0
+                        height : (tab1.width) / 2.0
+                        smooth : true
+                    }
+                    Column {
+                        id : infoColumn
+                        anchors.top : infoFirstPage.bottom
+                        anchors.topMargin : 32
+                        anchors.left : parent.left
+                        anchors.leftMargin : 16
+                        anchors.right : parent.right
+                        anchors.rightMargin : 16
+                        spacing : 20
+
+                        LineText {
+                            width : tab1.width - tab1.contentMargin
+                            text : qsTr("Properties")
+                        }
+                        Label {
+                            text : "<b>" + qsTr("Pages") + ":</b> " + (mainView.maxPageNumber - 1)
+                        }
+                        Label {
+                            text : "<b>" + qsTr("Path") + ":</b> " + mainView.mangaPath
+
+                            // explicit width is needed for wrapping to work
+                            width    : tab1.width - tab1.contentMargin
+                            wrapMode : Text.WrapAnywhere
+                        }
+                        LineText {
+                            width : tab1.width - tab1.contentMargin
+                            text  : qsTr("Online search")
+                        }
+                        Button {
+                            text : "Google"
+                            anchors.horizontalCenter : parent.horizontalCenter
+                            onClicked : {
+                                rootWindow.notify(qsTr("Opening <b>Google</b> search"))
+                                Qt.openUrlExternally("http://www.google.com/search?as_q=" + readingState.getPrettyName())
+                            }
+                        }
+                        Button {
+                            // TODO: other language mutations
+                            text : "Wikipedia"
+                            anchors.horizontalCenter : parent.horizontalCenter
+                            onClicked : {
+                                rootWindow.notify(qsTr("Opening <b>Wikipedia</b> search"))
+                                Qt.openUrlExternally("http://en.wikipedia.org/w/index.php?search=" + readingState.getPrettyName() + "&go=Go")
+                            }
+
+                        }
+                        Button {
+                            text : "Manga updates"
+                            anchors.horizontalCenter : parent.horizontalCenter
+                            onClicked : {
+                                rootWindow.notify(qsTr("Opening <b>Manga updates</b> search"))
+                                Qt.openUrlExternally("http://www.mangaupdates.com/search.html?search=" + readingState.getPrettyName())
+                            }
                         }
                     }
                 }
@@ -130,10 +144,12 @@ Page {
             id: tab2
             anchors.fill : parent
             // background rectangle
+            /*
             Rectangle {
                 anchors.fill : parent
                 color : "black"
             }
+            */
             Label {
                 anchors.top : parent.top
                 anchors.topMargin : 64
@@ -186,10 +202,12 @@ Page {
             id: tab3
             anchors.fill : parent
             // background rectangle
+            /*
             Rectangle {
                 anchors.fill : parent
                 color : "black"
             }
+            */
             ScrollDecorator {
                  flickableItem : aboutFlickable
             }
@@ -288,7 +306,7 @@ Page {
                         }
                         Label {
                             width : tab3.width
-                            text  : "<b>" + qsTr("discussion") + ":</b> " + "<a href='http://forum.meego.com/showthread.php?t=5405'>forum.meego.com</a>"
+                            text  : "<b>" + qsTr("discussion") + ":</b> " + "<a href='http://talk.maemo.org/showthread.php?t=73907'>talk.meego.com</a>"
                             onLinkActivated : Qt.openUrlExternally(link)
                         }
                     }
