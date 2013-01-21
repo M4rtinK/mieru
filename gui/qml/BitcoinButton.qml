@@ -9,7 +9,7 @@ Rectangle {
     border.width : showBorder ? 2 : 0
     border.color : "white"
     smooth : true
-    radius : 25
+    radius : 50
     width : 300
     height : 100
     property string url : ""

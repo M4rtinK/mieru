@@ -7,7 +7,7 @@ Rectangle {
     id : flattrButton
     color : flattrMA.pressed ? "limegreen" : "green"
     smooth : true
-    radius : 5
+    radius : 15
     width : 300
     height : 90
     property string url : ""
