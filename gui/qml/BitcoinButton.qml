@@ -20,7 +20,6 @@ Rectangle {
         anchors.horizontalCenter : parent.horizontalCenter
         anchors.verticalCenter : parent.verticalCenter
         font.family: "Arial"
-        font.pixelSize : 24
         text : "<h3>Bitcoin</h3>"
         color : bitcoinMA.pressed ? "black" : "white"
     }
