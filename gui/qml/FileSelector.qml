@@ -114,7 +114,8 @@ Dialog {
         width : iconSize
         height : iconSize
         smooth : true
-        source: "image://icons/icon-m-common-drilldown-arrow-inverse.png"
+        //source: "image://theme/icon-m-toolbar-next"
+        source: "image://theme/icon-m-toolbar-back-white-selected"
         anchors.right: parent.right;
         anchors.verticalCenter: parent.verticalCenter
 	visible: folderModel.isFolder(index)
@@ -167,7 +168,7 @@ Dialog {
         anchors.right: labelField.right
 
         opacity: closeButtonArea.pressed ? 0.5 : 1.0
-        source: "image://icons/icon-m-common-dialog-close.png"
+        source: "image://theme/icon-m-toolbar-close-selected"
 
         MouseArea {
           id: closeButtonArea
@@ -232,7 +233,7 @@ Dialog {
         width : iconSize
         height : iconSize
         smooth : true
-        source: "image://icons/icon-m-toolbar-back-white-selected.png"
+        source: "image://theme/icon-m-toolbar-back-white-selected"
         // fix Fremantle CSSU icon availability
         //source: platform.incompleteTheme() ? "image://icons/icon-m-toolbar-back-white-selected" : "image://icons/icon-m-startup-back"
         anchors.verticalCenter: parent.verticalCenter
