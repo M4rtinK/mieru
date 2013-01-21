@@ -1,6 +1,6 @@
 //HistoryPage.qml
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import com.nokia.meego 1.0
 
 Page {
     id : historyPage
@@ -81,7 +81,7 @@ Page {
 		delegate: Component {
 			Rectangle {
 				width: historyList.width
-				height: 80
+				height: 160
 				color: model.thing.checked?"#00B8F5":(index%2?"#eee":"#ddd")
 				Label {
 					id: title
@@ -89,7 +89,7 @@ Page {
 					text: model.thing.name
 					color: (model.thing.checked?"white":"black")
 					font.bold: true
-					anchors.leftMargin: 10
+					anchors.leftMargin: 16
 					anchors.fill: parent
 					verticalAlignment: Text.AlignVCenter
 				}
