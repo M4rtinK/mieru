@@ -1,15 +1,15 @@
 //PayPalButton.qml
 
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import com.nokia.meego 1.0
 
 Rectangle {
     id : ppButton
     color : ppMA.pressed ? "yellow" : "gold"
     smooth : true
     radius : 30
-    width : 210
-    height : 60
+    width : 300
+    height : 100
     property string url : ""
 
     Label {
