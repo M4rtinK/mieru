@@ -1,7 +1,7 @@
 //BitcoinButton.qml
 
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import com.nokia.meego 1.0
 
 Rectangle {
     id : bitcoinButton
@@ -10,8 +10,8 @@ Rectangle {
     border.color : "white"
     smooth : true
     radius : 25
-    width : 210
-    height : 50
+    width : 300
+    height : 100
     property string url : ""
     property bool showBorder : false
 
