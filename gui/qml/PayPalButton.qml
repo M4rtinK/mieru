@@ -7,7 +7,7 @@ Rectangle {
     id : ppButton
     color : ppMA.pressed ? "yellow" : "gold"
     smooth : true
-    radius : 30
+    radius : 60
     width : 300
     height : 100
     property string url : ""
