@@ -1,6 +1,6 @@
 //SelectorButtonWithText.qml
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import com.nokia.meego 1.0
 
 Item {
     id: container
@@ -28,7 +28,8 @@ Item {
     Button {
         id : pfsButton
         iconSource : "image://theme/icon-m-common-combobox-arrow"
-        width : 200
+        width : 350
+        height : 80
         anchors {
             right: parent.right
             verticalCenter: parent.verticalCenter
