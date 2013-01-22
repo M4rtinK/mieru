@@ -13,13 +13,12 @@
    width="281.34375"
    height="247.25"
    id="svg2"
-   inkscape:label="Pozadí"
+   inkscape:label="Background"
    sodipodi:version="0.32"
    inkscape:version="0.48.1 r9760"
    version="1.0"
    sodipodi:docname="page_unreadable.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/user"
    inkscape:export-xdpi="48.112762"
    inkscape:export-ydpi="48.112762">
   <defs
@@ -216,7 +215,6 @@
        y="702.86676"
        rx="33.214397"
        ry="45.511047"
-       inkscape:export-filename="/tmp/page_unreadable.png"
        inkscape:export-xdpi="112.11324"
        inkscape:export-ydpi="112.11324" />
     <rect
@@ -228,7 +226,6 @@
        y="720.12561"
        rx="11.2944"
        ry="11.2944"
-       inkscape:export-filename="D:\obrazky\!Vlastni.tvorba\mieru\mieru.png"
        inkscape:export-xdpi="36"
        inkscape:export-ydpi="36" />
     <path
