@@ -69,7 +69,9 @@ Rectangle {
                     anchors.verticalCenter : labelWrapper.verticalCenter
                     anchors.right : labelField.right
                     opacity : closeButtonArea.pressed ? 0.5 : 1.0
-                    source : "image://theme/icon-m-common-dialog-close"
+                    source : "image://theme/icon-m-toolbar-close-selected"
+                    width : 64
+                    height : 64
                     MouseArea {
                         id : closeButtonArea
                         anchors.fill : parent
@@ -93,19 +95,19 @@ Rectangle {
             Image {
                 id : bitcoinQrCode
                 anchors.top : dialogContent.top
-                anchors.topMargin : 8
+                anchors.topMargin : 16
                 anchors.horizontalCenter : parent.horizontalCenter
                 source : "image://icons/qrcode_bitcoin.png"
             }
             TextField {
                 id : urlField
                 anchors.top : bitcoinQrCode.bottom
-                anchors.topMargin : 8
+                anchors.topMargin : 16
                 anchors.left : parent.left
                 anchors.right : parent.right
                 //anchors.horizontalCenter : parent.horizontalCenter
-                font.pointSize : 20
-                height : 48
+                font.pointSize : 18
+                height : 80
                 text : bitcoinButton.url
             }
             Button {
