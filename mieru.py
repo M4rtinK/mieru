@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import with_statement # for python 2.5
+from pprint import pprint
+import traceback
 import gs
+
+import bbpy
 
 import timer
 import time
@@ -31,6 +35,8 @@ os.chdir(dname)
 import sys
 
 sys.path.append('platforms')
+sys.path.append('gui')
+
 
 class Mieru:
   def destroy(self):
@@ -72,6 +78,11 @@ class Mieru:
 
     # get the platform ID string
     platformId = "pc" # safe fallback
+
+    # TODO: do this properly
+    args.p = 'bb10'
+    args.u = "harmattan"
+
     if args.p is None:
       import platform_detection
       # platform detection
@@ -93,6 +104,10 @@ class Mieru:
         import harmattan
 
         self.platform = harmattan.Harmattan(self)
+      elif platformId == "bb10":
+        import bb10
+
+        self.platform = bb10.BB10(self)
       else:
         import pc
 
@@ -142,11 +157,11 @@ class Mieru:
         print("loading manga from: %s" % args.o)
         self.setActiveManga(self.openManga(args.o, checkHistory=True))
         print('manga loaded')
-      except Exception, e:
+      except Exception as e:
         print("loading manga from path: %s failed" % args.o)
         print(e)
 
-    """ restore previously saved state (if available and no manga was 
+    """ restore previously saved state (if available and no manga was
     sucessfully loaded from a path provided by startup arguments"""
     if self.activeManga is None:
       self._restoreState()
@@ -166,7 +181,10 @@ class Mieru:
 
     initialSize = self.platform.getScreenWH()
     if id in ("QML", "harmattan"):
-      self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)
+      import qml_gui
+
+      self.gui = qml_gui.QMLGUI(self, type='QML', size=initialSize)
+    #      self.gui = gui.getGui(self, 'QML', accel=True, size=initialSize)
     elif id == "hildon":
       self.gui = gui.getGui(self, 'hildon', accel=True, size=initialSize)
     elif id == "GTK":
@@ -247,7 +265,7 @@ class Mieru:
     print("button press event")
 
   def notify(self, message, icon=""):
-    print("notification: %s" % message)
+    print("notification: %s" % message.encode('utf-8'))
     self.platform.notify(message, icon)
 
   def openManga(self, path, startOnPage=0, replaceCurrent=True, loadNotify=True, checkHistory=True):
@@ -259,7 +277,7 @@ class Mieru:
         print('manga path found in history')
         self.openMangaFromState(mangaState)
       else:
-        print("opening %s on page %d" % (path, startOnPage))
+        print("opening %s on page %d" % (path.encode('utf-8'), startOnPage))
         mangaInstance = manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
         # close and replace any current active manga
         self.setActiveManga(mangaInstance)
@@ -270,7 +288,14 @@ class Mieru:
         # return the newly created manga instance
         return mangaInstance
     else:
-      return manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
+      try:
+        return manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
+      except Exception as e:
+        print('mieru: loading manga from path failed')
+        #        print('path: ', path)
+        print(e)
+        traceback.print_exc(file=sys.stdout)
+        return None
 
   def openMangaFromState(self, state):
     print("opening manga from state")
@@ -317,18 +342,18 @@ class Mieru:
       try:
         if mangaState['path'] is not None:
           path = mangaState['path']
-          print("adding to history: %s, on page %d" % (path, mangaState.get('pageNumber', 0)))
+          print("adding to history: %s, on page %d" % (path.encode('utf-8'), mangaState.get('pageNumber', 0)))
           openMangasHistory[path] = {"state": mangaState, "timestamp": time.time()}
-          """the states are saved under their path to store only unique mangas,
-             when the same manga is opened again, its state is replaced by the new one
-             the timestamp is used for chronological sorting of the list
-          """
+          # the states are saved under their path to store only unique mangas,
+          # when the same manga is opened again, its state is replaced by the new one
+          # the timestamp is used for chronological sorting of the list
+
           # save the history back to the persistent store
           # TODO: limit the size of the history + clearing of history
           status = True
-      except Exception, e:
+      except Exception as e:
         print("saving manga to history failed with exception:\n", e)
-        print("manga state was:", mangaState)
+        print("manga state was:", mangaState.encode('utf-8'))
       self.set('openMangasHistory', openMangasHistory)
       self.options.save()
       return status
@@ -423,7 +448,7 @@ class Mieru:
     """
     try:
       return self.d.get(key, default)
-    except Exception, e:
+    except Exception as e:
       print("options: exception while working with persistent dictionary:\n%s" % e)
       return default
 
@@ -467,6 +492,7 @@ class Mieru:
       ("screen", "fit to screen")
     ]
     return modes
+
 
 if __name__ == "__main__":
   mieru = Mieru()
