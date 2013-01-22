@@ -3,7 +3,7 @@
 Mieru hildon UI (for Maemo 5@N900)
 """
 
-from base_platform import BasePlatform
+from platforms.base_platform import BasePlatform
 
 
 class BB10(BasePlatform):
@@ -26,7 +26,7 @@ class BB10(BasePlatform):
   def getDefaultFileSelectorPath(self):
     """we default to the MyDocs folder as this is where most
     users will store their mangas and comic books"""
-    return "."
+    return "/accounts/1000/shared/downloads"
 
   def showQuitButton(self):
     """Swype handles window closing"""
