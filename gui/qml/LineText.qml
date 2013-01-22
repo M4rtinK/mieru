@@ -1,6 +1,6 @@
 //LineText.qml
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import com.nokia.meego 1.0
 
 Item {
     id: lineTextMain
@@ -11,7 +11,7 @@ Item {
 
     Rectangle {
         id: line
-        color : "white"
+        color : "black"
         height : 2
 
         anchors {
