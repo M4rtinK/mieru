@@ -1,7 +1,7 @@
 //MainView.qml
 import QtQuick 1.1
-import com.nokia.meego 1.1
-import com.nokia.extras 1.1
+import com.nokia.meego 1.0
+import com.nokia.extras 1.0
 
 Page {
     id : mainView
@@ -225,20 +225,23 @@ Page {
             rotation : 90
             onClicked: mainView.toggleFullscreen()
             //iconSource : "toolbar-next"
-            iconId : "toolbar-next"
+            iconId : "icon-m-common-next"
         }
         ToolButton {
             id : pageNumbers
             text : mainView.pageLoaded ? mainView.pageNumber + "/" + mainView.maxPageNumber : "-/-"
-            height : menuTI.height
+            width : 150
+            height : 90
+            anchors.verticalCenter : parent.verticalCenter
             flat : true
             onClicked : pagingDialog.open()
         }
         ToolIcon {
             id : menuTI
             iconId: "toolbar-view-menu"
-            //iconSource: "toolbar-view-menu"
+            //iconSource: "image://theme/icon-m-toolbar-view-menu"
             onClicked: mainViewMenu.open()
+            anchors.verticalCenter : parent.verticalCenter
         }
     }
 
@@ -445,11 +448,12 @@ Page {
     }
 
     /** Fullscreen toggle button **/
-    ToolButton {
+    ToolIcon {
         id : fullscreenButton
         // FIXME: incomplete theme on Fremantle
         //iconId: platform.incompleteTheme() ? "icon-m-common-next" : "toolbar-up"
-        iconSource: "toolbar-next"
+        //iconSource: "toolbar-next"
+        iconId: "icon-m-common-next"
         rotation : 270
         anchors.left   : mainView.left
         anchors.bottom : mainView.bottom
@@ -461,7 +465,9 @@ Page {
         MouseArea {
             anchors.fill : parent
             drag.filterChildren: true
-            onClicked: mainView.toggleFullscreen();
+            onClicked: {
+                mainView.toggleFullscreen();
+            }
         }
     }
 
@@ -494,22 +500,26 @@ Page {
                 }
                 Button {
                     width : mLayout.width
-                    text  : qsTr(mainView.pageFitMode)
+                    text  : qsTr("Fit mode:") + "  " + qsTr(mainView.pageFitMode)
                     // FIXME: incomplete theme on Fremantle
-                    iconSource: platform.incompleteTheme() ?
-                    "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-image-expand"
+                    //iconSource: platform.incompleteTheme() ? "image://theme/icon-m-image-edit-resize" : "image://theme/icon-m-image-expand"
+                    iconSource: "image://theme/icon-m-image-edit-resize"
                     onClicked : pageFitSelector.open()
                 }
                 Button {
                     width : mLayout.width
-                    text  : qsTr("Rotation")
+                    text  : qsTr("Rotation lock")
                     iconSource : "image://theme/icon-m-common-" + __iconType
-                    property string __iconType: (mainView.orientationLock == PageOrientation.LockPrevious) ? "locked" : "unlocked"
+                    property string __iconType: (mainView.orientationLock == PageOrientation.Automatic) ? "unlocked" : "locked"
                     onClicked: {
-                        if (mainView.orientationLock == PageOrientation.LockPrevious) {
+                        if (mainView.orientationLock != PageOrientation.Automatic) {
                             mainView.orientationLock = PageOrientation.Automatic
                         } else {
-                            mainView.orientationLock = PageOrientation.LockPrevious
+                            if (rootWindow.inPortrait) {
+                                mainView.orientationLock = PageOrientation.LockPortrait
+                            } else {
+                                mainView.orientationLock = PageOrientation.LockLandscape
+                            }
                         }
                     }
                 }
@@ -528,6 +538,15 @@ Page {
         visible : !mainView.pageLoaded
     }
 
+    /*
+    Label {
+        width : parent.width
+        anchors.centerIn : parent
+        text : "<h1>" + screen.orientationString + "<br>w:" + screen.width + "h:" + screen.height + "a:" + screen.rotation + "<br>dw:" + screen.displayWidth + "dh:" + screen.displayHeight + "cu:" + screen.currentOrientation + "<br>port:" + rootWindow.inPortrait + "</h1>"
+        wrapMode : Text.WordWrap
+        horizontalAlignment : Text.AlignHCenter
+    }*/
+
     /** Paging feedback **/
 
     Item {
@@ -540,15 +559,17 @@ Page {
             anchors.top    : parent.top
             anchors.bottom : parent.bottom
             anchors.left   : parent.left
-            width : previousIcon.width + 40
+            width : previousIcon.width + 80
             color : "darkgray"
         }
         Image {
             id : previousIcon
             anchors.verticalCenter : parent.verticalCenter
             anchors.left : parent.left
-            anchors.leftMargin : 20
+            anchors.leftMargin : 40
             source : "image://theme/icon-m-toolbar-previous"
+            width : 64
+            height : 64
         }
     }
     Item {
@@ -561,15 +582,17 @@ Page {
             anchors.top    : parent.top
             anchors.bottom : parent.bottom
             anchors.right  : parent.right
-            width : nextIcon.width + 40
+            width : nextIcon.width + 80
             color : "darkgray"
         }
         Image {
             id : nextIcon
             anchors.verticalCenter : parent.verticalCenter
             anchors.right : parent.right
-            anchors.rightMargin : 20
+            anchors.rightMargin : 40
             source : "image://theme/icon-m-toolbar-next"
+            width : 64
+            height : 64
         }
     }
 
