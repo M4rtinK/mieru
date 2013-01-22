@@ -76,11 +76,11 @@ class Manga:
         if loadNotify:
           self.mieru.notify(
             '<b>%s</b> loaded on page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(startOnPage)))
-          print('<b>%s</b> loaded on page <b>%d</b>' % (self.name, self.ID2PageNumber(startOnPage)))
+          print('<b>%s</b> loaded on page <b>%d</b>' % (self.name.encode('utf-8'), self.ID2PageNumber(startOnPage)))
       else:
         if loadNotify:
           self.mieru.notify('<b>%s</b> loading failed' % self.getPrettyName())
-          print('<b>%s</b> loading failed' % self.getPrettyName())
+          print('<b>%s</b> loading failed' % self.getPrettyName().encode('utf-8'))
 
   def getName(self):
     return self.name
@@ -126,13 +126,14 @@ class Manga:
       self.name = self._nameFromPath(path)
       if self.load(path, pageNumber):
         self.mieru.notify(
-          '<b>%s</b> restored to page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(self.activePageId)))
+          '<b>%s</b> restored to page <b>%d</b>' % (self.getPrettyName(), self.ID2PageNumber(self.activePageId))
+        )
       else:
         self.mieru.notify('<b>%s</b> restore failed' % self.getPrettyName())
 
   def load(self, path, pageNumber=0):
     """try to load manga from the given path"""
-    print("manga: loading from path: %s" % path)
+    print("manga: loading from path: %s" % path.encode('utf-8'))
     self.path = path
 
     start = time.clock()

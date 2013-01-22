@@ -63,7 +63,7 @@ def from_path(path):
       elif type == "rar":
         return RarContainer(path)
       else:
-        print("manga: loading failed, unsupported storage formate")
+        print("manga: loading failed, unsupported storage format")
         return False
   else:
     print("manga: loading failed, path does not exist or is inaccessible")
@@ -71,7 +71,7 @@ def from_path(path):
 
 
 def testPath(path):
-  print("testing path: %s" % path)
+  print("testing path: %s" % path.encode('utf-8'))
   #is it file or folder ?
   try:
     if os.path.isfile(path):
