@@ -1,11 +1,17 @@
 //main.qml
 import QtQuick 1.1
-import com.nokia.meego 1.1
-import com.nokia.extras 1.1
+import com.nokia.meego 1.0
+import com.nokia.extras 1.0
 
 PageStackWindow {
     id : rootWindow
     anchors.fill : parent
+
+    FileSelector {
+        id : fileSelector
+        onAccepted : readingState.openManga(selectedFile)
+    }
+
     initialPage : MainView { id : mainView }
 
     property bool enableMangaMode : options.get("QMLMangaMode", false)
@@ -99,8 +105,9 @@ PageStackWindow {
     QueryDialog {
         id : firstStartDialog
         icon : "image://icons/harmattan_icon.svg"
-        titleText : qsTr("How to turn pages")
-        message :   qsTr("Tap the <b>right half</b> of the screen to go to the <b>next page</b>.") + "<br><br>"
+        titleText : qsTr("How to use Mieru")
+        message : qsTr("Just open a manga or comic book file and start reading.<br><br>") +
+                  qsTr("Tap the <b>right half</b> of the screen to go to the <b>next page</b>.") + "<br><br>"
                   + qsTr("Tap the <b>left half</b> to go to the <b>previous page</b>.")
         acceptButtonText : qsTr("Don't show again")
         rejectButtonText : qsTr("OK")
@@ -116,8 +123,8 @@ PageStackWindow {
 
     InfoBanner {
         id : notification
-        //timerShowTime : 5000
-        timeout : 5000
+        timerShowTime : 5000
+        //timeout : 5000
         height : rootWindow.height / 5.0
         // add margin and prevent overlapping with status bar, if the bar is visible
         y : rootWindow.showStatusBar ? rootWindow.statusBarHeight + 8 : 8
