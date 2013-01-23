@@ -542,7 +542,7 @@ Page {
     Label {
         width : parent.width
         anchors.centerIn : parent
-        text : "<h1>" + screen.orientationString + "<br>w:" + screen.width + "h:" + screen.height + "a:" + screen.rotation + "<br>dw:" + screen.displayWidth + "dh:" + screen.displayHeight + "cu:" + screen.currentOrientation + "<br>port:" + rootWindow.inPortrait + "</h1>"
+        text : "<h1>" + screen.orientationString + "<br>a:" + screen.rotation + " minimized:"+ screen.minimized +  "<br>dw:" + screen.displayWidth + "dh:" + screen.displayHeight + "cu:" + screen.currentOrientation + "<br>port:" + rootWindow.inPortrait + "</h1>"
         wrapMode : Text.WordWrap
         horizontalAlignment : Text.AlignHCenter
     }*/
