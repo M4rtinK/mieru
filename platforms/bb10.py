@@ -2,7 +2,8 @@
 """
 Mieru hildon UI (for Maemo 5@N900)
 """
-
+import glob
+import os
 from platforms.base_platform import BasePlatform
 
 
@@ -10,6 +11,7 @@ class BB10(BasePlatform):
   def __init__(self, mieru):
     BasePlatform.__init__(self)
     self.mieru = mieru
+    self._cleanCoreDumps()
 
   def getIDString(self):
     return "bb10"
@@ -41,3 +43,11 @@ class BB10(BasePlatform):
 
   def startInFullscreen(self):
     return True
+
+  def _cleanCoreDumps(self):
+    """due to experimental OpenGL support when using QtQuick with QBB_USE_OPENGL,
+    there might sometimes be creates python3.2 core dumps even though the program cleanly exits
+    -> this function cleans them on startup"""
+    corePath = os.path.join(os.environ['SANDBOX'], 'logs', '*.core')
+    for core in glob.glob(corePath):
+      os.remove(core)
