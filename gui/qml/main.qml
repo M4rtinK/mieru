@@ -64,9 +64,11 @@ PageStackWindow {
         whatsNewDialog.open()
     }
 
-    FileSelector {
+    FileSelectorWrapper {
         id : fileSelector
-        onAccepted : readingState.openManga(selectedFile)
+        onAccepted : {
+            readingState.openManga(selectedFile)
+        }
     }
 
     PageFitSelector {
