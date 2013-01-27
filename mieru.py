@@ -26,6 +26,8 @@ timer.elapsed(startTs, "All modules combined")
 # eq.: ./opt/mieru/mieru.py -p harmattan -u harmattan
 import os
 
+originalCWD = os.getcwd()
+
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
@@ -58,6 +60,7 @@ class Mieru:
     start = startup.Startup()
     args = start.args
     self.args = args
+    self.originalCWD = originalCWD
 
     # restore the persistent options dictionary
     self.d = {}
