@@ -50,4 +50,8 @@ class BB10(BasePlatform):
     -> this function cleans them on startup"""
     corePath = os.path.join(os.environ['SANDBOX'], 'logs', '*.core')
     for core in glob.glob(corePath):
-      os.remove(core)
+      try:
+        os.remove(core)
+      except Exception as e:
+        print("removing core-dump failed")
+        print(e)
