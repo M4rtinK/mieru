@@ -48,7 +48,8 @@ class BB10(BasePlatform):
     """due to experimental OpenGL support when using QtQuick with QBB_USE_OPENGL,
     there might sometimes be creates python3.2 core dumps even though the program cleanly exits
     -> this function cleans them on startup"""
-    corePath = os.path.join(os.environ['SANDBOX'], 'logs', '*.core')
+
+    corePath = os.path.join(self.mieru.originalCWD, 'logs', '*.core')
     for core in glob.glob(corePath):
       try:
         os.remove(core)
