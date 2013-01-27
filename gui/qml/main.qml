@@ -7,11 +7,6 @@ PageStackWindow {
     id : rootWindow
     anchors.fill : parent
 
-    FileSelector {
-        id : fileSelector
-        onAccepted : readingState.openManga(selectedFile)
-    }
-
     initialPage : MainView { id : mainView }
 
     property bool enableMangaMode : options.get("QMLMangaMode", false)
