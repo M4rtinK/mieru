@@ -43,6 +43,7 @@ class QMLGUI(GUI):
         self.gui = gui
 
       def closeEvent(self, event):
+        print('CLOSE EVENT')
         pass
         # shutdown moved behind mainloop
 
