@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Mieru hildon UI (for Maemo 5@N900)
+Mieru BB10 platform module
 """
 import glob
 import os
