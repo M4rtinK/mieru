@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement # for python 2.5
 from pprint import pprint
+import shutil
 import traceback
 import gs
 
@@ -17,6 +18,17 @@ import manga
 import options
 import startup
 import stats
+
+LOG_FOLDER = '/accounts/1000/shared/downloads'
+fSock = open(os.path.join(LOG_FOLDER, 'mieru_log.txt'), 'w', 0)
+rfSock = open(os.path.join(LOG_FOLDER, 'mieru_error_log.txt'), 'w', 0)
+
+try:
+  userHomePath = os.path.join(os.getenv("HOME", ""),".mieru")
+  shutil.copy(userHomePath, LOG_FOLDER)
+except Exception as e:
+  print("COPY EXCEPTION")
+  print(e)
 
 timer.elapsed(startTs, "All modules combined")
 
@@ -498,4 +510,13 @@ class Mieru:
 
 
 if __name__ == "__main__":
-  mieru = Mieru()
+  try:
+    mieru = Mieru()
+  except Exception:
+    fp = open(os.path.join(LOG_FOLDER, 'mieru_exception_log.txt'), 'w', 0)
+    traceback.print_exc(file=fp)
+    fp.flush()
+    fp.close()
+    traceback.print_exc(file=fSock)
+    fSock.flush()
+    exit(1)
