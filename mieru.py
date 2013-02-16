@@ -4,6 +4,7 @@ from __future__ import with_statement # for python 2.5
 from pprint import pprint
 import shutil
 import traceback
+import os
 import gs
 
 import bbpy
@@ -24,7 +25,7 @@ fSock = open(os.path.join(LOG_FOLDER, 'mieru_log.txt'), 'w', 0)
 rfSock = open(os.path.join(LOG_FOLDER, 'mieru_error_log.txt'), 'w', 0)
 
 try:
-  userHomePath = os.path.join(os.getenv("HOME", ""),".mieru")
+  userHomePath = os.path.join(os.getenv("HOME", ""),".mieru/mieru_options.bin")
   shutil.copy(userHomePath, LOG_FOLDER)
 except Exception as e:
   print("COPY EXCEPTION")
@@ -520,3 +521,4 @@ if __name__ == "__main__":
     traceback.print_exc(file=fSock)
     fSock.flush()
     exit(1)
+  exit(0)
