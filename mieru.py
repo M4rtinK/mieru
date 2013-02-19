@@ -94,8 +94,10 @@ class Mieru:
           self.platform = maemo5.Maemo5(self, GTK=False)
       elif platformId == "harmattan":
         import harmattan
-
         self.platform = harmattan.Harmattan(self)
+      elif platformId == "android":
+        import android_module
+        self.platform = android_module.Android(self)
       else:
         import pc
 

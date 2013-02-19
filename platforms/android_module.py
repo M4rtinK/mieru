@@ -9,7 +9,6 @@ class Android(BasePlatform):
   def __init__(self, mieru):
     BasePlatform.__init__(self)
     self.mieru = mieru
-    self._cleanCoreDumps()
 
   def getIDString(self):
     return "android"
@@ -24,7 +23,6 @@ class Android(BasePlatform):
     # -> somehow getting device name ?
     # NOTE: this string is not yet shown anywhere :)
     return "An Android device"
-
 
   def notify(self, message, icon=""):
     self.mieru.gui._notify(message, icon)
