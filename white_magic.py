@@ -119,7 +119,16 @@ if dll:
 if not libmagic or not libmagic._name:
   import sys
   platform_to_lib = {'darwin': '/opt/local/lib/libmagic.dylib',
-                     'win32': 'magic1.dll'}
+                     'win32': 'magic1.dll',
+                      'qnx6': 'libmagic.so.1',
+                      'android' : '/data/data/org.modrana.Mieru/files/python/lib/libmagic.so'
+                    }
+
+# on Android, the libmagic library needs to be loaded manually
+#
+# What sets sys.platform to "android" ?
+# -> the main Android startup script
+
   if sys.platform in platform_to_lib:
     try:
       libmagic = ctypes.CDLL(platform_to_lib[sys.platform])
