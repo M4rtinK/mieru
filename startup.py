@@ -12,7 +12,7 @@ class Startup():
       action="store", choices=["pc", "hildon", "harmattan", "QML"])
     parser.add_argument('-p',
       help="specify current platform", default=None,
-      action="store", choices=["maemo5", "harmattan", "pc"])
+      action="store", choices=["maemo5", "harmattan", "pc", "android"])
     parser.add_argument('-o',
       help="specify path to a manga or comic book to open", default=None,
       action="store", metavar="path to file", )
