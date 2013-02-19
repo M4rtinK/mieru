@@ -85,6 +85,9 @@ class QMLGUI(gui.GUI):
             localeId = self.mieru.args.locale
         else:
             localeId = locale.getlocale()[0]
+            # if localeId is None, use english
+            if not localeId:
+              localeId = "en"
         translator.load("gui/qml/i18n/qml_" + localeId)
         self.app.installTranslator(translator)
 
