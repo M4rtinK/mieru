@@ -124,10 +124,10 @@ if not libmagic or not libmagic._name:
                       'android' : '/data/data/org.modrana.Mieru/files/python/lib/libmagic.so'
                     }
 
-# on Android, the libmagic library needs to be loaded manually
-#
-# What sets sys.platform to "android" ?
-# -> the main Android startup script
+  # on Android, the libmagic library needs to be loaded manually
+  #
+  # What sets sys.platform to "android" ?
+  # -> the main Android startup script
 
   if sys.platform in platform_to_lib:
     try:
