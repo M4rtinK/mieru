@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import with_statement # for python 2.5
+import traceback
 import gs
 
 import timer
@@ -256,26 +257,31 @@ class Mieru:
     self.platform.notify(message, icon)
 
   def openManga(self, path, startOnPage=0, replaceCurrent=True, loadNotify=True, checkHistory=True):
-    if replaceCurrent:
-      mangaState = None
-      if checkHistory: # check for saved state for the path
-        mangaState = self.getMangaStateFromHistory(path)
-      if mangaState:
-        print('manga path found in history')
-        self.openMangaFromState(mangaState)
+    try:
+      if replaceCurrent:
+        mangaState = None
+        if checkHistory: # check for saved state for the path
+          mangaState = self.getMangaStateFromHistory(path)
+        if mangaState:
+          print('manga path found in history')
+          self.openMangaFromState(mangaState)
+        else:
+          print("opening %s on page %d" % (path, startOnPage))
+          mangaInstance = manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
+          # close and replace any current active manga
+          self.setActiveManga(mangaInstance)
+
+          # increment manga count
+          self.stats.incrementUnitCount()
+
+          # return the newly created manga instance
+          return mangaInstance
       else:
-        print("opening %s on page %d" % (path, startOnPage))
-        mangaInstance = manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
-        # close and replace any current active manga
-        self.setActiveManga(mangaInstance)
-
-        # increment manga count
-        self.stats.incrementUnitCount()
-
-        # return the newly created manga instance
-        return mangaInstance
-    else:
-      return manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
+        return manga.Manga(self, path, startOnPage, loadNotify=loadNotify)
+    except Exception, e:
+      print("mieru: opening manga failed")
+      print(e)
+      traceback.print_exc(file=sys.stdout) # find what went wrong
 
   def openMangaFromState(self, state):
     print("opening manga from state")
