@@ -2,18 +2,29 @@
 """Mieru persistent options storage"""
 import marshal
 import os
+import sys
+
+DEFAULT_PROFILE_FOLDER_NAME = '.mieru'
+OPTIONS_FILENAME = 'mieru_options.bin'
 
 class Options:
   def __init__(self, mieru):
     self.mieru = mieru
-    optionsFilename = 'mieru_options.bin'
-    mieruProfileFolderName = '.mieru'
-    userHomePath = os.getenv("HOME", "")
-    self.profileFolderPath = os.path.join(userHomePath, mieruProfileFolderName)
-    self.optionsPath = os.path.join(self.profileFolderPath, optionsFilename)
+    self.profileFolderPath = self.getPlatformProfilePath()
+    if self.profileFolderPath is None:
+      userHomePath = os.getenv("HOME", "")
+      self.profileFolderPath = os.path.join(userHomePath, DEFAULT_PROFILE_FOLDER_NAME)
+    self.optionsPath = os.path.join(self.profileFolderPath, OPTIONS_FILENAME)
     self.checkProfilePath()
     print("options: profile path: %s" % self.profileFolderPath)
     self.load()
+
+  # TODO: do this cleaner ?
+  def getPlatformProfilePath(self):
+    if sys.platform == "android":
+      return "/sdcard/.mieru"
+    else:
+      return None
 
   def checkProfilePath(self):
     """check if the profile folder exists, try to create it if not"""
