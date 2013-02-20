@@ -26,6 +26,10 @@ import ctypes.util
 
 from ctypes import c_char_p, c_int, c_size_t, c_void_p
 
+MAGIC_FILE_PATHS = {
+  "android" : '/data/data/org.modrana.Mieru/files/python/lib/magic.mgc'
+}
+
 class MagicException(Exception): pass
 
 class Magic:
@@ -43,6 +47,12 @@ class Magic:
     magic_file - use a mime database other than the system default
 
     """
+
+    # is the magic file set ?
+    if magic_file is None:
+      # check if this platform contains path for the Magic file
+      magic_file = MAGIC_FILE_PATHS.get(sys.platform, None)
+
     flags = MAGIC_NONE
     if mime:
       flags |= MAGIC_MIME
