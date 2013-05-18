@@ -11,6 +11,7 @@ import progressive_download
 
 URL_PREFIX = "http://www.baka-tsuki.org/project/index.php?title="
 VOLUME_NAME = "Volume"
+FULL_TEXT_SUFFIX="_Full_Text"
 PRINT_SUFFIX = "&printable=yes"
 
 def getFullName(name, number, volumeName=VOLUME_NAME):
@@ -20,7 +21,7 @@ def getFullName(name, number, volumeName=VOLUME_NAME):
 
 def getUrl(fullName):
   """get Url for a given novel"""
-  url = URL_PREFIX + fullName + PRINT_SUFFIX
+  url = URL_PREFIX + fullName + FULL_TEXT_SUFFIX + PRINT_SUFFIX
   return url
 
 def downloadNovel(fullName):
