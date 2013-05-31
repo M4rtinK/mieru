@@ -52,7 +52,7 @@ EPUB_TITLE_PAGE_FILE = os.path.join(EPUB_TEXT_FOLDER, "title_page.xhtml")
 
 def getFullName(name, number, volumeName=VOLUME_NAME):
   fullName = re.sub(" ", "_", name)
-  fullName += ":" + volumeName + str(number)
+  fullName += "_" + volumeName + str(number)
   return fullName
 
 def getUrl(fullName):
