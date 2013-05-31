@@ -16,7 +16,7 @@ URL_PREFIX = "http://www.baka-tsuki.org/project/index.php?title="
 MAIN_PAGE = "http://www.baka-tsuki.org/project/index.php?title=Main_Page"
 IMAGE_URL_BASE = 'http://www.baka-tsuki.org'
 VOLUME_NAME = "Volume"
-PRINT_SUFFIX = "&printable=yes"
+PRINT_SUFFIX = "_Full_Text&printable=yes"
 NOVEL_LIST_VALID = 24 # in hours
 TEMPORARY_FILE = "temp.opf"
 
@@ -52,21 +52,26 @@ EPUB_TITLE_PAGE_FILE = os.path.join(EPUB_TEXT_FOLDER, "title_page.xhtml")
 
 def getFullName(name, number, volumeName=VOLUME_NAME):
   fullName = re.sub(" ", "_", name)
-  fullName += "_" + volumeName + str(number)
+  fullName += ":" + volumeName + str(number)
   return fullName
+
+def getFolderName(name, number, volumeName=VOLUME_NAME):
+  folderName = re.sub(" ", "_", name)
+  folderName += "_" + volumeName + str(number)
+  return folderName
 
 def getUrl(fullName):
   """get Url for a given novel"""
   url = URL_PREFIX + fullName + PRINT_SUFFIX
   return url
 
-def downloadNovel(fullName):
+def downloadNovel(fullName, folderName):
   """download a novel with the given fullname"""
   url = getUrl(fullName)
   # assure storage folder exists
-  if not os.path.exists(fullName):
-    os.mkdir(fullName)
-  filePath = os.path.join(fullName, "%s.html" % fullName)
+  if not os.path.exists(folderName):
+    os.mkdir(folderName)
+  filePath = os.path.join(folderName, "%s.html" % folderName)
   downloadUrl(url, filePath)
 
 def downloadUrl(url, path):
@@ -86,7 +91,7 @@ def assurePath(path):
     print("creating dirs in path:\n%s" % path)
     os.makedirs(path)
 
-def processHTML(fullName):
+def processHTML(fullName, folderName):
   """Process the raw HTML from Bakatsuki to a form usable for making EPUBs"""
 
   EXP = 0 #end of site
@@ -94,19 +99,19 @@ def processHTML(fullName):
   WIKI_TABLE = 0 #end of novel text
 
   print("opening novel: %s" % fullName)
-  print("directory: %s" % fullName)
-  filename = fullName + ".html"
+  print("directory: %s" % folderName)
+  filename = folderName + ".html"
   print("filename: %s" % filename)
   # folder name is fullName
   # filename is fullName + .html
-  chapterFile = open(os.path.join(fullName,filename), "rt")
+  chapterFile = open(os.path.join(folderName,filename), "rt")
   novel = chapterFile.read()
   chapterFile.close()
   # get title of the novel
   TITLE = getTitle(novel)
 
   # switch to the EPUB content folder
-  toplevelFolder = os.path.join(fullName, EPUB_TOPLEVEL_FOLDER)
+  toplevelFolder = os.path.join(folderName, EPUB_TOPLEVEL_FOLDER)
   assurePath(toplevelFolder)
   print("switching to: %s" % toplevelFolder)
   os.chdir(toplevelFolder)
@@ -353,7 +358,10 @@ if __name__ == "__main__":
     default=None)
   parser.add_argument('--number',
     help="volume number",
-    action="store")
+    action="store",
+    type=int,
+    default=1
+    )
   parser.add_argument('--volume',
     help="override volume name",
     action="store")
@@ -367,20 +375,21 @@ if __name__ == "__main__":
   # get name of the novel
   if args.list:
     listAllAvailableNovels()
-  else:
+  elif args.name is not None:
     name = args.name
-    fullName = getFullName(name, 1)
+    fullName = getFullName(name, args.number)
+    folderName = getFolderName(name, args.number)
     print(fullName)
-    if isLocallyAvailable(fullName):
+    if isLocallyAvailable(folderName):
       if args.r:
         print("re-downloading")
-        downloadNovel(fullName)
+        downloadNovel(fullName, folderName)
       else:
         print("locally available")
-        processHTML(fullName)
     else:
       print("downloading")
-      downloadNovel(fullName)
+      downloadNovel(fullName, folderName)
+    processHTML(folderName, folderName)
 
 
 
