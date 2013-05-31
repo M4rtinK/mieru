@@ -105,7 +105,7 @@ def processHTML(fullName, folderName):
   print("filename: %s" % filename)
   # folder name is fullName
   # filename is fullName + .html
-  chapterFile = open(os.path.join(folderName,filename), "rt")
+  chapterFile = open(os.path.join(folderName,filename), "rt", encoding='utf-8')
   novel = chapterFile.read()
   chapterFile.close()
   # get title of the novel
@@ -170,7 +170,7 @@ def processHTML(fullName, folderName):
         WIKI_TABLE = 1
     if (H2 == 1) and (WIKI_TABLE == 0):
       if re.search('src="/project/images/thumb/', line) is not None:
-        print (re.search('src="/project/images/thumb/', line))
+        #print (re.search('src="/project/images/thumb/', line))
         getImages(line, contentFile, chapterFile)
         ### if the line contains an image, the procedure adds the appropriate tags into the chapter.xhtml and content.opf files ###
       else:
