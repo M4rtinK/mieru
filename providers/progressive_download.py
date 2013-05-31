@@ -4,7 +4,13 @@ downloading with progress information
 based on:
 http://stackoverflow.com/questions/2028517/python-urllib2-progress-hook
 """
-import urllib2, sys
+import sys
+
+try:  # Python 2
+  from urllib2 import urlopen, HTTPError, URLError
+except ImportError:  # Python 3
+  from urllib.request import urlopen
+  from urllib.error import HTTPError, URLError
 
 def _chunk_report(bytes_so_far, chunk_size, total_size):
   if total_size:
@@ -24,7 +30,7 @@ def _chunk_download(url, path, chunk_size=8192, report_hook=None):
   response hook = None -> select response hook automatically
   response hook = False -> do not use response hook
   """
-  response = urllib2.urlopen(url)
+  response = urlopen(url)
   total_size = response.info().getheader('Content-Length')
   if total_size:
     total_size = total_size.strip()
