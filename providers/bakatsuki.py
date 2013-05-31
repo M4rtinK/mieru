@@ -81,9 +81,10 @@ def downloadUrl(url, path):
   else:
     progressive_download.download(url, path)
 
-def isLocallyAvailable(fullName):
+def isLocallyAvailable(folderName):
   """check if a novel with this full name is locally available"""
-  return os.path.exists(fullName)
+  filename = "%s.html" % folderName
+  return os.path.exists(os.path.join(folderName, filename))
 
 def assurePath(path):
   """Make sure all directories in given path exist"""
