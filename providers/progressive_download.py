@@ -31,13 +31,13 @@ def _chunk_download(url, path, chunk_size=8192, report_hook=None):
   response hook = False -> do not use response hook
   """
   response = urlopen(url)
-  total_size = response.info().getheader('Content-Length')
+  total_size = response.info()['Content-Length']
   if total_size:
     total_size = total_size.strip()
     total_size = int(total_size)
   bytes_so_far = 0
 
-  f = open(path, "w")
+  f = open(path, "wb")
 
   while 1:
     chunk = response.read(chunk_size)
@@ -54,7 +54,6 @@ def _chunk_download(url, path, chunk_size=8192, report_hook=None):
   return bytes_so_far
 
 def download(url, path, report_hook=None, verbose=True):
-
   if verbose:
     print(url)
   _chunk_download(url, path, report_hook=None)
