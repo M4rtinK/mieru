@@ -7,6 +7,10 @@ try:  # Python 2
 except ImportError:  # Python 3
   from urllib.request import urlopen
   from urllib.error import HTTPError, URLError
+  from urllib.parse import quote
+
+from http.client import HTTPConnection
+
 #noinspection PyCompatibility
 import argparse
 import progressive_download
@@ -16,7 +20,8 @@ URL_PREFIX = "http://www.baka-tsuki.org/project/index.php?title="
 MAIN_PAGE = "http://www.baka-tsuki.org/project/index.php?title=Main_Page"
 IMAGE_URL_BASE = 'http://www.baka-tsuki.org'
 VOLUME_NAME = "Volume"
-PRINT_SUFFIX = "_Full_Text&printable=yes"
+PRINT_SUFFIX = "&printable=yes"
+FULL_TEXT_SUFFIX = "_Full_Text"
 NOVEL_LIST_VALID = 24 # in hours
 TEMPORARY_FILE = "temp.opf"
 
@@ -60,10 +65,28 @@ def getFolderName(name, number, volumeName=VOLUME_NAME):
   folderName += "_" + volumeName + str(number)
   return folderName
 
+def checkUrlExists(url):
+  print("checking URL:\n%s" % url)
+  try:
+    urlopen(url)
+    print("URL exists")
+    return True
+  except:
+    print("URL does not work")
+    return False
+
 def getUrl(fullName):
   """get Url for a given novel"""
-  url = URL_PREFIX + fullName + PRINT_SUFFIX
-  return url
+  urls = [
+    URL_PREFIX + fullName + PRINT_SUFFIX,
+    URL_PREFIX + fullName + FULL_TEXT_SUFFIX + PRINT_SUFFIX
+  ]
+  workingUrl = None
+  for url in urls:
+    if checkUrlExists(url):
+      workingUrl = url
+      break
+  return workingUrl
 
 def downloadNovel(fullName, folderName):
   """download a novel with the given fullname"""
