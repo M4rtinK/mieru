@@ -288,6 +288,104 @@ def processHTML(fullName, folderName):
   ")
   titleFile.close()
 
+
+
+
+
+  mimeFile = open(EPUB_MIME_FILE, 'w')
+  mimeFile.write(EPUB_MIME)
+  mimeFile.close()
+
+
+  containerFile = open(EPUB_CONTAINER_FILE, 'w')
+  containerFile.write("<?xml version=\"1.0\"?>\n \
+<container version=\"1.0\" xmlns=\"urn:oasis:names:tc:opendocument:xmlns:container\">\n \
+   <rootfiles>\n \
+        <rootfile full-path=\"OEBPS/content.opf\" media-type=\"application/oebps-package+xml\"/>\n \
+   </rootfiles>\n \
+</container>")
+  containerFile.close()
+
+  stylesheetFile = open(EPUB_STYLESHEET_FILE, 'w')
+  stylesheetFile.write("\
+/* Style Sheet */\n\
+/* This defines styles and classes used in the book */\n\
+body { margin-left: 5%; margin-right: 5%; margin-top: 5%; margin-bottom: 5%; text-align: justify; }\n\
+pre { font-size: x-small; }\n\
+h1 { text-align: center; }\n\
+h2 { text-align: center; }\n\
+h3 { text-align: center; }\n\
+h4 { text-align: center; }\n\
+h5 { text-align: center; }\n\
+h6 { text-align: center; }\n\
+.CI {\n\
+    text-align:center;\n\
+    margin-top:0px;\n\
+    margin-bottom:0px;\n\
+    padding:0px;\n\
+    }\n\
+.center   {text-align: center;}\n\
+.smcap    {font-variant: small-caps;}\n\
+.u        {text-decoration: underline;}\n\
+.bold     {font-weight: bold;}\n\
+")
+  stylesheetFile.close()
+
+  templateFile = open(EPUB_STYLE_TEMPLATE_FILE, 'w')
+  templateFile.write("\
+<ade:template xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:ade=\"http://ns.adobe.com/2006/ade\"\n\
+		 xmlns:fo=\"http://www.w3.org/1999/XSL/Format\">\n\
+\n\
+  <fo:layout-master-set>\n\
+   <fo:simple-page-master master-name=\"single_column\">\n\
+		<fo:region-body margin-bottom=\"3pt\" margin-top=\"0.5em\" margin-left=\"3pt\" margin-right=\"3pt\"/>\n\
+    </fo:simple-page-master>\n\
+  \n\
+    <fo:simple-page-master master-name=\"single_column_head\">\n\
+		<fo:region-before extent=\"8.3em\"/>\n\
+		<fo:region-body margin-bottom=\"3pt\" margin-top=\"6em\" margin-left=\"3pt\" margin-right=\"3pt\"/>\n\
+    </fo:simple-page-master>\n\
+\n\
+    <fo:simple-page-master master-name=\"two_column\"	margin-bottom=\"0.5em\" margin-top=\"0.5em\" margin-left=\"0.5em\" margin-right=\"0.5em\">\n\
+		<fo:region-body column-count=\"2\" column-gap=\"10pt\"/>\n\
+    </fo:simple-page-master>\n\
+\n\
+    <fo:simple-page-master master-name=\"two_column_head\" margin-bottom=\"0.5em\" margin-left=\"0.5em\" margin-right=\"0.5em\">\n\
+		<fo:region-before extent=\"8.3em\"/>\n\
+		<fo:region-body column-count=\"2\" margin-top=\"6em\" column-gap=\"10pt\"/>\n\
+    </fo:simple-page-master>\n\
+\n\
+    <fo:simple-page-master master-name=\"three_column\" margin-bottom=\"0.5em\" margin-top=\"0.5em\" margin-left=\"0.5em\" margin-right=\"0.5em\">\n\
+		<fo:region-body column-count=\"3\" column-gap=\"10pt\"/>\n\
+    </fo:simple-page-master>\n\
+\n\
+    <fo:simple-page-master master-name=\"three_column_head\" margin-bottom=\"0.5em\" margin-top=\"0.5em\" margin-left=\"0.5em\" margin-right=\"0.5em\">\n\
+		<fo:region-before extent=\"8.3em\"/>\n\
+		<fo:region-body column-count=\"3\" margin-top=\"6em\" column-gap=\"10pt\"/>\n\
+    </fo:simple-page-master>\n\
+\n\
+    <fo:page-sequence-master>\n\
+        <fo:repeatable-page-master-alternatives>\n\
+            <fo:conditional-page-master-reference master-reference=\"three_column_head\" page-position=\"first\" ade:min-page-width=\"80em\"/>\n\
+            <fo:conditional-page-master-reference master-reference=\"three_column\" ade:min-page-width=\"80em\"/>\n\
+            <fo:conditional-page-master-reference master-reference=\"two_column_head\" page-position=\"first\" ade:min-page-width=\"50em\"/>\n\
+            <fo:conditional-page-master-reference master-reference=\"two_column\" ade:min-page-width=\"50em\"/>\n\
+            <fo:conditional-page-master-reference master-reference=\"single_column_head\" page-position=\"first\" />\n\
+            <fo:conditional-page-master-reference master-reference=\"single_column\"/>\n\
+        </fo:repeatable-page-master-alternatives>\n\
+    </fo:page-sequence-master>\n\
+\n\
+  </fo:layout-master-set>\n\
+\n\
+  <ade:style>\n\
+    <ade:styling-rule selector=\".title_box\" display=\"adobe-other-region\" adobe-region=\"xsl-region-before\"/>\n\
+  </ade:style>\n\
+\n\
+</ade:template>\n\
+")
+  templateFile.close()
+
+
 def getTitle(novel):
   """Extract the title from the given light novel"""
   return re.search('<title>(.*)</title>', novel).group(1)
