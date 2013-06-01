@@ -24,6 +24,8 @@ IMAGE_URL_BASE = 'http://www.baka-tsuki.org'
 VOLUME_NAME = "Volume"
 PRINT_SUFFIX = "&printable=yes"
 FULL_TEXT_SUFFIX = "_Full_Text"
+URL_VOLUME_SEPARATOR = ":"
+FOLDER_VOLUME_SEPARATOR = "_"
 NOVEL_LIST_VALID = 24 # in hours
 TEMPORARY_FILE = "temp.opf"
 
@@ -56,16 +58,28 @@ EPUB_CHAPTER_FILE = os.path.join(EPUB_TEXT_FOLDER, "chap01.xhtml")
 EPUB_CHAPTER_FILE_TEMP = os.path.join(EPUB_TEXT_FOLDER, "chap01temp.xhtml")
 EPUB_TITLE_PAGE_FILE = os.path.join(EPUB_TEXT_FOLDER, "title_page.xhtml")
 
+#display and URL names are often different on Bakatsuki
+NAMING_TABLE = {
+  "Infinite Stratos" : "IS",
+  "To Aru Majutsu no Index": "Toaru Majutsu no Index"
+}
+
+def getName(name, number, separator, volumeName):
+  # replace with value from naming table, if present
+  if name in NAMING_TABLE:
+    urlName = NAMING_TABLE[name]
+    print("Replacing display name %s with URL name %s" % (name, urlName))
+    name = urlName
+
+  name = re.sub(" ", "_", name)
+  name += separator + volumeName + str(number)
+  return name
 
 def getFullName(name, number, volumeName=VOLUME_NAME):
-  fullName = re.sub(" ", "_", name)
-  fullName += ":" + volumeName + str(number)
-  return fullName
+  return getName(name, number, URL_VOLUME_SEPARATOR, volumeName)
 
 def getFolderName(name, number, volumeName=VOLUME_NAME):
-  folderName = re.sub(" ", "_", name)
-  folderName += "_" + volumeName + str(number)
-  return folderName
+  return getName(name, number, FOLDER_VOLUME_SEPARATOR, volumeName)
 
 def checkUrlExists(url):
   print("checking URL:\n%s" % url)
