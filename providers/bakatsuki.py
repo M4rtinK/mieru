@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+import zipfile
+
 try:  # Python 2
   from urllib2 import urlopen, HTTPError, URLError
 except ImportError:  # Python 3
@@ -431,13 +433,35 @@ def getImages(line, contentFile, chapterFile):
     contentFile.write(CONTENT)
 
 
+def _zipDirContent(path, zipPath):
+  """Zip content of directory on path to zip file on zipPath
+  :param path: path to directory contents to be zipped
+  :param zipPath: path to the zip file
+  """
+  z = zipfile.ZipFile(zipPath, 'w', compression=zipfile.ZIP_DEFLATED)
+  for root, dirs, files in os.walk(path):
+    # print(root)
+    for file in files:
+      # remove the toplevel directory from storage path
+      # NOTE: not sure how robust is this
+      storagePath = os.path.join(root.replace(path,""), file)
+      storagePath = storagePath.strip(os.sep)
+      # zipfile will strip the leading separator in arcname
+      z.write(os.path.join(root, file),arcname=storagePath)
+  z.close()
 
+def createEPUB(absolutePath, folderName):
+  """Create EPUB from files present in the given folder
+  absolutePath + folderName -> path to the folder for the given light novel
+  folderName + .epub -> name of the EPUB file
+  """
+  os.chdir(os.path.join(absolutePath))
+  zipPath = "%s.epub" % folderName
+  print("creating EPUB file")
+  sourcePath = os.path.join(absolutePath, folderName, EPUB_TOPLEVEL_FOLDER)
+  _zipDirContent(sourcePath, zipPath)
+  print("EPUB created: %s" % zipPath)
 
-
-
-def makeEPUB(path):
-  """Make EPUB from HTML file on the given path"""
-  pass
 
 def listAllAvailableNovels():
   """list all novels available from Bakatsuki"""
@@ -471,6 +495,8 @@ def listAllAvailableNovels():
 #def getStorageName(name, number, )
 
 if __name__ == "__main__":
+  # save PWD
+  absoluteStartingPath = os.path.dirname(os.path.abspath(__file__))
   # CLI argument parsing
   parser = argparse.ArgumentParser(description='Light novel processing.')
   parser.add_argument('name',
@@ -494,9 +520,9 @@ if __name__ == "__main__":
     help="list all available light novels",
     action="store_true")
   args = parser.parse_args()
-  # get name of the novel
   if args.list:
     listAllAvailableNovels()
+  # get name of the novel
   elif args.name is not None:
     name = args.name
     fullName = getFullName(name, args.number)
@@ -512,6 +538,7 @@ if __name__ == "__main__":
       print("downloading")
       downloadNovel(fullName, folderName)
     processHTML(folderName, folderName)
+    createEPUB(absoluteStartingPath, folderName)
 
 
 
