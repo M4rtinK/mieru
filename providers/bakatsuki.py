@@ -166,7 +166,7 @@ def processHTML(fullName, folderName):
   """Process the raw HTML from Bakatsuki to a form usable for making EPUBs"""
 
   EXP = 0 #end of site
-  H2 = 0 #start of novel text
+  HEADER = 0 #start of novel text
   WIKI_TABLE = 0 #end of novel text
 
   print("opening novel: %s" % fullName)
@@ -232,13 +232,13 @@ def processHTML(fullName, folderName):
   ### chapter file still open ###
 
   for line in novel.splitlines():
-    if H2 == 0:
-      if re.search(r'<h2> <span class="mw-headline"', line) is not None:
-        H2 = 1
+    if HEADER == 0:
+      if re.search(r'<h.> <span class="mw-headline"', line) is not None:
+        HEADER = 1
     if WIKI_TABLE == 0:
       if re.search(r'<table class="wikitable"', line) is not None:
         WIKI_TABLE = 1
-    if (H2 == 1) and (WIKI_TABLE == 0):
+    if (HEADER == 1) and (WIKI_TABLE == 0):
       if re.search('src="/project/images/thumb/', line) is not None:
         #print (re.search('src="/project/images/thumb/', line))
         getImages(line, contentFile, chapterFile)
