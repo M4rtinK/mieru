@@ -58,13 +58,40 @@ EPUB_TITLE_PAGE_FILE = os.path.join(EPUB_TEXT_FOLDER, "title_page.xhtml")
 
 
 def getFullName(name, number, volumeName=VOLUME_NAME):
-  fullName = re.sub(" ", "_", name)
-  fullName += ":" + volumeName + str(number)
+  Hit = 0
+  exactHit = 0
+  tempName = name
+  tempName = tempName.replace(" ","").lower()
+  #print (tempName)
+  novelList = []
+  listAllAvailableNovels(novelList)
+  #print (novelList)
+  for novel in novelList:
+    tempNovel = novel.replace("_","").lower()
+    #print (tempNovel)
+    if tempName == tempNovel: 
+      Hit = 1
+      exactHit = 1
+      fullName = re.sub(" ", "_", name)
+      fullName += ":" + volumeName + str(number)
+  if (exactHit == 0):
+    for novel in novelList:
+      tempNovel = novel.replace("_","").lower()
+      if re.search(tempName, tempNovel) is not None:
+        foundMatch = (input('Did you mean \"%s\" ? (Y/n): ' % novel.replace("_"," ")))
+        if foundMatch.lower() == 'y':
+          Hit = 1
+          novel = novel.replace("To_Aru","Toaru")
+          fullName = novel + ":" + volumeName + str(number)	
+          break
+  if Hit == 0:
+    print ("Novel not Found\n")
   return fullName
 
-def getFolderName(name, number, volumeName=VOLUME_NAME):
-  folderName = re.sub(" ", "_", name)
-  folderName += "_" + volumeName + str(number)
+def getFolderName(name):
+  folderName = re.sub(":","_", name)
+  #folderName = re.sub(" ", "_", name)
+  #folderName += "_" + volumeName + str(number)
   return folderName
 
 def checkUrlExists(url):
@@ -79,9 +106,12 @@ def checkUrlExists(url):
 
 def getUrl(fullName):
   """get Url for a given novel"""
+  volumeAlter = fullName.replace("Volume","Volume_")
   urls = [
     URL_PREFIX + fullName + PRINT_SUFFIX,
-    URL_PREFIX + fullName + FULL_TEXT_SUFFIX + PRINT_SUFFIX
+    URL_PREFIX + fullName + FULL_TEXT_SUFFIX + PRINT_SUFFIX,
+    URL_PREFIX + volumeAlter + PRINT_SUFFIX,
+    URL_PREFIX + volumeAlter + FULL_TEXT_SUFFIX + PRINT_SUFFIX
   ]
   workingUrl = None
   for url in urls:
@@ -200,6 +230,7 @@ def processHTML(fullName, folderName):
         ### if the line contains an image, the procedure adds the appropriate tags into the chapter.xhtml and content.opf files ###
       else:
         chapterFile.write(line)
+        chapterFile.write("\n")
         ### if the line doesnt contain a picture, it contains text and will be added into the chapter.xhtml ###
     if re.search('</html>', line) is not None:
       EXP = 1
@@ -272,22 +303,25 @@ def processHTML(fullName, folderName):
   ### adds title to the title page ###
   titleFile = open(EPUB_TITLE_PAGE_FILE, 'w', encoding='utf-8')
   titleFile.write("\
-  <?xml version=\"1.0\" encoding=\"utf-8\"?>\n\
-  <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n\
-    \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n\
-  \n\
-  <html xmlns=\"http://www.w3.org/1999/xhtml\">\n\
-  <head>\n\
-    <title>" + TITLE + "</title>\n\
-    <link rel=\"stylesheet\" href=\"../Styles/stylesheet.css\" type=\"text/css\" />\n\
-    <link rel=\"stylesheet\" type=\"application/vnd.adobe-page-template+xml\" href=\"../Styles/page-template.xpgt\" />\n\
-  </head>\n\
-  \n\
-  <body>\n\
-    <div>\n\
-      <h2 id=\"heading_id_2\">" + TITLE + "</h2>\n\
-      <h2 id=\"heading_id_3\">Baka-Tsuki</h2>\n\
-  ")
+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n\
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n\
+  \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n\
+\n\
+<html xmlns=\"http://www.w3.org/1999/xhtml\">\n\
+<head>\n\
+  <title>" + TITLE + "</title>\n\
+  <link rel=\"stylesheet\" href=\"../Styles/stylesheet.css\" type=\"text/css\" />\n\
+  <link rel=\"stylesheet\" type=\"application/vnd.adobe-page-template+xml\" href=\"../Styles/page-template.xpgt\" />\n\
+</head>\n\
+\n\
+<body>\n\
+  <div>\n\
+    <h2 id=\"heading_id_2\">" + TITLE + "</h2>\n\
+    <h2 id=\"heading_id_3\">Baka-Tsuki</h2>\n\
+  </div>\n\
+</body>\n\
+</html>\n\
+")
   titleFile.close()
 
 
@@ -421,7 +455,8 @@ def getImages(line, contentFile, chapterFile):
     # output.close()
     # path = CUSTOM_PATH + "\sample\OEBPS\Text"
     # os.chdir(path)
-    chapterFile.write('<p class="CI"><img alt="sample image" src="../Images/' + imageFilename + '\" /></p>\n')
+    chapterFile.write('<div class="svg_outer svg_inner"><svg xmlns="http://www.w3.org/2000/svg" height="100%" preserveAspectRatio="xMidYMid meet" version="1.1" viewBox="0 0 824 1200" width="100%" xmlns:xlink="http://www.w3.org/1999/xlink"><image height="1200" width="824" xlink:href="../Images/' + imageFilename + '"></image></svg></div>')
+    #chapterFile.write('<p class="CI"><img alt="sample image" src="../Images/' + imageFilename + '\" /></p>\n')
     # #CONTENT = '        <item id=\"'  + IMG_URL[46:] + '\" href=\"Images/' + IMG_URL[46:] + '\" media-type=\"image/' + IMG_URL[-3:] + '\"/>\n'
     CONTENT = '        <item id=\"' + IMG_URL[46:] + '\" href=\"Images/' + imageFilename
     if IMG_URL[-3:] == 'jpg':
@@ -463,12 +498,11 @@ def createEPUB(absolutePath, folderName):
   print("EPUB created: %s" % zipPath)
 
 
-def listAllAvailableNovels():
+def listAllAvailableNovels(novels):
   """list all novels available from Bakatsuki"""
   LN = 0
   h = urlopen(MAIN_PAGE)
-  novels = []
-  for i in range(500):
+  for i in range(1000):
     data = h.readline()
     if re.search(r"- Light Novels -->",str(data)) is not None:
       LN = 1
@@ -489,9 +523,10 @@ def listAllAvailableNovels():
         novels.append(found.group(1))
 
   h.close()
-  for novel in novels:
-    print(novel.replace("_"," "))
-
+ # for novel in novels:
+ #   print(novel.replace("_"," "))
+  return novels
+  
 #def getStorageName(name, number, )
 
 if __name__ == "__main__":
@@ -526,7 +561,7 @@ if __name__ == "__main__":
   elif args.name is not None:
     name = args.name
     fullName = getFullName(name, args.number)
-    folderName = getFolderName(name, args.number)
+    folderName = getFolderName(fullName)
     print(fullName)
     if isLocallyAvailable(folderName):
       if args.r:
