@@ -24,6 +24,8 @@ IMAGE_URL_BASE = 'http://www.baka-tsuki.org'
 VOLUME_NAME = "Volume"
 PRINT_SUFFIX = "&printable=yes"
 FULL_TEXT_SUFFIX = "_Full_Text"
+URL_VOLUME_SEPARATOR = ":"
+FOLDER_VOLUME_SEPARATOR = "_" 
 NOVEL_LIST_VALID = 24 # in hours
 TEMPORARY_FILE = "temp.opf"
 
@@ -56,24 +58,26 @@ EPUB_CHAPTER_FILE = os.path.join(EPUB_TEXT_FOLDER, "chap01.xhtml")
 EPUB_CHAPTER_FILE_TEMP = os.path.join(EPUB_TEXT_FOLDER, "chap01temp.xhtml")
 EPUB_TITLE_PAGE_FILE = os.path.join(EPUB_TEXT_FOLDER, "title_page.xhtml")
 
+#display and URL names are often different on Bakatsuki
+NAMING_TABLE = {
+  "Infinite_Stratos" : "IS",
+  "To_Aru_Majutsu_no_Index": "Toaru_Majutsu_no_Index"
+}
 
-def getFullName(name, number, volumeName=VOLUME_NAME):
+#def getName(name, number, separator, volumeName):
+def getName(name, number, volumeName=VOLUME_NAME):
   Hit = 0
   exactHit = 0
   tempName = name
   tempName = tempName.replace(" ","").lower()
-  #print (tempName)
   novelList = []
   listAllAvailableNovels(novelList)
-  #print (novelList)
   for novel in novelList:
     tempNovel = novel.replace("_","").lower()
-    #print (tempNovel)
     if tempName == tempNovel: 
       Hit = 1
       exactHit = 1
-      fullName = re.sub(" ", "_", name)
-      fullName += ":" + volumeName + str(number)
+      name = re.sub(" ", "_", name)
   if (exactHit == 0):
     for novel in novelList:
       tempNovel = novel.replace("_","").lower()
@@ -81,17 +85,28 @@ def getFullName(name, number, volumeName=VOLUME_NAME):
         foundMatch = (input('Did you mean \"%s\" ? (Y/n): ' % novel.replace("_"," ")))
         if foundMatch.lower() == 'y':
           Hit = 1
-          novel = novel.replace("To_Aru","Toaru")
-          fullName = novel + ":" + volumeName + str(number)	
+          name = novel
+          print(name)		  
+          if name in NAMING_TABLE:
+            urlName = NAMING_TABLE[name]
+            print("Replacing display name %s with URL name %s" % (name, urlName))
+            name = urlName
+          print(name) 
           break
   if Hit == 0:
     print ("Novel not Found\n")
-  return fullName
+  return name
 
-def getFolderName(name):
-  folderName = re.sub(":","_", name)
-  #folderName = re.sub(" ", "_", name)
-  #folderName += "_" + volumeName + str(number)
+def getFullName(name, number, volumeName=VOLUME_NAME):
+  fullName = re.sub(" ", "_", name)
+  fullName += URL_VOLUME_SEPARATOR + volumeName + str(number)
+#  print (fullName)
+  return fullName
+ 
+def getFolderName(name, number, volumeName=VOLUME_NAME):
+  folderName = re.sub(" ", "_", name)
+  folderName += FOLDER_VOLUME_SEPARATOR + volumeName + str(number)
+#  print(folderName)
   return folderName
 
 def checkUrlExists(url):
@@ -560,8 +575,9 @@ if __name__ == "__main__":
   # get name of the novel
   elif args.name is not None:
     name = args.name
+    name = getName(name, args.number)
     fullName = getFullName(name, args.number)
-    folderName = getFolderName(fullName)
+    folderName = getFolderName(name, args.number)
     print(fullName)
     if isLocallyAvailable(folderName):
       if args.r:
