@@ -3,5 +3,5 @@
 # pull all changes from transifex,
 # including new languages
 # -> it is probably a good idea
-# to first push any local cnages
+# to first push any local changes
 tx pull -a
