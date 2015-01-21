@@ -1,6 +1,6 @@
 //HistoryPage.qml
-import QtQuick 1.1
-import com.nokia.meego 1.0
+import QtQuick 2.0
+import UC 1.0
 
 Page {
     id : historyPage

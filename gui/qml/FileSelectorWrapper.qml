@@ -3,7 +3,7 @@
 // -> it should also get around the limitations of the FolderListModel,
 // that won't notice new files unless recreated
 
-import QtQuick 1.1
+import QtQuick 2.0
 
 Item {
     id : wrapper

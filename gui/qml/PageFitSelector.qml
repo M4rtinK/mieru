@@ -1,6 +1,6 @@
 //PageFitSelector.qml
 import QtQuick 1.0
-import com.nokia.meego 1.0
+import UC 1.0
 
 SelectionDialog {
     id: pageFitSelector
