@@ -1,33 +1,17 @@
 TODO
 
-Format support
-* folders DONE
-* archives cointaining just images DONE
-* archives containing folder with images DONE
-* archives with nested folders (eq a volume archive that contains per-chapter folders) DONE
-
-Unpacking DONE
-
-Options storage DONE
-
-Hildon integration
-* notifications DONE
-* options menu DONE
-
-Maintenance
+Qt 5 & Python 3 port
+====================
+* port from PySide to PyOtherSide
+* port from QtQuick 1.1 to QtQuick 2.0
+* port from QtComponents to Universal Components
+* drop the Qt 4 & Clutter GUIs
+* finish porting of the Python code to Python 3
+ * no need to maintain Python 2 compatibility as
+   PyOtherSide is Python 3 only
+* use proper logging, based on modRana code
 * packaging
-
-Harmattan QML GUI
-* history
-* options
-* info menu
- * current manga info
-  * path
-  * current page number/page number
-  * size
-  * delete ?
-  * rename ?
- * reading statistics
- * about
-
-* page centering for pages that are smaller than the viewport
+ * Sailfish OS
+ * Android
+ * desktop Linux
+* write a porting TODO DONE ;-)

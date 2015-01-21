@@ -1,0 +1,33 @@
+TODO
+
+Format support
+* folders DONE
+* archives cointaining just images DONE
+* archives containing folder with images DONE
+* archives with nested folders (eq a volume archive that contains per-chapter folders) DONE
+
+Unpacking DONE
+
+Options storage DONE
+
+Hildon integration
+* notifications DONE
+* options menu DONE
+
+Maintenance
+* packaging
+
+Harmattan QML GUI
+* history
+* options
+* info menu
+ * current manga info
+  * path
+  * current page number/page number
+  * size
+  * delete ?
+  * rename ?
+ * reading statistics
+ * about
+
+* page centering for pages that are smaller than the viewport
