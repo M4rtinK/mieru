@@ -4,7 +4,7 @@ Format support
 * folders DONE
 * archives cointaining just images DONE
 * archives containing folder with images DONE
-* archives with nested folders (eq a volume archive that vontains per-chapter folders) DONE
+* archives with nested folders (eq a volume archive that contains per-chapter folders) DONE
 
 Unpacking DONE
 
@@ -30,4 +30,4 @@ Harmattan QML GUI
  * reading statistics
  * about
 
-* page centering for pages that are smaler than the viewport
+* page centering for pages that are smaller than the viewport
